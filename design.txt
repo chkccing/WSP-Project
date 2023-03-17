@@ -1,0 +1,45 @@
+ 1.	Login Page 
+
+->Title 
+
+->Organizer+ Participant 
+
+->Login/ Sign up 
+
+2.	Common design： 
+
+Header: Logo 
+
+Navigation Bar： Sort, Filter–Category, Recent, Message, Notification 
+
+Footer: Home/ Joined/ Setting 
+
+3.	Home: 
+
+Search Bar/ Recent new event
+
+Search function: match/ no result
+
+4a.	Joined:  
+
+Recent organized/ Add event / Recent joined（carousel photos） 
+
+Function: auto search and sort
+
+4b.	Organizer page： 
+
+Event Name; Event Date; Category; Public Date; Participants Number; Address; Photos; Details; Cost; FAQ; generate link; QR code 
+
+Auto Generate link and QR code, manage participants
+
+4c.	Join event page： 
+
+Photo carousel; FAQ; Contact ; Join/Quit button ; Payment
+
+5.	Setting: 
+
+Profile; Notification; Declaration; Report; Logout 
+
+6. Optional
+
+Message Function, Notification, Preference
