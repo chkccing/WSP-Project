@@ -16,7 +16,7 @@ Footer: Home/ Joined/ Setting
 
 3.	Home: 
 
-Search Bar/ Recent new event
+Search Bar/ Recent new event -SocketIO
 
 Search function: match/ no result
 
@@ -24,11 +24,11 @@ Search function: match/ no result
 
 Recent organized/ Add event / Recent joined（carousel photos） 
 
-Function: auto search and sort
+Function: auto search and sort -Associate & Join
 
 4b.	Organizer page： 
 
-Event Name; Event Date; Category; Public Date; Participants Number; Address; Photos; Details; Cost; FAQ; generate link; QR code 
+Event Name; Event Date; Time Slot; Category; Public Date; Participants Number; Address; Photos; Details; Cost; FAQ; generate link; QR code 
 
 Auto Generate link and QR code, manage participants
 
