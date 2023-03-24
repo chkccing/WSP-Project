@@ -28,7 +28,7 @@ Function: auto search and sort -Associate & Join
 
 4b.	Organizer page： 
 
-Event Name; Event Date; Time Slot; Category; Public Date; Participants Number; Address; Photos; Details; Cost; FAQ; generate link; QR code 
+Event Name; Event Date; Time Slot Section; Category; Public Date; Participants Number; Address; Photos; Details; Cost; FAQ; generate link; QR code 
 
 Auto Generate link and QR code, manage participants
 
