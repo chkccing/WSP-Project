@@ -1,0 +1,39 @@
+user
+----
+id integer PK
+username varchar(32)
+email varchar(60)
+password varchar(30)
+is_age18 boolean
+is_admin boolean
+created_at datetime
+updated_at datetime
+
+event
+-----
+id integer PK
+host_id integer FK >0- user.id
+title varchar(60)
+created_by integer
+category varchar(20)
+hashtag varchar(20)
+datetime datetime
+location varchar(20)
+is_age18 boolean
+is_private boolean
+
+
+event_participant
+-----------------
+id integer PK
+event_id integer FK >0- event.id
+user_id integer FK >0- user.id
+
+event_rating
+-----
+id integer PK
+event_id FK >0- event.id
+user_id integer FK >0- user.id
+rating integer 
+command varchar(250)
+created_at datetime
