@@ -9,3 +9,4 @@
 5. css
 
 Challenge: hashtag// matching// insert map
+Optional: Qr code check-in for organizer
