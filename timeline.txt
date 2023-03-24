@@ -1,11 +1,11 @@
-1. user login, profile, function 
+1. user login, profile, function
 
-2. event profile create and view 
+2. event profile create and view
 
-3. join event, participant visible (organizer history) 
+3. join event, participant visible (organizer history)
 
-4. search event and homepage 
+4. search event and homepage
 
-5. css 
+5. css
 
-Challenge: hashtag// matching// insert map 
+Challenge: hashtag// matching// insert map
