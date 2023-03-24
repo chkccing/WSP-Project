@@ -1,4 +1,4 @@
-1. user login, profile, function 
+1. user login, profile, function (set權限)
 
 2. event profile create and view 
 
