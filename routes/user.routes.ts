@@ -90,6 +90,7 @@ userRoutes.post('/login', (req, res) => {
     req.session.user = {
       id: user.id,
       username,
+      is_age18: user.is_age18,
     }
   
     res.json({ id: user.id })
