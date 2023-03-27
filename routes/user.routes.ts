@@ -1,5 +1,4 @@
 import { Router } from 'express'
-import { Url } from 'url'
 
 export let userRoutes = Router()
 
@@ -7,7 +6,7 @@ export type User ={
     id: number
     username: string
     showedName: string
-    icon: Url
+    icon: string
     rating: number
     bio: string
     email: string
@@ -18,7 +17,7 @@ export type User ={
 }
 
 let users: User[] = []
-let maxId = users.reduce((id, user)=> Math.max(id, user.id), 0) 
+let maxId = users.reduce((id, user) => Math.max(id, user.id), 0) 
 
 userRoutes.get('/users', (req, res) => {
     res.json(
@@ -37,7 +36,7 @@ userRoutes.post('/users', (req, res) => {
     let email = req.body.email
     let phone = req.body.phone
     let is_age18 = req.body.is_age18
-    users.push(
+    users.push({
         id: maxId,
         username,
         showedName,
@@ -45,6 +44,10 @@ userRoutes.post('/users', (req, res) => {
         email,
         phone,
         is_age18,
-    )
+        icon: '',
+        rating: 0,
+        bio: '',
+        is_admin: false
+    })
     res.json({})
 })
