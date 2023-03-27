@@ -3,7 +3,7 @@ user
 id integer PK
 username varchar(32)
 showedName varchar(32)
-icon user_icon FK >0- image.user_icon
+icon url FK >0- image.user_icon
 rating integer
 bio varchar(250)
 email varchar(60)

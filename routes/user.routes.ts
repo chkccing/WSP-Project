@@ -1,11 +1,20 @@
 import { Router } from 'express'
+import { Url } from 'url'
 
 export let userRoutes = Router()
 
 export type User ={
     id: number
     username: string
+    showedName: string
+    icon: Url
+    rating: number
+    bio: string
+    email: string
+    phone: number
     password: string
+    is_age18: boolean
+    is_admin: boolean
 }
 
 let users = User[] = []
@@ -23,7 +32,11 @@ userRoutes.post('/users', (req, res) => {
     users.push(
         id,
         username,
+        showedName,
         password,
+        email,
+        phone,
+        is_age18,
     )
     res.json({})
 })
