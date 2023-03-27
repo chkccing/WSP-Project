@@ -17,6 +17,7 @@ declare module 'express-session' {
     user: {
       id: number
       username: string
+      is_age18: boolean
     }
   }
 }
