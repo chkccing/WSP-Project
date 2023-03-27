@@ -1,4 +1,7 @@
 import { Router } from 'express'
+import { getString, HttpError } from '../express'
+import { getPhone, HttpError } from '../express'
+import '../session'
 
 export let userRoutes = Router()
 
@@ -30,12 +33,12 @@ userRoutes.get('/users', (req, res) => {
 
 userRoutes.post('/users', (req, res) => {
     maxId++
-    let username = req.body.username
-    let showedName = req.body.showedName
-    let password = req.body.password
-    let email = req.body.email
-    let phone = req.body.phone
-    let is_age18 = req.body.is_age18
+    let username = getString(req, 'username')
+    let showedName = getString(req, 'showedName')
+    let password = getString(req, 'password')
+    let email = getString(req, 'email')
+    let phone = getPhone(req, 'phone')
+    let is_age18 = getBoolean(req, 'is_age18')
     users.push({
         id: maxId,
         username,
@@ -51,3 +54,31 @@ userRoutes.post('/users', (req, res) => {
     })
     res.json({})
 })
+
+userRoutes.post('/login', (req, res) => {
+    let username = getString(req, 'username')
+    let password = getString(req, 'password')
+  
+    let user = users.find(user => user.username === username)
+    if (!user) {
+      throw new HttpError(403, 'wrong username')
+    }
+  
+    if (user.password !== password) {
+      throw new HttpError(403, 'wrong username or password')
+    }
+  
+    req.session.user = {
+      id: user.id,
+      username,
+    }
+  
+    res.json({ id: user.id })
+  })
+
+  userRoutes.get('/role', (req, res) => {
+    res.json({
+      user: req.session.user,
+    })
+  })
+  
