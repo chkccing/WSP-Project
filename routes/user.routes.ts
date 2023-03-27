@@ -8,7 +8,7 @@ export type User = {
     id: number
     username: string
     showedName: string
-    icon: string
+    icon?: string
     rating: number
     bio: string
     email: string

@@ -27,6 +27,7 @@ date date
 time datetime
 cost integer
 location varchar(20)
+Participants number
 FAQ varchar(500)
 is_age18 boolean
 is_private boolean
