@@ -44,8 +44,18 @@ userRoutes.post('/users', (req, res) => {
 
     let user = users.find(user => user.username === username)
     if (user) {
-        throw new HttpError(409, 'this username is already in use')
+        throw new HttpError(409, 'this username is already in used')
      }
+
+    let userEmail = users.find(userEmail => userEmail.email === email)
+    if (userEmail) {
+        throw new HttpError(409, 'this email address is already in used')
+    }
+
+    let userPhone = users.find(userPhone => userPhone.phone === phone)
+    if (userPhone) {
+        throw new HttpError(409, 'this phone number is already in used')
+    }
 
     maxId++
     users.push({
