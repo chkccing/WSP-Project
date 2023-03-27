@@ -26,10 +26,10 @@ export function getPhone(req: Request, field: number) {
       throw new HttpError(400, 'Missing ' + field)
     }
     if (typeof value !== 'number') {
-      throw new HttpError(400, 'Invalid ' + field + ', should a string')
+      throw new HttpError(400, 'Invalid ' + field + ', should a number')
     }
     if (length !== 8) {
-      throw new HttpError(400, 'Invalid ' + field + ', should not be empty')
+      throw new HttpError(400, 'Invalid ' + field + ', should be in 8 digits')
     }
     return value
   }

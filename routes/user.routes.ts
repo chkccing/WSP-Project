@@ -1,6 +1,5 @@
 import { Router } from 'express'
-import { getString, HttpError } from '../express'
-import { getPhone, HttpError } from '../express'
+import { getString, getPhone, HttpError } from '../express'
 import '../session'
 
 export let userRoutes = Router()
@@ -38,7 +37,7 @@ userRoutes.post('/users', (req, res) => {
     let password = getString(req, 'password')
     let email = getString(req, 'email')
     let phone = getPhone(req, 'phone')
-    let is_age18 = getBoolean(req, 'is_age18')
+    let is_age18 = req.body.is_age18
     users.push({
         id: maxId,
         username,
