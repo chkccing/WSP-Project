@@ -9,7 +9,7 @@ export let sessionMiddleware = session({
     resave: false,
     saveUninitialized: false,
     cookie:{
-        maxAge: 1000 * 60 * 60,
+        maxAge: 1000 * 60 * 60, // 1hr
     },
 })
 

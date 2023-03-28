@@ -40,10 +40,14 @@
       <div class="header">
         <div class="row">
           <div class="column">
-            <img class="logo" src="/Logo.png" />
+            <img class="logo" src="img/Logo.png" />
             <div class="logoWord">Pecker</div>
           </div>
-          <div class="right"></div>
+          <div class="right">
+            <div id="signUp-btu">
+              <button onclick="goToSignUpPage()">Sign UP</button>
+            </div>
+          </div>
         </div>
         <div class="row">
           <div class="column">
@@ -57,5 +61,10 @@
         </div>
       </div>
     </div>
+    <script>
+      function goToSignUpPage() {
+        location.href = "./sign-up.html";
+      }
+    </script>
   </body>
 </html>
