@@ -34,7 +34,7 @@ create table event_rating (
     id serial primary key,
     event_id integer,
     user_id integer,
-    rating integer,
+    rating DECIMAL(1, 0),
     comment varchar(250),
     created_at datetime,
 );
