@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign-Up page</title>
+    <title>Create Event</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -18,6 +18,10 @@
         flex-direction: column;
         align-items: center;
         margin-top: 50px;
+      }
+
+      .textinput {
+        width: 30rem;
       }
 
       input {
@@ -48,59 +52,45 @@
   </head>
 
   <body>
-    <div id="signUp" class="right">
-      <span onclick="backToHamePage()">
-        <i class="bi bi-x-lg"></i>
-      </span>
-    <form id="Sign-Up" method="POST" action="/signUp">
-      <H2>Sign Up</H2>
-      <p>Please fill in this form to create an account.</p>
+    <form id="Create-Event" method="POST" action="/createEvent">
+      <H2>Event Create</H2>
       <div>
-        <input class = "textinput" type="text"  placeholder="enter your login name" name="username" />
+        <input class = "textinput" type="title"  placeholder="title" name="title" />
       </div>
       <div>
-        <input class = "textinput" type="text" placeholder="enter your name you wish to call" name="showedName"/>
+        <input class = "textinput" type="category" placeholder="category" name="category"/>
       </div>
       <div>
-        <input class = "textinput" type="password" placeholder="enter your password" name="password"/>
+        <input class = "textinput" type="hashtag" placeholder="hashtag" name="hashtag"/>
       </div>
       <div>
-        <input class = "textinput" type="password" placeholder="confirm your password" name="password"/>
+        <input class = "textinput" type="start_date" placeholder="start date" name="start_date"/>
       </div>
       <div>
-        <input class = "textinput" type="email" placeholder="name@explem.com" name="Email"/>
+        <input class = "textinput" type="end_date" placeholder="end date" name="end_date"/>
       </div>
       <div>
-        <input class = "textinput" type="text" placeholder="enter your phone number" name="phone"/>
+        <input class = "textinput" type="cost" placeholder="cost" name="cost"/>
       </div>
       <div>
-        <input class = "textinput" type="number" placeholder="enter your age" name="age"/>
+        <input class = "textinput" type="location" placeholder="location" name="location"/>
       </div>
       <div>
-        <input type="submit" value="Sign Up" />
+        <input class = "textinput" type="Participants" placeholder="Participants number" name="Participants"/>
       </div>
-      <p>
-        <input type="checkbox" name="agreement" />By creating an account you
-        agree to our <a href="#" style="color: dodgerblue">Terms & Privacy</a>
-      </p>
+      <div>
+        <input class = "textinput" type="FAQ" placeholder="FAQ" name="FAQ"/>
+      </div>
+      <div>
+        <input class = "textinput" type="is_age18" placeholder="Is age 18 required?" name="is_age18"/>
+      </div>
+      <div>
+        <input class = "textinput" type="is_private" placeholder="Is it the private event?" name="is_private"/>
+      </div>
+      <div>
+        <input type="submit" value="Create Event" />
+      </div>
     </div> 
-    </form>
-    <form method="POST" action="/login" id="login">
-      <h3 class="text-center">Login</h3>
-      <div class="form-group">
-        <label>
-          Username:
-          <input type="text" name="username" class="form-control" required />
-        </label>
-      </div>
-      <div class="form-group">
-        <label>
-          Password:
-          <input type="password" name="password" class="form-control" required />
-        </label>
-      </div>
-      <div id="error-message"></div>
-      <input type="submit" class="btn btn-primary" value="Login" />
     </form>
     <script src="/alert.js"></script>
     <script>
