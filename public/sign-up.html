@@ -85,12 +85,25 @@
       </p>
     </div> 
     </form>
-    <script src="/alert.js"></script>
+    <form id="Login" method="POST" action="/login">
+      <H2>Login</H2>
+      <p>Please fill in this form to login.</p>
+      <div>
+        <input class = "textinput" type="text"  placeholder="enter your login name" name="username" />
+      </div>
+      <div>
+        <input class = "textinput" type="password" placeholder="enter your password" name="password"/>
+      </div>
+      <div>
+        <input type="submit" value="Login" />
+      </div>
+    </div> 
+    </form>
     <script>
       function backToHamePage(){
         location.href="./index.html"  
       }
-      
+
       async function loadRole() {
         let res = await fetch('/role')
         let json = await res.json()

@@ -17,4 +17,4 @@
       "noUnusedLocals": true
     },
     "exclude": ["node_modules", "build", "scripts", "index.js"]
-  }
+}
