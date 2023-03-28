@@ -32,7 +32,10 @@
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "formidable": "^2.1.1",
+    "grant": "^5.4.21",
     "listening-on": "^2.0.9",
-    "pg": "^8.10.0"
+    "pg": "^8.10.0",
+    "populate-env": "^2.0.0",
+    "socket.io": "^4.6.1"
   }
 }

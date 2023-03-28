@@ -13,7 +13,7 @@ export type User = {
   rating: number
   bio: string
   email: string
-  phone: number
+  phone: string
   password: string
   is_age18: boolean
   is_admin: boolean
@@ -36,14 +36,25 @@ from users
   }
 })
 
-userRoutes.post('/users', async (req, res, next) => {
+// //註冊功能測試
+// userRoutes.post('/signUp', (req, res) => {
+//   console.log(req.body);
+//   res.json({
+//     user: 1,
+//   })
+// })
+
+userRoutes.post('/signUp', async (req, res, next) => {
   try {
     let username = getString(req, 'username')
     let showedName = getString(req, 'showedName')
     let password = getString(req, 'password')
-    let email = getString(req, 'email')
-    let phone = getPhone(req, 88888888)
-    let is_age18 = req.body.is_age18
+    let email = getString(req, 'Email')
+    let phone = getPhone(req, 'phone')
+    //加上 >= 18，以判定歲數是18歲或以上。
+    let is_age18 = req.body.age >= 18
+
+console.log({is_age18})
 
     let result = await client.query(
       /* sql */ `
@@ -65,7 +76,7 @@ where username = $1
 insert into users
 (username, showedName, password, email, phone, is_age18)
 values
-($1, $2)
+($1, $2, $3, $4, $5, $6)
 returning id
     `,
       [username, showedName, password, email, phone, is_age18],
@@ -107,7 +118,8 @@ where username = $1
 
     req.session.user = {
       id: user.id,
-      username,
+      name: username,
+      avatar: null
     }
 
     res.json({ id: user.id })
@@ -121,3 +133,5 @@ userRoutes.get('/role', (req, res) => {
     user: req.session.user,
   })
 })
+
+

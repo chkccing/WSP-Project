@@ -10,7 +10,9 @@ import { getSessionUser, hasLogin } from '../guards'
 let uploadDir = join('uploads', 'event-images')
 mkdirSync(uploadDir, { recursive: true })
 
-eventRoutes.use('/uploads/event-images', express.static(uploadDir))
+// appp.use('/uploads/event-images', express.static(uploadDir))
+
+export const eventRoutes = express.Router()
 
 let form = formidable({
   uploadDir,
@@ -22,23 +24,25 @@ let form = formidable({
   },
 })
 
-type Event = {
-  id: number
-  host_id: number
-  eventPicture?: string
-  title: string
-  category: string
-  Date: Date
-  Time: TimeRanges
-  Details: String
-  Hashtag: String
-  Cost: Number
-  Location: String
-  Participants: Number
-  FAQ: String
-  Is_age18: Boolean
-  Is_private: Boolean
-}
+// type Event = {
+//   id: number
+//   host_id: number
+//   eventPicture?: string
+//   title: string
+//   category: string
+//   Date: Date
+//   Time: TimeRanges
+//   Details: String
+//   Hashtag: String
+//   Cost: Number
+//   Location: String
+//   Participants: Number
+//   FAQ: String
+//   Is_age18: Boolean
+//   Is_private: Boolean
+
+//   content: string
+// }
 
 export function createEventRoutes(io: socketIO.Server) {
   let eventRoutes = Router()
@@ -96,12 +100,13 @@ export function createEventRoutes(io: socketIO.Server) {
 
         res.json({ id })
 
-        let event: Event = {
+        let event: any = {
           id,
           content,
           user_id,
           image: filename,
-        }
+        };
+
         io.emit('new-event', event)
       } catch (error) {
         next(error)
