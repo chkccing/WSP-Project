@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express'
 import { print } from 'listening-on'
 import { eventRoutes } from './routes/event.routes'
-import { userRoutes } from './routes/userpre.routes'
+import { userRoutes } from './routes/user.routes'
 import { sessionMiddleware } from './session'
 
 let app = express()
