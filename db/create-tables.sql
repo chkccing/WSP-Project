@@ -10,12 +10,12 @@ create table users (
 create table event (
     id serial primary key,
     host_id integer,
-    eventPicture url,
+    eventPicture varchar(250),
     title varchar(60) not null,
-    category varchar(20) not null,
-    hashtag varchar(20) not null,
-    date date not null,
-    time datetime not null,
+    category varchar(250) not null,
+    hashtag varchar(250) not null,
+    start_date date not null,
+    end_date date not null,
     cost integer not null,
     location varchar(20) not null,
     Participants number not null,
@@ -27,7 +27,7 @@ create table event (
 );
 create table event_participant (
     id serial primary key,
-    event_id integer,
+    event_timeslot_id integer,
     user_id integer,
 );
 create table event_rating (
@@ -40,10 +40,11 @@ create table event_rating (
 );
 create table image (
     id serial primary key,
-    event_image url,
-    user_icon url,
-) create event_timeslot (
+    event_image varchar(250),
+    user_icon varchar(250),
+);
+create event_timeslot (
     id serial primary key,
-    period date,
+    date date,
     timeslot datetime,
-)
+);
