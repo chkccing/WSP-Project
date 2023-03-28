@@ -8,7 +8,7 @@ export type User = {
     id: number
     username: string
     showedName: string
-    icon?: string
+    avatar?: string
     rating: number
     bio: string
     email: string
@@ -16,11 +16,13 @@ export type User = {
     password: string
     is_age18: boolean
     is_admin: boolean
+    created_at: Date
+    updated_at: Date
 }
 
 let users: User[] = [
-    { id: 1, username: 'admin', showedName: 'admin', icon: 'null', rating: 5, bio: '', email: '', phone: 91234567, is_age18: true, is_admin: true, password: 'secret' },
-    { id: 2, username: 'test1', showedName: 'test1', icon: 'null', rating: 1, bio: '', email: '', phone: 92345678, is_age18: true, is_admin: false, password: 'secret' },
+    { id: 1, username: 'admin', showedName: 'admin', avatar: 'null', rating: 5, bio: '', email: '', phone: 91234567, is_age18: true, is_admin: true, password: 'secret', created_at:, updated_at:  },
+    { id: 2, username: 'test1', showedName: 'test1', avatar: 'null', rating: 1, bio: '', email: '', phone: 92345678, is_age18: true, is_admin: false, password: 'secret', created_at:, updated_at: },
   ]
 
 let maxId = users.reduce((id, item) => Math.max(id, item.id), 0) 
@@ -59,17 +61,19 @@ userRoutes.post('/users', (req, res) => {
 
     maxId++
     users.push({
-        id: maxId,
-        username,
-        showedName,
-        password,
-        email,
-        phone,
-        is_age18,
-        icon: '',
-        rating: 0,
-        bio: '',
-        is_admin: false
+      id: maxId,
+      username,
+      showedName,
+      password,
+      email,
+      phone,
+      is_age18,
+      avatar: '',
+      rating: 0,
+      bio: '',
+      is_admin: false,
+      created_at: '',
+      updated_at: '',
     })
     res.json({})
 })
