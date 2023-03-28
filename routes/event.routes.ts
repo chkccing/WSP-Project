@@ -142,6 +142,7 @@ export function createEventRoutes(io: socketIO.Server) {
         try {
           await unlink(join(uploadDir, event.image))
         } catch (error) {
+          // maybe another request is deleting it at the same time
         }
       }
 
