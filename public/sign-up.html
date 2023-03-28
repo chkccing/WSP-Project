@@ -28,10 +28,6 @@
         box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
       }
 
-      .textinput {
-        width: 30rem;
-      }
-
       input[type="submit"] {
         background-color: #007bff;
         color: #fff;
@@ -89,10 +85,25 @@
       </p>
     </div> 
     </form>
+    <script src="/alert.js"></script>
     <script>
       function backToHamePage(){
         location.href="./index.html"  
       }
+      
+      async function loadRole() {
+        let res = await fetch('/role')
+        let json = await res.json()
+        if (!json.user) {
+          document.body.dataset.role = 'guest'
+          return
+        }
+        profileForm.querySelector('.user-name').textContent = json.user.name
+        profileForm.querySelector('.avatar').src =
+          json.user.avatar || '/logo.png'
+        document.body.dataset.role = 'user'
+      }
+      loadRole()
     </script>
   </body>
 </html>

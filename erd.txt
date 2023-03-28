@@ -45,8 +45,8 @@ event_rating
 id integer PK
 event_id integer FK >0- event.id
 user_id integer FK >0- user.id
-rating rating
-command varchar(250)
+rating integer
+comment varchar(250)
 created_at datetime
 
 image

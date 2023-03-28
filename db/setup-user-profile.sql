@@ -11,7 +11,7 @@ add column bio varchar(255);
 alter table users
 add column email varchar(60) drop not null;
 alter table users
-add column phone varchar(8) drop not null;
+add column phone DECIMAL(8, 0) drop not null;
 alter table users
 alter column password_hash drop not null;
 alter table users
