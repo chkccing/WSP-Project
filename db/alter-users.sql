@@ -6,3 +6,5 @@ alter table users drop column password;
 alter table users
 alter column password_hash
 set not null;
+alter TABLE users
+add column is_age18 varchar(20) not null;
