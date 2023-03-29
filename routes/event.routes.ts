@@ -1,10 +1,10 @@
-import express, { Router } from 'express'
+import express from 'express'
+// import { Router } from 'express'
 import formidable from 'formidable'
 import { mkdirSync } from 'fs'
-import { unlink } from 'fs/promises'
+// import { unlink } from 'fs/promises'
 import { join } from 'path'
-import socketIO from 'socket.io'
-import { client } from '../db'
+// import { client } from '../db'
 import { checkString, HttpError } from '../express'
 import { getSessionUser, hasLogin } from '../guards'
 let uploadDir = join('uploads', 'event-images')
@@ -24,151 +24,96 @@ let form = formidable({
   },
 })
 
-// type Event = {
-//   id: number
-//   host_id: number
-//   eventPicture?: string
-//   title: string
-//   category: string
-//   Date: Date
-//   Time: TimeRanges
-//   Details: String
-//   Hashtag: String
-//   Cost: Number
-//   Location: String
-//   Participants: Number
-//   FAQ: String
-//   Is_age18: Boolean
-//   Is_private: Boolean
-
-//   content: string
-// }
-
-export function createEventRoutes(io: socketIO.Server) {
-  let eventRoutes = Router()
-
-  eventRoutes.use('/uploads/event-pictures', express.static(uploadDir))
-
-  eventRoutes.get('/event', async (req, res, next) => {
-    try {
-      let result = await client.query(
-        /* sql */ `
-      select
-        id
-      , content
-      , user_id
-      , image
-      from events
-    `,
-        [],
-      )
-      let events = result.rows
-      res.json({ events })
-    } catch (error) {
-      next(error)
-    }
-  })
-
-  eventRoutes.post('/events', hasLogin, (req, res, next) => {
-    form.parse(req, async (err, fields, files) => {
-      if (err) {
-        next(err)
-        return
-      }
-      try {
-        let content = checkString('content', fields.content)
-        let imageMaybeArray = files.image
-        let image = Array.isArray(imageMaybeArray)
-          ? imageMaybeArray[0]
-          : imageMaybeArray
-        let user_id = getSessionUser(req).id
-        let filename = image?.newFilename
-
-        console.log('insert events:', { content, user_id, filename })
-
-        let result = await client.query(
-          /* sql */ `
-        insert into events
-        (content, user_id, image)
-        values
-        ($1, $2, $3)
-        returning id
-      `,
-          [content, user_id, filename],
-        )
-        let id = result.rows[0].id
-
-        res.json({ id })
-
-        let event: any = {
-          id,
-          content,
-          user_id,
-          image: filename,
-        };
-
-        io.emit('new-event', event)
-      } catch (error) {
-        next(error)
-      }
-    })
-  })
-
-  eventRoutes.delete('/events/:id', hasLogin, async (req, res, next) => {
-    try {
-      let id = +req.params.id
-      let user_id = getSessionUser(req).id
-
-      let result = await client.query(
-        /* sql */ `
-      select
-        user_id
-      , image
-      from events
-      where id = $1
-    `,
-        [id],
-      )
-      let event = result.rows[0]
-
-      if (!event) {
-        res.json({ details: 'the event is already deleted' })
-        return
-      }
-
-      if (event.user_id !== user_id) {
-        throw new HttpError(
-          403,
-          "You are not allowed to delete other users's event",
-        )
-      }
-
-      if (event.image) {
-        try {
-          await unlink(join(uploadDir, event.image))
-        } catch (error) {
-          // maybe another request is deleting it at the same time
-        }
-      }
-
-      result = await client.query(
-        /* sql */ `
-      delete from events
-      where id = $1
-        and user_id = $2
-    `,
-        [id, user_id],
-      )
-
-      if (result.rowCount > 0) {
-        res.json({ details: 'the event is just deleted' })
-      } else {
-        res.json({ details: 'the event is already deleted' })
-      }
-    } catch (error) {
-      next(error)
-    }
-  })
-
-  return eventRoutes
+type Event = {
+  id: number
+  host_id: number
+  eventPicture?: string
+  title: string
+  category: string
+  Date: Date
+  Time: TimeRanges
+  Details: String
+  Hashtag: String
+  Cost: Number
+  Location: String
+  Participants: Number
+  FAQ: String
+  Is_age18: Boolean
+  Is_private: Boolean
 }
+
+let events: Event[] = []
+let maxId = events.reduce((id, item) => Math.max(id, item.id), 0)
+
+eventRoutes.get('/events', (req, res) => {
+  res.json(events)
+})
+
+eventRoutes.post('/events', hasLogin, (req, res, next) => {
+  form.parse(req, (err, fields, files) => {
+    // console.log({ err, fields, files })
+    if (err) {
+      next(err)
+      return
+    }
+    try {
+      let host_id = getSessionUser(req).id
+      let eventPictureMaybeArray = files.image
+      let eventPicture = Array.isArray(eventPictureMaybeArray)
+        ? eventPictureMaybeArray[0]
+        : eventPictureMaybeArray
+      let title = checkString('title', fields.content)
+      let category = checkString('content', fields.content)
+      let Date = req.body['Date']
+      let Time = req.body['Time']
+      let Details = checkString('Details', fields.content)
+      let Hashtag = checkString('Hashtag', fields.content)
+      let Cost = req.body['Cost']
+      let Location = checkString('Location', fields.content)
+      let Participants = req.body['Participants']
+      let FAQ = checkString('FAQ', fields.content)
+      let Is_age18 = req.body['Is_age18']
+      let Is_private = req.body['Is_private']
+      maxId++
+      events.push({
+        id: maxId,
+        host_id,
+        eventPicture: eventPicture?.newFilename,
+        title,
+        category,
+        Date,
+        Time,
+        Details,
+        Hashtag,
+        Cost,
+        Location,
+        Participants,
+        FAQ,
+        Is_age18,
+        Is_private,
+      })
+      res.json({ id: maxId })
+    } catch (error) {
+      next(error)
+    }
+  })
+})
+
+eventRoutes.delete('/events/:id', hasLogin, (req, res) => {
+  let id = +req.params.id
+
+  let idx = events.findIndex(event => event.id === id)
+
+  if (idx === -1) {
+    res.json({ details: 'the event is already deleted' })
+    return
+  }
+
+  let event = events[idx]
+  if (event.host_id !== getSessionUser(req).id) {
+    throw new HttpError(403, "You are not allowed to delete other users's events=")
+  }
+
+  events.splice(idx, 1)
+  res.json({ details: 'the event is just deleted' })
+})
