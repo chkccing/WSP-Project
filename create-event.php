@@ -1,8 +1,8 @@
 <?php
 $host = "localhost";
-$user = "admin";
-$password = "admin";
-$db = "admin";
+$user = "wspproj";
+$password = "wspproj02";
+$db = "wspproj";
 $con = pg_connect ("host=$host dbname=$db user=$user password=$password") or die ("Could not connect to Server\n");
 
 If(!$con) {
@@ -20,7 +20,7 @@ If(!$con) {
     $FAQ = $_POST["FAQ"]
     $is_age18 = $_POST["is_age18"]
     $is_private = $_POST["is_private"]
-    $query = "INSERT INTO register (eventPicture, title, category, hashtag, start_date, end_date, cost, location, Participants, FAQ, is_age18, is_private) VALUES ($, $, $, $, $, $, $, $, $, $, $, $)";
+    $query = "INSERT INTO event (eventPicture, title, category, hashtag, start_date, end_date, cost, location, Participants, FAQ, is_age18, is_private) VALUES ($, $, $, $, $, $, $, $, $, $, $, $)";
     $result = pg_query($con, $query);
     header("Location: create-event.html");
 }

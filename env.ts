@@ -3,9 +3,10 @@ import populateEnv from 'populate-env'
 
 export let env = {
   PORT: 8100,
-  DB_NAME: 'WSP Proj',
-  DB_USER: 'wspproj',
-  DB_PASSWORD: 'wspproj02',
+  DB_NAME: '',
+  DB_USER: '',
+  DB_PASSWORD: '',
+  DB_PORT: 5432,
   // GOOGLE_CLIENT_ID: '',
   // GOOGLE_CLIENT_SECRET: '',
 }
