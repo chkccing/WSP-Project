@@ -20,8 +20,12 @@
         margin-top: 50px;
       }
 
-      .textinput {
+      .line {
         width: 30rem;
+      }
+
+      .date {
+        width: 15rem;
       }
 
       input {
@@ -54,40 +58,40 @@
     <form id="Create-Event" action="create-event.php" method="POST" action="/createEvent">
       <H2>Event Create</H2>
       <div>
-        <input class = "insetPic" type="eventPicture"  placeholder="eventPicture" name="eventPicture"/>
+          <label for="img">Event Pictures:</label>
+          <input action="/action_page.php" type="file" name="eventPictures" accept="image/*">
       </div>
       <div>
-        <input class = "textinput" type="title"  placeholder="title" name="title"/>
+        <input class = "line" type="text"  placeholder="title" name="title"/>
       </div>
       <div>
-        <input class = "textinput" type="category" placeholder="category" name="category" required/>
+        <input class = "line" type="text" placeholder="category" name="category" required/>
       </div>
       <div>
-        <input class = "textinput" type="hashtag" placeholder="hashtag" name="hashtag"/>
+        <input class = "line" type="text" placeholder="hashtag" name="hashtag"/>
       </div>
       <div>
-        <input class = "textinput" type="start_date" placeholder="start date" name="start_date" required/>
+        <input class = "line date" type="date" placeholder="start date" name="start_date" required/>
+        <input class = "line date" type="date" placeholder="end date" name="end_date" required/>
       </div>
       <div>
-        <input class = "textinput" type="end_date" placeholder="end date" name="end_date" required/>
+        <input class = "line" type="time" placeholder="timeslot" name="timeslot" required/>
       </div>
       <div>
-        <input class = "textinput" type="cost" placeholder="cost" name="cost" required/>
+        <input class = "line" type="number" placeholder="cost" name="cost" required/>
       </div>
       <div>
-        <input class = "textinput" type="location" placeholder="location" name="location" required/>
+        <input class = "line" type="text" placeholder="location" name="location" required/>
       </div>
       <div>
-        <input class = "textinput" type="Participants" placeholder="Participants number" name="Participants" required/>
+        <input class = "line" type="number" placeholder="Participants number" name="Participants" required/>
       </div>
       <div>
-        <input class = "textinput" type="FAQ" placeholder="FAQ" name="FAQ"/>
+        <input class = "line" type="text" placeholder="FAQ" name="FAQ"/>
       </div>
       <div>
-        <input class = "textinput" type="is_age18" placeholder="Is age 18 required?" name="is_age18" required/>
-      </div>
-      <div>
-        <input class = "textinput" type="is_private" placeholder="Is it the private event?" name="is_private" required/>
+        <input type="checkbox" name="is_age18" required/> Is age 18 required?
+        <input type="checkbox" name="is_private" required/> Is it the private event?
       </div>
       <div>
         <input type="submit" value="Create Event" />
