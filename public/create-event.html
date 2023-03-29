@@ -23,12 +23,24 @@
       .line {
         width: 30rem;
       }
+      
+      .bigbox {
+        height: 15rem;
+      }
 
       .date {
         width: 15rem;
       }
 
       input {
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: none;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      }
+
+      select {
         padding: 10px;
         margin-bottom: 20px;
         border-radius: 5px;
@@ -65,20 +77,29 @@
         <input class = "line" type="text"  placeholder="title" name="title"/>
       </div>
       <div>
-        <input class = "line" type="text" placeholder="category" name="category" required/>
+        <select class = "line" type="text" placeholder="category" name="category" required>
+          <option value="anime">Anime</option>
+          <option value="anime">Board Game</option>
+          <option value="anime">Booking</option>
+          <option value="anime">Celebrities</option>
+          <option value="anime">Giveaway</option>
+          <option value="anime">Match</option>
+          <option value="anime">Meeting</option>
+          <option value="anime">Photography</option>
+        </select>
       </div>
       <div>
         <input class = "line" type="text" placeholder="hashtag" name="hashtag"/>
       </div>
       <div>
-        <input class = "line date" type="date" placeholder="start date" name="start_date" required/>
-        <input class = "line date" type="date" placeholder="end date" name="end_date" required/>
+        <input class = "date" type="date" placeholder="start date" name="start_date" required/>
+        <input class = "date" type="date" placeholder="end date" name="end_date" required/>
       </div>
       <div>
         <input class = "line" type="time" placeholder="timeslot" name="timeslot" required/>
       </div>
       <div>
-        <input class = "line" type="number" placeholder="cost" name="cost" required/>
+        <input class = "line" type="number" placeholder="cost in HKD" name="cost" required/>
       </div>
       <div>
         <input class = "line" type="text" placeholder="location" name="location" required/>
@@ -87,7 +108,7 @@
         <input class = "line" type="number" placeholder="Participants number" name="Participants" required/>
       </div>
       <div>
-        <input class = "line" type="text" placeholder="FAQ" name="FAQ"/>
+        <input class = "line bigbox" type="text" placeholder="FAQ" name="FAQ"/>
       </div>
       <div>
         <input type="checkbox" name="is_age18" required/> Is age 18 required?
