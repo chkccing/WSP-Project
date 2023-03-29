@@ -10,3 +10,6 @@
 
 
 alter TABLE users add column is_age18 varchar(20) not null;
+
+alter table users add column password_hash char(60);
+

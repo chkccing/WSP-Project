@@ -34,6 +34,7 @@
         padding: 1rem 1rem;
       }
     </style>
+    <link rel="stylesheet" href="/css/styles.css">
   </head>
   <body>
     <div class="container">
@@ -46,6 +47,11 @@
           <div class="right">
             <div id="signUp-btu">
               <button onclick="goToSignUpPage()">Sign UP</button>
+            </div>
+          </div>
+          <div class="right">
+            <div>
+              <button onclick="goToLogInPage()"  id="logIn-btu">Login</button>
             </div>
           </div>
         </div>
@@ -64,6 +70,9 @@
     <script>
       function goToSignUpPage() {
         location.href = "./sign-up.html";
+      }
+      function goToLogInPage() {
+        location.href = "./Login.html";
       }
     </script>
   </body>

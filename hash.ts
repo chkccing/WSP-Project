@@ -35,8 +35,8 @@ async function demo() {
   }
 }
 
-async function migrate() {
-  //逐個users攞晒出來。
+export async function migrate() {
+  //對database中沒有hash password的users，逐個users攞晒出來。
   let result = await client.query(/* sql */ `
 select id, password
 from users
