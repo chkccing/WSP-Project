@@ -67,7 +67,7 @@
     </style>
   </head>
   <body>
-    <form id="Create-Event" action="create-event.php" method="POST" action="/createEvent">
+    <form id="Create-Event" method="POST" action="/createEvent">
       <H2>Event Create</H2>
       <div>
           <label for="img">Event Pictures:</label>
@@ -78,14 +78,14 @@
       </div>
       <div>
         <select class = "line" type="text" placeholder="category" name="category" required>
-          <option value="anime">Anime</option>
-          <option value="anime">Board Game</option>
-          <option value="anime">Booking</option>
-          <option value="anime">Celebrities</option>
-          <option value="anime">Giveaway</option>
-          <option value="anime">Match</option>
-          <option value="anime">Meeting</option>
-          <option value="anime">Photography</option>
+          <option value="Anime">Anime</option>
+          <option value="Board Game">Board Game</option>
+          <option value="Booking">Booking</option>
+          <option value="Celebrities">Celebrities</option>
+          <option value="Giveaway">Giveaway</option>
+          <option value="Match">Match</option>
+          <option value="Meeting">Meeting</option>
+          <option value="Photography">Photography</option>
         </select>
       </div>
       <div>
@@ -111,15 +111,15 @@
         <input class = "line bigbox" type="text" placeholder="FAQ" name="FAQ"/>
       </div>
       <div>
-        <input type="checkbox" name="is_age18" required/> Is age 18 required?
-        <input type="checkbox" name="is_private" required/> Is it the private event?
+        <input type="checkbox" name="is_age18" /> Is age 18 required?
+        <input type="checkbox" name="is_private" /> Is it the private event?
       </div>
       <div>
         <input type="submit" value="Create Event" />
       </div>
     </div> 
     </form>
-    <script src="/alert.js"></script>
+    <!-- <script src="/alert.js"></script> -->
     <script>
       let today = new Date().toISOString().split('T')[0];
       document.getElementsByName("start_date")[0].setAttribute('min', today);
@@ -129,18 +129,14 @@
       }
 
       async function loadRole() {
-        let res = await fetch('/role')
-        let json = await res.json()
+        let res = await fetch('/role');
+        let json = await res.json();
         if (!json.user) {
-          document.body.dataset.role = 'guest'
-          return
+          document.body.dataset.role = 'guest';
+          return;
         }
-        profileForm.querySelector('.user-name').textContent = json.user.name
-        profileForm.querySelector('.avatar').src =
-          json.user.avatar || '/logo.png'
-        document.body.dataset.role = 'user'
       }
-      loadRole()
+      loadRole();
     </script>
   </body>
 </html>

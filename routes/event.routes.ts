@@ -1,20 +1,20 @@
-import express from 'express'
-// import { Router } from 'express'
+// import express from 'express'
+import { Router } from 'express'
 import formidable from 'formidable'
 import { mkdirSync } from 'fs'
 // import { unlink } from 'fs/promises'
 import { join } from 'path'
-import { client } from '../db'
+import { client } from '../db'  
 import { checkString } from '../express'
 // import { HttpError } from '../express'
-import { getSessionUser } from '../guards'
-// import { hasLogin } from '../guards'
+import { getSessionUser, hasLogin } from '../guards'
 let uploadDir = join('uploads', 'event-images')
 mkdirSync(uploadDir, { recursive: true })
+import '../session'
 
 // appp.use('/uploads/event-images', express.static(uploadDir))
 
-export const eventRoutes = express.Router()
+export const eventRoutes = Router()
 
 let form = formidable({
   uploadDir,
@@ -45,8 +45,12 @@ export type Event = {
 }
 
 
-eventRoutes.post('/createEvent', async (req, res, next) => {
+eventRoutes.post('/createEvent', hasLogin, (req, res, next) => {
   form.parse(req, async (err, fields, files) => {
+  if (err) {
+    next(err)
+    return
+  }
   try {
     let host_id = getSessionUser(req).id
     let eventPictureMaybeArray = files.image
@@ -55,12 +59,12 @@ eventRoutes.post('/createEvent', async (req, res, next) => {
       : eventPictureMaybeArray
     let title = checkString('title', fields.content)
     let category = checkString('content', fields.content)
-    let Date = req.body['Date']
-    let Time = req.body['Time']
-    let Hashtag = checkString('Hashtag', fields.content)
-    let Cost = req.body['Cost']
-    let Location = checkString('Location', fields.content)
-    let Participants = req.body['Participants']
+    let start_date = req.body['start_date']
+    let end_date = req.body['end_date']
+    let hashtag = checkString('hashtag', fields.content)
+    let cost = req.body['cost']
+    let location = checkString('location', fields.content)
+    let participants = req.body['participants']
     let FAQ = checkString('FAQ', fields.content)
     let Is_age18 = req.body['Is_age18']
     let Is_private = req.body['Is_private']
@@ -68,28 +72,27 @@ eventRoutes.post('/createEvent', async (req, res, next) => {
     let result = await client.query(
       /* sql */ `
 select
-  id
+  event.id,
 from event
-where host_id = $1
+inner join users on users.id = events.host_id
     `,
-      [host_id],
+      [],
     )
     
     result = await client.query(
       /* sql */ `
 insert into events
-(host_id, eventPicture, title, category, Date, Time, Hashtag, Cost, Location, Participants, FAQ, Is_age18, Is_private)
+(host_id, eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, FAQ, Is_age18, Is_private)
 values
 ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
 returning id
     `,
-      [host_id, eventPicture, title, category, Date, Time, Hashtag, Cost, Location, Participants, FAQ, Is_age18, Is_private],
+      [host_id, eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, FAQ, Is_age18, Is_private],
     )
+
     let id = result.rows[0].id
 
-    res.json({
-      id,
-    })
+    res.json({ id })    
   } catch (error) {
     next(error)
   }
