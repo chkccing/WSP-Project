@@ -1,8 +1,8 @@
 <?php
 $host = "localhost";
-$user = "";
-$password = "";
-$db = "";
+$user = "admin";
+$password = "admin";
+$db = "admin";
 $con = pg_connect ("host=$host dbname=$db user=$user password=$password") or die ("Could not connect to Server\n");
 
 If(!$con) {
