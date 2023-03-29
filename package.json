@@ -29,12 +29,18 @@
     "typescript": "^5.0.2"
   },
   "dependencies": {
+<<<<<<< HEAD
+=======
+    "@types/bcryptjs": "^2.4.2",
+    "@types/jsonfile": "^6.1.1",
+>>>>>>> eb8fb7d4c3d31adfd83cc2995158baf29fd69bbf
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "formidable": "^2.1.1",
     "grant": "^5.4.21",
+    "jsonfile": "^6.1.0",
     "listening-on": "^2.0.9",
     "pg": "^8.10.0",
     "populate-env": "^2.0.0",

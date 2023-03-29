@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="view-event" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="eventPicture"></div>
+    <div class="title"></div>
+    <div class="category"></div>
+    <div class="hashtag"></div>
+    <div class="start_date"></div>
+    <div class="end_date"></div>
+    <div class="cost"></div>
+    <div class="location"></div>
+    <div class="participants"></div>
+    <div class="FAQ"></div>
+    <div class="is_age18"></div>
+    <div class="is_private"></div>
+    <script>
+      const { Client } = require("pg");
+
+      const event = new Event({
+        host: "localhost",
+        user: "",
+        port: 8100,
+        password: "",
+        database: "",
+      });
+
+      client.connect();
+
+      client.query("Select * from users", (err, res) => {
+        if (!err) {
+          console.log(res.rows);
+        } else {
+          console.log(err.massage);
+        }
+        client.end;
+      });
+    </script>
+  </body>
+</html>

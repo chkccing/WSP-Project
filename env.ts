@@ -6,6 +6,7 @@ export let env = {
   DB_NAME: '',
   DB_USER: '',
   DB_PASSWORD: '',
+  DB_PORT: 5432,
   // GOOGLE_CLIENT_ID: '',
   // GOOGLE_CLIENT_SECRET: '',
 }

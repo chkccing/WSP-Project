@@ -18,7 +18,7 @@ create table event (
     end_date date not null,
     cost integer not null,
     location varchar(20) not null,
-    Participants number not null,
+    Participants integer not null,
     FAQ varchar(500),
     is_age18 boolean not null,
     is_private boolean not null,
@@ -28,7 +28,7 @@ create table event (
 create table event_participant (
     id serial primary key,
     event_timeslot_id integer,
-    user_id integer,
+    user_id integer
 );
 create table event_rating (
     id serial primary key,
@@ -36,15 +36,15 @@ create table event_rating (
     user_id integer,
     rating DECIMAL(1, 0),
     comment varchar(250),
-    created_at datetime,
+    created_at timestamp not null default current_timestamp
 );
 create table image (
     id serial primary key,
     event_image varchar(250),
-    user_icon varchar(250),
+    user_icon varchar(250)
 );
-create event_timeslot (
+create table event_timeslot (
     id serial primary key,
     date date,
-    timeslot datetime,
+    timeslot time
 );
