@@ -92,8 +92,8 @@
         <input class = "line" type="text" placeholder="hashtag" name="hashtag"/>
       </div>
       <div>
-        <input class = "date" type="date" placeholder="start date" name="start_date" required/>
-        <input class = "date" type="date" placeholder="end date" name="end_date" required/>
+        <input class="date" type="text" placeholder="Start Date" name ="start_date" onfocus="(this.type='date')" onblur="(this.type='text')">
+        <input class="date" type="text" placeholder="End Date" name ="end_date" onfocus="(this.type='date')" onblur="(this.type='text')">
       </div>
       <div>
         <input class = "line" type="time" placeholder="timeslot" name="timeslot" required/>
@@ -121,6 +121,9 @@
     </form>
     <script src="/alert.js"></script>
     <script>
+      let today = new Date().toISOString().split('T')[0];
+      document.getElementsByName("start_date")[0].setAttribute('min', today);
+      
       function backToHamePage(){
         location.href="./index.html"  
       }
