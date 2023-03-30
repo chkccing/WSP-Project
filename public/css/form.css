@@ -26,10 +26,20 @@
     max-width: 25ch;
   }
   
-  [data-role="admin"] form#login {
+  [data-role="admin"] button#logIn-btu {
     display: none;
   }
-  [data-role="guest"] form#logout {
+  [data-role="guest"] button#logOut-btu {
     display: none;
   }
   
+
+  #logIn-btu{
+    border-radius: 0.5rem;
+    background-color: black;
+    color: yellow;
+}
+
+#logout{
+    asdfa
+}

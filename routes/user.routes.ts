@@ -98,11 +98,13 @@ returning id
     }
     req.session.save()
     
-    let id = result.rows[0].id
+    // let id = result.rows[0].id
 
-    res.json({
-      id,
-    })
+    // res.json({
+    //   id,
+    // })
+
+    res.redirect("/create-event.html");
    
   } catch (error) {
     next(error)
@@ -144,16 +146,42 @@ where username = $1
     }
     req.session.save()
 
-    res.json({ id: user.id })
+    // 不能兩個res，會矛盾。
+    // res.json({ id: user.id })
+
+    res.redirect("/index.html");
   } catch (error) {
     next(error)
   }
+})
+
+//新加以下來設logout
+userRoutes.post('/logout', (req, res) => {
+  if (!req.session.user) {
+    res.json({ role: 'guest' })
+    return
+  }
+  req.session.destroy(err => {
+    if (err) {
+      res.json({ role: 'admin' })
+    } else {
+      res.json({ role: 'guest' })
+    }
+  })
 })
 
 userRoutes.get('/role', (req, res) => {
   res.json({
     user: req.session.user,
   })
+  //新加以下來判斷是否登入，但爆error
+  // res.json({
+  //   role: req.session.user ? 'admin' : 'guest',
+  //   username: req.session.user?.username,
+  // })
 })
+
+
+
 
 
