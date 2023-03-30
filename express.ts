@@ -18,6 +18,25 @@ export function checkString(field: string, value: unknown) {
   return value
 }
 
+export function checkNumber(field: string, value: unknown) {
+  if (value === undefined) {
+    throw new HttpError(400, 'Missing ' + field)
+  }
+  if (typeof value !== 'number') {
+    throw new HttpError(400, 'Invalid ' + field + ', should a number')
+  }
+  return value
+}
+
+export function checkBoolean(field: string, value: unknown) {
+  if(value = "on"){
+    value = true;
+  } else if (value === undefined) {
+    value = false;
+  } else { value = false;}
+  return value
+}
+
 export function getPhone(req: Request, field: string) {
     return checkPhone(field, req.body[field])
   }

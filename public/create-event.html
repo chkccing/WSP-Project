@@ -67,7 +67,7 @@
     </style>
   </head>
   <body>
-    <form id="Create-Event" method="POST" action="/createEvent">
+    <form id="Create-Event" method="POST" action="/createEvent" enctype='multipart/form-data'>
       <H2>Event Create</H2>
       <div>
           <label for="img">Event Pictures:</label>
@@ -105,7 +105,7 @@
         <input class = "line" type="text" placeholder="location" name="location" required/>
       </div>
       <div>
-        <input class = "line" type="number" placeholder="Participants number" name="Participants" required/>
+        <input class = "line" type="number" placeholder="participants" name="participants" required/>
       </div>
       <div>
         <input class = "line bigbox" type="text" placeholder="FAQ" name="FAQ"/>
