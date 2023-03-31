@@ -4,7 +4,7 @@
     width: fit-content;
   }
   
-  form {
+  /* form {
     background-color: darkred;
     display: flex;
     flex-direction: column;
@@ -20,7 +20,7 @@
     font-size: larger;
     margin: 0.5rem;
     text-align: center;
-  }
+  } */
   
   input[type="file"] {
     max-width: 25ch;
@@ -34,12 +34,4 @@
   }
   
 
-  #logIn-btu{
-    border-radius: 0.5rem;
-    background-color: black;
-    color: yellow;
-}
-
-#logout{
-    asdfa
-}
+  
