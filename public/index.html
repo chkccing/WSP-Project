@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Index</title>
     <style>
       body {
         margin: 0;
@@ -34,7 +34,7 @@
         padding: 1rem 1rem;
       }
     </style>
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/styles.css" />
   </head>
   <body>
     <div class="container">
@@ -51,7 +51,12 @@
           </div>
           <div class="right">
             <div>
-              <button onclick="goToLogInPage()"  id="logIn-btu">Login</button>
+              <button onclick="goToLogInPage()" id="logIn-btu">Login</button>
+            </div>
+          </div>
+          <div class="right">
+            <div>
+              <button onclick="goToCreateEventPage()">Create Event</button>
             </div>
           </div>
         </div>
@@ -73,6 +78,9 @@
       }
       function goToLogInPage() {
         location.href = "./Login.html";
+      }
+      function goToCreateEventPage() {
+        location.href = "./create-event.html";
       }
     </script>
   </body>

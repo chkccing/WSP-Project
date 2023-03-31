@@ -7,8 +7,8 @@
     <title>Document</title>
   </head>
   <body>
-    <div class="eventPicture"></div>
-    <div class="title"></div>
+    <div id="eventPicture"></div>
+    <div id="title"></div>
     <div class="category"></div>
     <div class="hashtag"></div>
     <div class="start_date"></div>
@@ -20,26 +20,14 @@
     <div class="is_age18"></div>
     <div class="is_private"></div>
     <script>
-      const { Client } = require("pg");
-
-      const event = new Event({
-        host: "localhost",
-        user: "",
-        port: 8100,
-        password: "",
-        database: "",
-      });
-
-      client.connect();
-
-      client.query("Select * from users", (err, res) => {
-        if (!err) {
-          console.log(res.rows);
-        } else {
-          console.log(err.massage);
-        }
-        client.end;
-      });
+      fetch("/loadEvent")
+        .then((res) => res.json())
+        .then((json) => {
+          let node = document.createElement("div");
+          node.className = "title";
+          node.textContent = event.value;
+          document.querySelector("#title").appendChild(node);
+        });
     </script>
   </body>
 </html>

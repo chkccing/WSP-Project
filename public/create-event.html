@@ -24,7 +24,12 @@
         width: 30rem;
       }
       
-      .bigbox {
+      textarea {
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: none;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         height: 15rem;
       }
 
@@ -67,6 +72,12 @@
     </style>
   </head>
   <body>
+    <span onclick="backToHamePage()">
+      <i class="bi bi-x-lg"></i>
+    </span>
+    <div>
+      <button onclick="goToLogInPage()" id="logIn-btu">Login</button>
+    </div>
     <form id="Create-Event" method="POST" action="/createEvent" enctype='multipart/form-data'>
       <H2>Event Create</H2>
       <div>
@@ -108,26 +119,59 @@
         <input class = "line" type="number" placeholder="participants" name="participants" required/>
       </div>
       <div>
-        <input class = "line bigbox" type="text" placeholder="FAQ" name="FAQ"/>
+        <textarea class = "line" type="text" placeholder="FAQ" name="FAQ"></textarea>
       </div>
       <div>
         <input type="checkbox" name="is_age18" /> Is age 18 required?
         <input type="checkbox" name="is_private" /> Is it the private event?
       </div>
       <div>
-        <input type="submit" value="Create Event" />
+        <input type="submit" id="submitForm" value="Create Event" />
       </div>
     </div> 
     </form>
-    <!-- <script src="/alert.js"></script> -->
+    <script src="/alert.js"></script>
     <script>
       let today = new Date().toISOString().split('T')[0];
       document.getElementsByName("start_date")[0].setAttribute('min', today);
       
       function backToHamePage(){
-        location.href="./index.html"  
+        location.href="./index.html";  
+      }
+      function goToLogInPage() {
+        location.href = "./Login.html";
       }
 
+      document.querySelector("#Create-Event").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    // Serialize the Form afterwards
+    const form = event.target;
+    const formData = new FormData(form);
+
+    formData.append("eventPictures", form.eventPictures.files[0]);
+    formData.append("title", form.title.value);
+    formData.append("category", form.category.value);
+    formData.append("start_date", form.start_date.value);
+    formData.append("end_date", form.end_date.value);
+    formData.append("hashtag", form.hashtag.value);
+    formData.append("cost", form.cost.value);
+    formData.append("location", form.location.value);
+    formData.append("participants", form.participants.value);
+    formData.append("FAQ", form.FAQ.value);
+    formData.append("is_age18", form.is_age18.value);
+    formData.append("is_private", form.is_private.value);
+
+
+    // Submit FormData(), no need to add "Content-Type": "application/json"
+    const res = await fetch("/createEvent", {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await res.json(); // { success: true }
+  });
+      
       async function loadRole() {
         let res = await fetch('/role');
         let json = await res.json();

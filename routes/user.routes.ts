@@ -144,11 +144,13 @@ where username = $1
     }
     req.session.save()
 
-    res.json({ id: user.id })
+    // res.json({ id: user.id}) 
+    res.redirect('/index.html')
+    
   } catch (error) {
     next(error)
   }
-})
+} )
 
 userRoutes.get('/role', (req, res) => {
   res.json({
