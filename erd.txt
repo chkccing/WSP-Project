@@ -64,3 +64,8 @@ id integer
 event_id integer FK >0- event.id
 data date 
 timeslot datetime 
+
+hashtag
+-------
+id
+event_id FK >0- event.id

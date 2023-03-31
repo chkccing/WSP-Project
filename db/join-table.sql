@@ -6,7 +6,7 @@ SELECT user.avatar as user_avatar,
     event_rating.event_id as event_rating_event_id,
     event_rating.user_id as event_rating_user_id,
     event_timeslot.date as event_timeslot_date,
-    event_timeslot.timeslot as event_timeslot_timeslot
+    event_timeslot.timeslot as event_timeslot_timeslot hashtag.id as hashtag_id
 FROM user
     join image on image.user_icon = user.avatar;
 FROM event
@@ -21,3 +21,5 @@ FROM event_rating
 FROM event_timeslot
     join event on event.date = event_timeslot.date,
     join event on event.time = event_timeslot.timeslot;
+FROM hashtag
+    join event on event.id = hashtag.event_id;
