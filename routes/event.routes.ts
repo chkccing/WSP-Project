@@ -98,15 +98,30 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
           )
       
           let id = result.rows[0].id
+          console.log(id);
+          
       
           res.json(id);
 
           
-      res.json({ success: true });
-    }catch (error) {
+    } catch (error) {
         console.log(error)
         res.json({})
       }})});
+
+eventRoutes.get("/viewEvent/:id", async (req, res, next) => {
+  // let id=req.query.id
+  let id=req.params.id
+  try {let result = await client.query(
+    /* sql */`
+    select * from event where id = $1
+      `,[id]
+  ); res.json(result.rows[0]);} catch (error) {
+    next(error)
+  }}
+
+)
+
 
 
 // eventRoutes.post('/createEvent', hasLogin, (req, res) => {

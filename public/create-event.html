@@ -78,7 +78,7 @@
     <div>
       <button onclick="goToLogInPage()" id="logIn-btu">Login</button>
     </div>
-    <form id="Create-Event" method="POST" action="/createEvent" enctype='multipart/form-data'>
+    <form id="Create-Event">
       <H2>Event Create</H2>
       <div>
           <label for="img">Event Pictures:</label>
@@ -103,8 +103,8 @@
         <input class = "line" type="text" placeholder="hashtag" name="hashtag"/>
       </div>
       <div>
-        <input class="start_date" type="text" placeholder="Start Date" name ="start_date" onfocus="(this.type='date')" onblur="(this.type='text')">
-        <input class="end_date" type="text" placeholder="End Date" name ="end_date" onfocus="(this.type='date')" onblur="(this.type='text')" >
+        <input class="start_date date" type="text" placeholder="Start Date" name ="start_date" onfocus="(this.type='date')" onblur="(this.type='text')">
+        <input class="end_date date" type="text" placeholder="End Date" name ="end_date" onfocus="(this.type='date')" onblur="(this.type='text')" >
       </div>
       <div>
         <input class = "line" type="time" placeholder="timeslot" name="timeslot" required/>
@@ -130,7 +130,7 @@
       </div>
     </div> 
     </form>
-    <script src="/alert.js"></script>
+    <script src="/js/alert.js"></script>
     <script>
       let today = new Date().toISOString().split('T')[0];
       console.log(today)
@@ -139,12 +139,12 @@
       document.querySelector(".start_date").addEventListener("change",()=>{
 
         let start_date = document.querySelector(".start_date").value
-        console.log({start_date});
+     
         document.querySelector(".end_date").setAttribute('min', start_date);
 
       } )
  
-     console.log(start_date)
+    
  
 
       function backToHamePage(){
@@ -154,8 +154,10 @@
         location.href = "./Login.html";
       }
 
-      document.querySelector("#Create-Event").addEventListener("submit", async function (event) {
+      document.querySelector("#Create-Event").addEventListener('submit', async (event)=> {
+ 
     event.preventDefault();
+ 
 
     // Serialize the Form afterwards
     const form = event.target;
@@ -169,7 +171,8 @@
     });
 
     const result = await res.json(); // { success: true }
-    window.location = '/index.html'
+    console.log(result)
+    window.location = `/view-event.html?id=${result}`
     console.log("id:",result);
   });
 

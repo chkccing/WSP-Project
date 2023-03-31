@@ -7,27 +7,46 @@
     <title>Document</title>
   </head>
   <body>
-    <div id="eventPicture"></div>
-    <div id="title"></div>
-    <div class="category"></div>
-    <div class="hashtag"></div>
-    <div class="start_date"></div>
-    <div class="end_date"></div>
-    <div class="cost"></div>
-    <div class="location"></div>
-    <div class="participants"></div>
-    <div class="FAQ"></div>
-    <div class="is_age18"></div>
-    <div class="is_private"></div>
+    <template>
+      <div class="currentEvent">
+        <div id="eventPicture"></div>
+        <div id="title"></div>
+        <div class="category"></div>
+        <div class="hashtag"></div>
+        <div class="start_date"></div>
+        <div class="end_date"></div>
+        <div class="cost"></div>
+        <div class="location"></div>
+        <div class="participants"></div>
+        <div class="FAQ"></div>
+        <div class="is_age18"></div>
+        <div class="is_private"></div>
+      </div>
+    </template>
+    <div class="event-result"></div>
     <script>
-      fetch("/loadEvent")
-        .then((res) => res.json())
-        .then((json) => {
-          let node = document.createElement("div");
-          node.className = "title";
-          node.textContent = event.value;
-          document.querySelector("#title").appendChild(node);
-        });
+      let params = new URL(document.location).searchParams;
+      let eventId = params.get("id");
+      console.log(eventId);
+
+      let eventResult = document.querySelector(".event-result");
+      let currentEventTemplate = document.querySelector("template");
+      let currentEvent =
+        currentEventTemplate.content.querySelector(".currentEvent");
+      async function viewEvent() {
+        let res = await fetch(`/viewEvent/${eventId}`);
+        let json = await res.json();
+        // if (json.error) {
+        //   showError("Failed to load event list", json.error);
+        //   return;
+        // }
+
+        currentEvent.querySelector("#title").textContent = json.title;
+
+        eventResult.appendChild(currentEvent);
+      }
+
+      viewEvent();
     </script>
   </body>
 </html>
