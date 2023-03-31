@@ -103,8 +103,8 @@
         <input class = "line" type="text" placeholder="hashtag" name="hashtag"/>
       </div>
       <div>
-        <input class="date" type="text" placeholder="Start Date" name ="start_date" onfocus="(this.type='date')" onblur="(this.type='text')">
-        <input class="date" type="text" placeholder="End Date" name ="end_date" onfocus="(this.type='date')" onblur="(this.type='text')">
+        <input class="start_date" type="text" placeholder="Start Date" name ="start_date" onfocus="(this.type='date')" onblur="(this.type='text')">
+        <input class="end_date" type="text" placeholder="End Date" name ="end_date" onfocus="(this.type='date')" onblur="(this.type='text')" >
       </div>
       <div>
         <input class = "line" type="time" placeholder="timeslot" name="timeslot" required/>
@@ -133,8 +133,20 @@
     <script src="/alert.js"></script>
     <script>
       let today = new Date().toISOString().split('T')[0];
-      document.getElementsByName("start_date")[0].setAttribute('min', today);
-      
+      console.log(today)
+      document.querySelector(".start_date").setAttribute('min', today);
+
+      document.querySelector(".start_date").addEventListener("change",()=>{
+
+        let start_date = document.querySelector(".start_date").value
+        console.log({start_date});
+        document.querySelector(".end_date").setAttribute('min', start_date);
+
+      } )
+ 
+     console.log(start_date)
+ 
+
       function backToHamePage(){
         location.href="./index.html";  
       }
@@ -149,19 +161,6 @@
     const form = event.target;
     const formData = new FormData(form);
 
-    formData.append("eventPictures", form.eventPictures.files[0]);
-    formData.append("title", form.title.value);
-    formData.append("category", form.category.value);
-    formData.append("start_date", form.start_date.value);
-    formData.append("end_date", form.end_date.value);
-    formData.append("hashtag", form.hashtag.value);
-    formData.append("cost", form.cost.value);
-    formData.append("location", form.location.value);
-    formData.append("participants", form.participants.value);
-    formData.append("FAQ", form.FAQ.value);
-    formData.append("is_age18", form.is_age18.value);
-    formData.append("is_private", form.is_private.value);
-
 
     // Submit FormData(), no need to add "Content-Type": "application/json"
     const res = await fetch("/createEvent", {
@@ -170,7 +169,10 @@
     });
 
     const result = await res.json(); // { success: true }
+    window.location = '/index.html'
+    console.log("id:",result);
   });
+
       
       async function loadRole() {
         let res = await fetch('/role');
