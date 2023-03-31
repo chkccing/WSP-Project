@@ -1,0 +1,12 @@
+split #  extract tag for # or , 
+eliminate the duplicate
+add hashtag blank to -
+
+hashtag table for the event 
+
+textarea input 
+
+add id in form 
+body: <datalist> with i hashtag <option>
+script let form document, fetch tag, json for each loop, hashtag.textContent="";, let option = create element,;
+hashtag move to upper input (one send to server, one draft)

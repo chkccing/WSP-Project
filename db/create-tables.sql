@@ -48,3 +48,7 @@ create table event_timeslot (
     date date,
     timeslot time
 );
+create table hashtag (
+    id serial primary key,
+    event_id integer,
+);

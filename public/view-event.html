@@ -5,41 +5,77 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="view-event" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      .currentEvent {
+        font-size: 2rem;
+      }
+      .row {
+        display: flex;
+        justify-content: center;
+        width: 30rem;
+        background-color: #fff;
+        outline: black 1px solid;
+      }
+    </style>
   </head>
   <body>
-    <div class="eventPicture"></div>
-    <div class="title"></div>
-    <div class="category"></div>
-    <div class="hashtag"></div>
-    <div class="start_date"></div>
-    <div class="end_date"></div>
-    <div class="cost"></div>
-    <div class="location"></div>
-    <div class="participants"></div>
-    <div class="FAQ"></div>
-    <div class="is_age18"></div>
-    <div class="is_private"></div>
+    <template>
+      <div class="currentEvent">
+        <div class="row" id="eventPicture"></div>
+        <div class="row" id="title"></div>
+        <div class="row" id="category"></div>
+        <div class="row" id="hashtag"></div>
+        <div class="row" id="start_date"></div>
+        <div class="row" id="end_date"></div>
+        <div class="row" id="cost"></div>
+        <div class="row" id="location"></div>
+        <div class="row" id="participants"></div>
+        <div class="row" id="FAQ"></div>
+      </div>
+    </template>
+    <div class="event-result"></div>
     <script>
-      const { Client } = require("pg");
+      let params = new URL(document.location).searchParams;
+      let eventId = params.get("id");
+      console.log(eventId);
 
-      const event = new Event({
-        host: "localhost",
-        user: "",
-        port: 8100,
-        password: "",
-        database: "",
-      });
+      let eventResult = document.querySelector(".event-result");
+      let currentEventTemplate = document.querySelector("template");
+      let currentEvent =
+        currentEventTemplate.content.querySelector(".currentEvent");
+      async function viewEvent() {
+        let res = await fetch(`/viewEvent/${eventId}`);
+        let json = await res.json();
+        // if (json.error) {
+        //   showError("Failed to load event list", json.error);
+        //   return;
+        // }
 
-      client.connect();
+        currentEvent.querySelector("#eventPicture").textContent =
+          "Event Picture: " + json.eventPicture;
+        currentEvent.querySelector("#title").textContent =
+          "Title: " + json.title;
+        currentEvent.querySelector("#category").textContent =
+          "Category: " + json.category;
+        currentEvent.querySelector("#hashtag").textContent =
+          "Hashtag: " + json.hashtag;
+        currentEvent.querySelector("#start_date").textContent =
+          "Start Date: " + json.start_date.split("T")[0];
+        currentEvent.querySelector("#end_date").textContent =
+          "End Date: " + json.end_date.split("T")[0];
+        currentEvent.querySelector("#cost").textContent = "Cost: " + json.cost;
+        currentEvent.querySelector("#location").textContent =
+          "Location: " + json.location;
+        currentEvent.querySelector("#participants").textContent =
+          "Participants: " + json.participants;
+        currentEvent.querySelector("#location").textContent =
+          "Location: " + json.location;
+        currentEvent.querySelector("#FAQ").textContent = "FAQ: " + json.FAQ;
 
-      client.query("Select * from users", (err, res) => {
-        if (!err) {
-          console.log(res.rows);
-        } else {
-          console.log(err.massage);
-        }
-        client.end;
-      });
+        eventResult.appendChild(currentEvent);
+      }
+
+      viewEvent();
     </script>
   </body>
 </html>

@@ -13,6 +13,6 @@ add column email varchar(60) not null;
 alter table users
 add column phone DECIMAL(8, 0) not null;
 alter table users
-alter column password_hash not null;
+alter column password_hash drop not null;
 alter table users
 add column is_age18 boolean not null;

@@ -24,7 +24,12 @@
         width: 30rem;
       }
       
-      .bigbox {
+      textarea {
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: none;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         height: 15rem;
       }
 
@@ -67,7 +72,13 @@
     </style>
   </head>
   <body>
-    <form id="Create-Event" method="POST" action="/createEvent" enctype='multipart/form-data'>
+    <span onclick="backToHamePage()">
+      <i class="bi bi-x-lg"></i>
+    </span>
+    <div>
+      <button onclick="goToLogInPage()" id="logIn-btu">Login</button>
+    </div>
+    <form id="Create-Event">
       <H2>Event Create</H2>
       <div>
           <label for="img">Event Pictures:</label>
@@ -92,8 +103,8 @@
         <input class = "line" type="text" placeholder="hashtag" name="hashtag"/>
       </div>
       <div>
-        <input class="date" type="text" placeholder="Start Date" name ="start_date" onfocus="(this.type='date')" onblur="(this.type='text')">
-        <input class="date" type="text" placeholder="End Date" name ="end_date" onfocus="(this.type='date')" onblur="(this.type='text')">
+        <input class="start_date date" type="text" placeholder="Start Date" name ="start_date" onfocus="(this.type='date')" onblur="(this.type='text')">
+        <input class="end_date date" type="text" placeholder="End Date" name ="end_date" onfocus="(this.type='date')" onblur="(this.type='text')" >
       </div>
       <div>
         <input class = "line" type="time" placeholder="timeslot" name="timeslot" required/>
@@ -108,26 +119,62 @@
         <input class = "line" type="number" placeholder="participants" name="participants" required/>
       </div>
       <div>
-        <input class = "line bigbox" type="text" placeholder="FAQ" name="FAQ"/>
+        <textarea class = "line" type="text" placeholder="FAQ" name="FAQ"></textarea>
       </div>
       <div>
         <input type="checkbox" name="is_age18" /> Is age 18 required?
         <input type="checkbox" name="is_private" /> Is it the private event?
       </div>
       <div>
-        <input type="submit" value="Create Event" />
+        <input type="submit" id="submitForm" value="Create Event" />
       </div>
     </div> 
     </form>
-    <!-- <script src="/alert.js"></script> -->
+    <script src="/js/alert.js"></script>
     <script>
       let today = new Date().toISOString().split('T')[0];
-      document.getElementsByName("start_date")[0].setAttribute('min', today);
-      
+      console.log(today)
+      document.querySelector(".start_date").setAttribute('min', today);
+
+      document.querySelector(".start_date").addEventListener("change",()=>{
+
+        let start_date = document.querySelector(".start_date").value
+     
+        document.querySelector(".end_date").setAttribute('min', start_date);
+
+      } )
+ 
+    
+ 
+
       function backToHamePage(){
-        location.href="./index.html"  
+        location.href="./index.html";  
+      }
+      function goToLogInPage() {
+        location.href = "./Login.html";
       }
 
+      document.querySelector("#Create-Event").addEventListener('submit', async (event)=> {
+ 
+    event.preventDefault();
+ 
+
+    // Serialize the Form afterwards
+    const form = event.target;
+    const formData = new FormData(form);
+
+
+    // Submit FormData(), no need to add "Content-Type": "application/json"
+    const res = await fetch("/createEvent", {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await res.json(); // { success: true }
+    console.log(result)
+    window.location = `/view-event.html?id=${result}`
+    console.log("id:",result);
+  });
       async function loadRole() {
         let res = await fetch('/role');
         let json = await res.json();
