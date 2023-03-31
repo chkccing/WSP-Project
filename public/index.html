@@ -15,7 +15,7 @@
       .header {
         margin-top: 0.5rem;
         margin-bottom: 0.5rem;
-        position: absolute;
+        /* position: absolute; */
       }
       .column {
         display: flex;
@@ -59,6 +59,20 @@
               <button onclick="goToCreateEventPage()">Create Event</button>
             </div>
           </div>
+          <!-- <div class="right">
+            <div>
+              <button onclick="goToLogOutPage()"  id="logOut-btu">Logout</buton>
+                <div class="title">Admin Panel</div>
+                <div>You have login as <span class="username"></span></div>                
+            </div>
+          </div> -->
+          <form id="logout" method="POST" action="/logout">
+            <div class="title">Admin Panel</div>
+            <div>You have login as <span class="username"></span></div>
+            <div class="text-center">
+              <input type="submit" value="Logout" />
+            </div>
+          </form>
         </div>
         <div class="row">
           <div class="column">
@@ -73,14 +87,15 @@
       </div>
     </div>
     <script>
+      let logoutForm = document.querySelector("form#logout");
+      //連同applyRole令div顯示用戶名稱
+      let currentUsername = document.querySelector("username");
+
       function goToSignUpPage() {
         location.href = "./sign-up.html";
       }
       function goToLogInPage() {
         location.href = "./Login.html";
-      }
-      function goToCreateEventPage() {
-        location.href = "./create-event.html";
       }
     </script>
   </body>

@@ -98,11 +98,13 @@ returning id
     }
     req.session.save()
     
-    let id = result.rows[0].id
+    // let id = result.rows[0].id
 
-    res.json({
-      id,
-    })
+    // res.json({
+    //   id,
+    // })
+
+    res.redirect("/create-event.html");
    
   } catch (error) {
     next(error)
@@ -144,18 +146,24 @@ where username = $1
     }
     req.session.save()
 
-    // res.json({ id: user.id}) 
-    res.redirect('/index.html')
-    
+    res.json({ id: user.id })
   } catch (error) {
     next(error)
   }
-} )
+})
 
 userRoutes.get('/role', (req, res) => {
   res.json({
     user: req.session.user,
   })
+  //新加以下來判斷是否登入，但爆error
+  // res.json({
+  //   role: req.session.user ? 'admin' : 'guest',
+  //   username: req.session.user?.username,
+  // })
 })
+
+
+
 
 
