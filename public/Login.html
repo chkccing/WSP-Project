@@ -76,15 +76,24 @@
       <div id="error-message"></div>
       <input type="submit" class="btn btn-primary" value="Login" />
     </form>
-    <script src="/alert.js"></script>
+    <script src="/js/alert.js"></script>
     <script>
       function backToHamePage() {
         location.href = "./index.html";
       }
 
+      function applyRole(user) {
+        console.log("current user:", user);
+        document.body.dataset.role = user.role;
+        if (user.role == "admin") {
+          currentUsername.textContent = user.username;
+        }
+      }
+
       async function loadRole() {
         let res = await fetch("/role");
         let json = await res.json();
+        console.log(json);
         if (!json.user) {
           document.body.dataset.role = "guest";
           return;
@@ -93,6 +102,7 @@
         profileForm.querySelector(".avatar").src =
           json.user.avatar || "/logo.png";
         document.body.dataset.role = "user";
+        json.role == "admin";
       }
       loadRole();
     </script>

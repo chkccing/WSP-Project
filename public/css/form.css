@@ -1,37 +1,45 @@
 .form-list {
-    display: inline-flex;
-    flex-direction: column;
-    width: fit-content;
-  }
-  
-  /* form {
-    background-color: darkred;
-    display: flex;
-    flex-direction: column;
-    margin: 1rem;
-    padding: 1rem;
-    padding-top: 0;
-    color: white;
-  }
-  
-  form .title {
-    color: rgb(255, 0, 0);
-    font-weight: bold;
-    font-size: larger;
-    margin: 0.5rem;
-    text-align: center;
-  } */
-  
-  input[type="file"] {
-    max-width: 25ch;
-  }
-  
-  [data-role="admin"] button#logIn-btu {
-    display: none;
-  }
-  [data-role="guest"] button#logOut-btu {
-    display: none;
-  }
-  
+  display: inline-flex;
+  flex-direction: column;
+  width: fit-content;
+}
 
-  
+form {
+  background-color: darkred;
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+  padding: 1rem;
+  padding-top: 0;
+  color: white;
+  width: 10rem;
+}
+
+input[type="file"] {
+  max-width: 25ch;
+}
+
+[data-role="user"] button#logIn-btu {
+  display: none;
+}
+[data-role="guest"] form#logout {
+  display: none;
+}
+
+#logIn-btu {
+  border-radius: 0.5rem;
+  background-color: black;
+  color: yellow;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.title {
+  color: rgb(255, 0, 0);
+  font-weight: bold;
+  font-size: larger;
+  margin: 0.5rem;
+  text-align: center;
+}

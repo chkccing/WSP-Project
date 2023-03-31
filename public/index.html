@@ -34,10 +34,10 @@
         padding: 1rem 1rem;
       }
     </style>
-    <link rel="stylesheet" href="/css/styles.css">
-    <link rel="stylesheet" href="/css/form.css">
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/form.css" />
   </head>
-  <body>
+  <body data-role="guest">
     <div class="container">
       <div class="header">
         <div class="row">
@@ -52,7 +52,7 @@
           </div>
           <div class="right">
             <div>
-              <button onclick="goToLogInPage()"  id="logIn-btu">Login</button>
+              <button onclick="goToLogInPage()" id="logIn-btu">Login</button>
             </div>
           </div>
           <!-- <div class="right">
@@ -69,7 +69,6 @@
               <input type="submit" value="Logout" />
             </div>
           </form>
-          
         </div>
         <div class="row">
           <div class="column">
@@ -84,10 +83,9 @@
       </div>
     </div>
     <script>
-
-      let logoutForm = document.querySelector('form#logout')
+      let logoutForm = document.querySelector("form#logout");
       //連同applyRole令div顯示用戶名稱
-      let currentUsername = document.querySelector('username')
+      let currentUsername = logoutForm.querySelector(".username");
 
       function goToSignUpPage() {
         location.href = "./sign-up.html";
@@ -95,22 +93,35 @@
       function goToLogInPage() {
         location.href = "./Login.html";
       }
-      function goToLogOutPage() {
-        location.href = "./index.html";
-      }      
+      // function goToLogOutPage() {
+      //   location.href = "./index.html";
+      // }
+
+      logoutForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        let form = logoutForm;
+        let res = await fetch(form.action, {
+          method: form.method,
+        });
+        let json = await res.json();
+        if (json.role == "guest") {
+          applyRole();
+        }
+      });
+
       function applyRole(user) {
-        console.log('current user:', user)
-        document.body.dataset.role = user.role
-        if (user.role == 'admin') {
-          currentUsername.textContent = user.username
+        console.log("current user:", user);
+        document.body.dataset.role = user ? "user" : "guest";
+        if (user) {
+          currentUsername.textContent = user.name;
         }
       }
       async function loadRole() {
-        let res = await fetch('/role')
-        let json = await res.json()
-        applyRole(json)
+        let res = await fetch("/role");
+        let json = await res.json();
+        applyRole(json.user);
       }
-
+      loadRole();
     </script>
   </body>
 </html>
