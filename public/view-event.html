@@ -5,22 +5,32 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="view-event" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      .currentEvent {
+        font-size: 2rem;
+      }
+      .row {
+        display: flex;
+        justify-content: center;
+        width: 30rem;
+        background-color: #fff;
+        outline: black 1px solid;
+      }
+    </style>
   </head>
   <body>
     <template>
       <div class="currentEvent">
-        <div id="eventPicture"></div>
-        <div id="title"></div>
-        <div id="category"></div>
-        <div id="hashtag"></div>
-        <div id="start_date"></div>
-        <div id="end_date"></div>
-        <div id="cost"></div>
-        <div id="location"></div>
-        <div id="participants"></div>
-        <div id="FAQ"></div>
-        <div id="is_age18"></div>
-        <div id="is_private"></div>
+        <div class="row" id="eventPicture"></div>
+        <div class="row" id="title"></div>
+        <div class="row" id="category"></div>
+        <div class="row" id="hashtag"></div>
+        <div class="row" id="start_date"></div>
+        <div class="row" id="end_date"></div>
+        <div class="row" id="cost"></div>
+        <div class="row" id="location"></div>
+        <div class="row" id="participants"></div>
+        <div class="row" id="FAQ"></div>
       </div>
     </template>
     <div class="event-result"></div>
@@ -42,20 +52,25 @@
         // }
 
         currentEvent.querySelector("#eventPicture").textContent =
-          json.eventPicture;
-        currentEvent.querySelector("#title").textContent = json.title;
-        currentEvent.querySelector("#category").textContent = json.category;
-        currentEvent.querySelector("#hashtag").textContent = json.hashtag;
+          "Event Picture: " + json.eventPicture;
+        currentEvent.querySelector("#title").textContent =
+          "Title: " + json.title;
+        currentEvent.querySelector("#category").textContent =
+          "Category: " + json.category;
+        currentEvent.querySelector("#hashtag").textContent =
+          "Hashtag: " + json.hashtag;
         currentEvent.querySelector("#start_date").textContent =
-          json.start_date.split("T")[0];
+          "Start Date: " + json.start_date.split("T")[0];
         currentEvent.querySelector("#end_date").textContent =
-          json.end_date.split("T")[0];
-        currentEvent.querySelector("#cost").textContent = json.cost;
-        currentEvent.querySelector("#location").textContent = json.location;
+          "End Date: " + json.end_date.split("T")[0];
+        currentEvent.querySelector("#cost").textContent = "Cost: " + json.cost;
+        currentEvent.querySelector("#location").textContent =
+          "Location: " + json.location;
         currentEvent.querySelector("#participants").textContent =
-          json.participants;
-        currentEvent.querySelector("#location").textContent = json.location;
-        currentEvent.querySelector("#FAQ").textContent = json.FAQ;
+          "Participants: " + json.participants;
+        currentEvent.querySelector("#location").textContent =
+          "Location: " + json.location;
+        currentEvent.querySelector("#FAQ").textContent = "FAQ: " + json.FAQ;
 
         eventResult.appendChild(currentEvent);
       }
