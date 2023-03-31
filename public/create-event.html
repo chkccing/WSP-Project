@@ -175,8 +175,6 @@
     window.location = `/view-event.html?id=${result}`
     console.log("id:",result);
   });
-
-      
       async function loadRole() {
         let res = await fetch('/role');
         let json = await res.json();

@@ -11,16 +11,16 @@
       <div class="currentEvent">
         <div id="eventPicture"></div>
         <div id="title"></div>
-        <div class="category"></div>
-        <div class="hashtag"></div>
-        <div class="start_date"></div>
-        <div class="end_date"></div>
-        <div class="cost"></div>
-        <div class="location"></div>
-        <div class="participants"></div>
-        <div class="FAQ"></div>
-        <div class="is_age18"></div>
-        <div class="is_private"></div>
+        <div id="category"></div>
+        <div id="hashtag"></div>
+        <div id="start_date"></div>
+        <div id="end_date"></div>
+        <div id="cost"></div>
+        <div id="location"></div>
+        <div id="participants"></div>
+        <div id="FAQ"></div>
+        <div id="is_age18"></div>
+        <div id="is_private"></div>
       </div>
     </template>
     <div class="event-result"></div>
@@ -41,7 +41,21 @@
         //   return;
         // }
 
+        currentEvent.querySelector("#eventPicture").textContent =
+          json.eventPicture;
         currentEvent.querySelector("#title").textContent = json.title;
+        currentEvent.querySelector("#category").textContent = json.category;
+        currentEvent.querySelector("#hashtag").textContent = json.hashtag;
+        currentEvent.querySelector("#start_date").textContent =
+          json.start_date.split("T")[0];
+        currentEvent.querySelector("#end_date").textContent =
+          json.end_date.split("T")[0];
+        currentEvent.querySelector("#cost").textContent = json.cost;
+        currentEvent.querySelector("#location").textContent = json.location;
+        currentEvent.querySelector("#participants").textContent =
+          json.participants;
+        currentEvent.querySelector("#location").textContent = json.location;
+        currentEvent.querySelector("#FAQ").textContent = json.FAQ;
 
         eventResult.appendChild(currentEvent);
       }
