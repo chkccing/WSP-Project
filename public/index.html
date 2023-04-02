@@ -88,6 +88,13 @@
         </div>
       </div>
     </div>
+    <template>
+      <div class="event">
+        <img class="image" />
+        <div class="eventTitle"></div>
+      </div>
+    </template>
+    <div class="event-list"></div>
     <script>
       let logoutForm = document.querySelector("form#logout");
       //連同applyRole令div顯示用戶名稱
@@ -102,6 +109,54 @@
       // function goToLogOutPage() {
       //   location.href = "./index.html";
       // }
+
+      let template = document.querySelector("template");
+      let eventList = document.querySelector(".event-list");
+      let eventTemplate = template.content.querySelector(".event");
+
+      function showEvent(event) {
+        let node = eventTemplate.cloneNode(true);
+        node.querySelector(".eventTitle").textContent = event.title;
+        let img = node.querySelector(".image");
+        if (event.image) {
+          img.src = "/uploads/event-images/" + event.eventPicture;
+        } else {
+          img.remove();
+        }
+        // a.href = "/viewEvent/" + event.id;
+        eventList.appendChild(node);
+      }
+
+      async function loadEvents() {
+        let res = await fetch("/allEvent");
+        let json = await res.json();
+        if (json.error) {
+          showError("Failed to load event list", json.error);
+          return;
+        }
+        for (let event of json.events) {
+          showEvent(event);
+        }
+      }
+      loadEvents();
+
+      // async function viewEvent() {
+      //   let res = await fetch("/allEvent/", {
+      //     method: "GET",
+      //   });
+      //   let json = await res.json();
+      //   if (json.error) {
+      //     showError("Failed to load event list", json.error);
+      //     return;
+      //   }
+
+      //   event.querySelector(".eventTitle").textContent = json.title;
+      //   console.log(json.title);
+
+      //   eventResult.appendChild(event);
+      // }
+
+      // viewEvent();
 
       logoutForm.addEventListener("submit", async (event) => {
         event.preventDefault();

@@ -8,9 +8,9 @@ import formidable from 'formidable'
 // import { join } from 'path'
 import { client } from '../db'  
 import { checkString, checkBoolean } from '../express'
-// import { HttpError } from '../express'
+import { HttpError } from '../express'
 import { getSessionUser } from '../guards'
-// import { hasLogin } from '../guards'
+import { hasLogin } from '../guards'
 // let uploadDir = join('uploads', 'event-images')
 // mkdirSync(uploadDir, { recursive: true })
 import '../session'
@@ -37,7 +37,7 @@ export type Event = {
   Is_private: Boolean
 }
 
-const uploadDir = "uploads";
+const uploadDir = "uploads/event-images";
 fs.mkdirSync(uploadDir, { recursive: true });
 
 const form = formidable({
@@ -123,76 +123,60 @@ eventRoutes.get("/viewEvent/:id", async (req, res, next) => {
 )
 
 
+eventRoutes.get("/allEvent/", async (req, res, next) => {
+  try {let result = await client.query(
+    /* sql */`
+    select id, eventPicture, title from event 
+      `,[],);
+    let events = result.rows
+    res.json({ events })
+  } catch (error) {
+    next(error)
+  }}
+)
 
-// eventRoutes.post('/createEvent', hasLogin, (req, res) => {
-//   form.parse(req, async (err, fields, files) => {
-//     console.log(fields);
-    
-//   if (err) {
-//     console.log(err)
-//     res.json({})
-//   }
-//   try {
-//     let host_id = getSessionUser(req).id
-//     let eventPictureMaybeArray = files.image
-//     let eventPicture = Array.isArray(eventPictureMaybeArray)
-//       ? eventPictureMaybeArray[0]
-//       : eventPictureMaybeArray
-//     let title = checkString('title', fields.title)
-//     let category = checkString('category', fields.category)
-//     let start_date = checkString('start_date', fields.start_date)
-//     let end_date = checkString('end_date', fields.end_date)
-//     let hashtag = checkString('hashtag', fields.hashtag)
-//     let cost = Number(checkString('cost', fields.cost))
-//     let location = checkString('location', fields.location)
-//     let participants = Number(checkString('participants', fields.participants))
-//     console.log({participants});
-    
-//     let FAQ = checkString('FAQ', fields.FAQ)
-//     let is_age18= checkBoolean('is_age18', fields.is_age18)
-//     let is_private= checkBoolean('is_private', fields.is_private)
-//     let result = await client.query(
-//       /* sql */ `
-// select
-//   event.id
-// from event
-// inner join users on users.id = event.host_id
-//     `,
-//       [],
-//     )
-    
-//     result = await client.query(
-//       /* sql */ `
-// insert into event
-// (host_id, eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, FAQ, is_age18, is_private)
-// values
-// ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-// returning id
-//     `,
-//       [host_id, eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, FAQ, is_age18, is_private],
-//     )
+eventRoutes.delete('/events/:id', hasLogin, async (req, res, next) => {
+  try {
+    let id = +req.params.id
+    let user_id = getSessionUser(req).id
 
-//     let id = result.rows[0].id
+    let result = await client.query(
+      /* sql */ `
+    select
+      host_id
+    from events
+    where id = $1
+  `,
+      [id],
+    )
+    let event = result.rows[0]
 
-//     res.json(id)
-//   } catch (error) {
-//     console.log(error)
-//     res.json({})
+    if (!event) {
+      res.json({ details: 'the memo is already deleted' })
+      return
+    }
 
-//   }
-// })
-// })
+    if (event.host_id !== user_id) {
+      throw new HttpError(
+        403,
+        "You are not allowed to delete other users's memo",
+      )
+    }
 
-// eventRoutes.get('/loadEvent', async (req, res, next) => {
-//   try {let result = await client.query(
-//  /* sql */`
-//  select eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, FAQ, is_age18, is_private from event`
-//  ,
-//  [],
-// )
-//   let events = result.rows
-//   res.json({ events }) 
-// }catch (error) {
-//   console.log(error)
-//   res.json({})
-// }})
+    result = await client.query(
+      /* sql */ `
+    delete from events
+    where id = $1
+    and host_id = $2
+  `,
+      [id, user_id],
+    )
+
+    if (result.rowCount > 0) {
+      res.json({ details: 'the memo is just deleted' })
+    } else {
+      res.json({ details: 'the memo is already deleted' })
+    }
+  } catch (error) {
+    next(error)
+  }})

@@ -16,6 +16,18 @@
         background-color: #fff;
         outline: black 1px solid;
       }
+      .deleteEvent {
+        background-color: grey;
+        color: #fff;
+        font-size: 20px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
     </style>
   </head>
   <body>
@@ -31,6 +43,7 @@
         <div class="row" id="location"></div>
         <div class="row" id="participants"></div>
         <div class="row" id="FAQ"></div>
+        <button class="deleteEvent">Delete</button>
       </div>
     </template>
     <div class="event-result"></div>
@@ -76,6 +89,25 @@
       }
 
       viewEvent();
+
+      function deleteEvent(event) {
+        node
+          .querySelector(".deleteEvent")
+          .addEventListener("click", async (event) => {
+            let res = await fetch(`/events/${event.id}`, { method: "DELETE" });
+            let json = await res.json();
+            if (json.error) {
+              Swal.fire({
+                title: "Failed to delete memo",
+                text: json.error,
+                icon: "error",
+              });
+            } else {
+              node.remove();
+              showSuccessToast(`Deleted event #${event.id}`);
+            }
+          });
+      }
     </script>
   </body>
 </html>
