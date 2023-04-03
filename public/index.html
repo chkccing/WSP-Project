@@ -39,8 +39,11 @@
         background-color: orange;
         margin: 0.5rem;
       }
+      #eventPicture {
+        width: 5rem;
+        height: 3rem;
+      }
     </style>
-    <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/form.css" />
     <link rel="stylesheet" href="/css/styles.css" />
   </head>
@@ -54,22 +57,22 @@
           </div>
           <div class="right">
             <div id="signUp-btu">
-              <button onclick="goToSignUpPage()">Sign UP</button>
+              <a href="/sign-up.html"><button>Sign UP</button></a>
             </div>
           </div>
           <div class="right">
             <div>
-              <button onclick="goToLogInPage()" id="logIn-btu">Login</button>
+              <a href="/Login.html"><button id="logIn-btu">Login</button></a>
             </div>
           </div>
           <div class="right">
             <div>
-              <button onclick="goToCreateEventPage()">Create Event</button>
+              <a href="/create-event.html"><button>Create Event</button></a>
             </div>
           </div>
           <!-- <div class="right">
             <div>
-              <button onclick="goToLogOutPage()"  id="logOut-btu">Logout</buton>
+              <a href="/index.html"><button id="logOut-btu">Logout</button></a>
                 <div class="title">Admin Panel</div>
                 <div>You have login as <span class="username"></span></div>                
             </div>
@@ -107,16 +110,6 @@
       //連同applyRole令div顯示用戶名稱
       let currentUsername = logoutForm.querySelector(".username");
 
-      function goToSignUpPage() {
-        location.href = "./sign-up.html";
-      }
-      function goToLogInPage() {
-        location.href = "./Login.html";
-      }
-      // function goToLogOutPage() {
-      //   location.href = "./index.html";
-      // }
-
       let template = document.querySelector("template");
       let eventList = document.querySelector(".event-list");
       let eventTemplate = template.content.querySelector("#link");
@@ -128,7 +121,7 @@
         if (event.eventpicture) {
           img.src = "/uploads/event-images/" + event.eventpicture;
         } else {
-          img.remove();
+          img.src = "/uploads/event-images/default.jpg";
         }
         // let eventBox = node.querySelector(".eventBox");
         // console.log(eventBox);

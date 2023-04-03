@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="login" content="width=device-width, initial-scale=1.0" />
-    <title>Sign-Up page</title>
+    <title>Login</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -51,11 +51,9 @@
   </head>
 
   <body>
-    <span onclick="backToHamePage()">
-      <i class="bi bi-x-lg"></i>
-    </span>
+    <a href="/index.html"><i class="bi bi-x-lg"></i></a>
     <div>
-      <button onclick="goToCreateEventPage()">Create Event</button>
+      <a href="/create-event.html"><button>Create Event</button></a>
     </div>
     <form method="POST" action="/login" id="login">
       <h3 class="text-center">Login</h3>
@@ -81,13 +79,6 @@
     </form>
     <script src="/js/alert.js"></script>
     <script>
-      function backToHamePage() {
-        location.href = "./index.html";
-      }
-      function goToCreateEventPage() {
-        location.href = "./create-event.html";
-      }
-
       function applyRole(user) {
         console.log("current user:", user);
         document.body.dataset.role = user.role;

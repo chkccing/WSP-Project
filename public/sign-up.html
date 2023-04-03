@@ -48,9 +48,7 @@
   </head>
 
   <body>
-      <span onclick="backToHamePage()">
-        <i class="bi bi-x-lg"></i>
-      </span>
+    <a href="/index.html"><i class="bi bi-x-lg"></i></a>
     <form id="Sign-Up" method="POST" action="/signUp">
       <H2>Sign Up</H2>\
       <p>Please fill in this form to create an account.</p>
@@ -87,10 +85,6 @@
     
     <script src="/alert.js"></script>
     <script>
-      function backToHamePage(){
-        location.href="./index.html"  
-      }
-
       async function loadRole() {
         let res = await fetch('/role')
         let json = await res.json()
