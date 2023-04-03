@@ -106,7 +106,7 @@
       loadRole()
 
 
-      //check password?=confirmPassword
+      //check password?=confirmPassword，new URLSearchParams(location.search)抽網址，location.search攞網址問號之後字串，
       const searchParams = new URLSearchParams(location.search);
       const errorMsg = searchParams.get("error");
 
