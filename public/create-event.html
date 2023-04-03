@@ -72,12 +72,10 @@
     </style>
   </head>
   <body>
-    <span onclick="backToHamePage()">
-      <i class="bi bi-x-lg"></i>
-    </span>
-    <div>
-      <button onclick="goToLogInPage()" id="logIn-btu">Login</button>
-    </div>
+    <a href="/index.html"><i class="bi bi-x-lg"></i></a>
+    <a href="/login.html"><div>
+      <button id="logIn-btu">Login</button>
+    </div></a>
     <form id="Create-Event">
       <H2>Event Create</H2>
       <div>
@@ -144,17 +142,7 @@
 
       } )
  
-    
- 
-
-      function backToHamePage(){
-        location.href="./index.html";  
-      }
-      function goToLogInPage() {
-        location.href = "./Login.html";
-      }
-
-      document.querySelector("#Create-Event").addEventListener('submit', async (event)=> {
+    document.querySelector("#Create-Event").addEventListener('submit', async (event)=> {
  
     event.preventDefault();
  

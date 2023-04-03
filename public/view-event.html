@@ -4,7 +4,11 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="view-event" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>view-event</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
+    />
     <style>
       .currentEvent {
         font-size: 2rem;
@@ -28,9 +32,14 @@
         justify-content: center;
         align-items: center;
       }
+      #eventPicture {
+        width: 30rem;
+        height: 20rem;
+      }
     </style>
   </head>
   <body>
+    <a href="/index.html"><i class="bi bi-x-lg"></i></a>
     <template>
       <div class="currentEvent">
         <img class="row" id="eventPicture" />
@@ -68,7 +77,7 @@
         if (json.eventpicture) {
           eventPicture.src = "/uploads/event-images/" + json.eventpicture;
         } else {
-          eventPicture.remove();
+          eventPicture.src = "/uploads/event-images/default.jpg";
         }
         currentEvent.querySelector("#title").textContent =
           "Title: " + json.title;
