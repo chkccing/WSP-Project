@@ -123,12 +123,10 @@
 
       function showEvent(event) {
         let node = eventTemplate.cloneNode(true);
-        console.log(node);
         node.querySelector(".eventTitle").textContent = event.title;
         let img = node.querySelector(".image");
         if (event.eventpicture) {
           img.src = "/uploads/event-images/" + event.eventpicture;
-          console.log(img.src);
         } else {
           img.remove();
         }

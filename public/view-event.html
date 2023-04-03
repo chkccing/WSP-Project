@@ -33,7 +33,7 @@
   <body>
     <template>
       <div class="currentEvent">
-        <div class="row" id="eventPicture"></div>
+        <img class="row" id="eventPicture" />
         <div class="row" id="title"></div>
         <div class="row" id="category"></div>
         <div class="row" id="hashtag"></div>
@@ -64,14 +64,11 @@
         //   return;
         // }
 
-        // currentEvent.querySelector("#eventPicture").textContent =
-        //   "Event Picture: " + json.eventpicture;
-
-        let img = currentEvent.querySelector("#eventPicture");
+        let eventPicture = currentEvent.querySelector("#eventPicture");
         if (json.eventpicture) {
-          img.src = "/uploads/event-images/" + json.eventpicture;
+          eventPicture.src = "/uploads/event-images/" + json.eventpicture;
         } else {
-          img.remove();
+          eventPicture.remove();
         }
         currentEvent.querySelector("#title").textContent =
           "Title: " + json.title;
