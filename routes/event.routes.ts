@@ -1,21 +1,21 @@
 import express from 'express'
-import fs from 'fs'
+// import fs from 'fs'
 import { Router } from 'express'
 import { Request, Response } from 'express'
 import formidable from 'formidable'
-// import { mkdirSync } from 'fs'
+import { mkdirSync } from 'fs'
 // import { unlink } from 'fs/promises'
-// import { join } from 'path'
+import { join } from 'path'
 import { client } from '../db'  
 import { checkString, checkBoolean } from '../express'
 import { HttpError } from '../express'
 import { getSessionUser } from '../guards'
 import { hasLogin } from '../guards'
-// let uploadDir = join('uploads', 'event-images')
-// mkdirSync(uploadDir, { recursive: true })
+let uploadDir = join('uploads', 'event-images')
+mkdirSync(uploadDir, { recursive: true })
 import '../session'
 
-// app.use('/uploads/event-images', express.static(uploadDir))
+
 
 export const eventRoutes = Router()
 
@@ -37,8 +37,8 @@ export type Event = {
   Is_private: Boolean
 }
 
-const uploadDir = "uploads/event-images";
-fs.mkdirSync(uploadDir, { recursive: true });
+// const uploadDir = "uploads/event-images";
+// fs.mkdirSync(uploadDir, { recursive: true });
 
 const form = formidable({
   uploadDir,
@@ -48,20 +48,16 @@ const form = formidable({
   filter: (part) => part.mimetype?.startsWith("image/") || false,
 });
 
-const app = express();
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
 // When #contact-form submit, this route will receive the request
 eventRoutes.post("/createEvent", function (req: Request, res: Response) {
   form.parse(req, async (err, fields, files) => {
     try {
           let host_id = getSessionUser(req).id
-          let eventPictureMaybeArray = files.image
+          let eventPictureMaybeArray = files.eventPictures
+          console.log("eventPictureMaybeArray:",files)
           let eventPicture = Array.isArray(eventPictureMaybeArray)
             ? eventPictureMaybeArray[0]
-            : eventPictureMaybeArray
+            : eventPictureMaybeArray.newFilename
           let title = checkString('title', fields.title)
           let category = checkString('category', fields.category)
           let start_date = checkString('start_date', fields.start_date)
@@ -108,6 +104,8 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
         console.log(error)
         res.json({})
       }})});
+
+eventRoutes.use('/uploads/event-images', express.static(uploadDir))
 
 eventRoutes.get("/viewEvent/:id", async (req, res, next) => {
   // let id=req.query.id

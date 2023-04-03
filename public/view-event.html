@@ -64,8 +64,15 @@
         //   return;
         // }
 
-        currentEvent.querySelector("#eventPicture").textContent =
-          "Event Picture: " + json.eventPicture;
+        // currentEvent.querySelector("#eventPicture").textContent =
+        //   "Event Picture: " + json.eventpicture;
+
+        let img = currentEvent.querySelector("#eventPicture");
+        if (json.eventpicture) {
+          img.src = "/uploads/event-images/" + json.eventpicture;
+        } else {
+          img.remove();
+        }
         currentEvent.querySelector("#title").textContent =
           "Title: " + json.title;
         currentEvent.querySelector("#category").textContent =

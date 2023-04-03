@@ -33,6 +33,12 @@
       .nav {
         padding: 1rem 1rem;
       }
+      .eventBox {
+        width: 5rem;
+        height: 5rem;
+        background-color: orange;
+        margin: 0.5rem;
+      }
     </style>
     <link rel="stylesheet" href="/css/styles.css" />
     <link rel="stylesheet" href="/css/form.css" />
@@ -88,11 +94,12 @@
         </div>
       </div>
     </div>
-    <template>
-      <div class="event">
-        <img class="image" />
-        <div class="eventTitle"></div>
-      </div>
+    <template
+      ><a href="/view-event.html?id=1" id="link">
+        <div class="eventBox">
+          <img class="image" id="eventPicture" />
+          <div class="eventTitle" id="title"></div></div
+      ></a>
     </template>
     <div class="event-list"></div>
     <script>
@@ -112,18 +119,22 @@
 
       let template = document.querySelector("template");
       let eventList = document.querySelector(".event-list");
-      let eventTemplate = template.content.querySelector(".event");
+      let eventTemplate = template.content.querySelector("#link");
 
       function showEvent(event) {
         let node = eventTemplate.cloneNode(true);
+        console.log(node);
         node.querySelector(".eventTitle").textContent = event.title;
         let img = node.querySelector(".image");
-        if (event.image) {
-          img.src = "/uploads/event-images/" + event.eventPicture;
+        if (event.eventpicture) {
+          img.src = "/uploads/event-images/" + event.eventpicture;
+          console.log(img.src);
         } else {
           img.remove();
         }
-        // a.href = "/viewEvent/" + event.id;
+        // let eventBox = node.querySelector(".eventBox");
+        // console.log(eventBox);
+        node.href = "/view-event.html?id=" + event.id;
         eventList.appendChild(node);
       }
 
@@ -139,24 +150,6 @@
         }
       }
       loadEvents();
-
-      // async function viewEvent() {
-      //   let res = await fetch("/allEvent/", {
-      //     method: "GET",
-      //   });
-      //   let json = await res.json();
-      //   if (json.error) {
-      //     showError("Failed to load event list", json.error);
-      //     return;
-      //   }
-
-      //   event.querySelector(".eventTitle").textContent = json.title;
-      //   console.log(json.title);
-
-      //   eventResult.appendChild(event);
-      // }
-
-      // viewEvent();
 
       logoutForm.addEventListener("submit", async (event) => {
         event.preventDefault();
