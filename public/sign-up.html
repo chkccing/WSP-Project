@@ -62,7 +62,7 @@
         <input class = "textinput" type="password" placeholder="enter your password" name="password"/>
       </div>
       <div>
-        <input class = "textinput" type="password" placeholder="confirm your password" name="password"/>
+        <input class = "textinput" type="password" placeholder="confirm your password" name="confirmPassword"/>
       </div>
       <div>
         <input class = "textinput" type="email" placeholder="name@explem.com" name="Email"/>
@@ -98,6 +98,19 @@
         document.body.dataset.role = 'user'
       }
       loadRole()
+
+
+
+      //檢查密碼是否一致。
+      let passwordToken = document.querySelector('password')
+      let passwordConfirmToken = document.querySelector('confirmPassword')
+      function passwordNotSame (){
+        try {
+          passwordToken = passwordConfirmToken
+        }catch (error){
+          return
+        }
+      }
     </script>
   </body>
 </html>

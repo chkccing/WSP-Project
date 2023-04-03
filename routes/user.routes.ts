@@ -156,7 +156,6 @@ where username = $1
   }
 });
 
-//新加以下來設logout
 userRoutes.post("/logout", (req, res) => {
   if (!req.session.user) {
     res.json({ role: "guest" });
@@ -164,7 +163,7 @@ userRoutes.post("/logout", (req, res) => {
   }
   req.session.destroy((err) => {
     if (err) {
-      res.json({ role: "admin" });
+      res.json({ role: "user" });
     } else {
       res.json({ role: "guest" });
     }
