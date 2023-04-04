@@ -151,18 +151,6 @@ eventRoutes.post("/joinEvent", async (req: Request, res: Response) => {
 
 eventRoutes.use('/uploads/event-images', express.static(uploadDir))
 
-// eventRoutes.get("/viewEvent/:id", async (req, res, next) => {
-//   // let id=req.query.id
-//   let id=req.params.id
-//   try {let result = await client.query(
-//     /* sql */`
-//     select * from event where id = $1
-//       `,[id]
-//   ); res.json(result.rows[0]);} catch (error) {
-//     next(error)
-//   }}
-
-// )
 
 eventRoutes.get("/viewEvent/:id", async (req, res, next) => {
   // let id=req.query.id
@@ -186,13 +174,15 @@ eventRoutes.get("/viewEvent/:id", async (req, res, next) => {
 }
 )
 
-eventRoutes.get("/allParticipants/", async (req, res, next) => {
+eventRoutes.get("/allParticipants/:id", async (req, res, next) => {
+  let id = req.params.id
   try {
     let result = await client.query(
     /* sql */`
     select * from users
-    right join event_participant on users.id  = event_participant.user_id
-      `, [],);
+    right join event_participant on users.id  = event_participant.user_id 
+    WHERE event_participant.event_id = $1
+      `, [id],);
     let users = result.rows
     res.json({ users })
   } catch (error) {

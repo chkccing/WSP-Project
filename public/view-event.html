@@ -143,7 +143,7 @@
         }
 
         async function loadParticipants() {
-          let res = await fetch("/allParticipants");
+          let res = await fetch(`/allParticipants/${eventId}`);
           let json = await res.json();
           if (json.error) {
             showError("Failed to load participants list", json.error);
@@ -160,14 +160,11 @@
           .addEventListener("click", async (event) => {
             event.preventDefault();
             if (json.data.participants > json.joined) {
-              if (json.data.user_id != json.currentUser) {
-                const res = await fetch(`/joinEvent?eventId=${eventId}`, {
-                  method: "POST",
-                });
-
-                const result = await res.json(); // { success: true }
-                window.location = `/`;
-              } else console.lof("You have already joined event.");
+              const res = await fetch(`/joinEvent?eventId=${eventId}`, {
+                method: "POST",
+              });
+              const result = await res.json(); // { success: true }
+              window.location = `/`;
             } else {
               console.log("The event is full.");
             }
