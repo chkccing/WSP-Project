@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Post</title>
+    <style>
+      .hash-tag-preview {
+        background-color: #ddd;
+        color: black;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        display: inline-block;
+        margin: 0.5rem;
+      }
+      [hidden] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Create Post</h1>
+    <form id="createPostForm" method="post" action="/post">
+      <label>
+        <div>Content:</div>
+        <textarea name="content"></textarea>
+      </label>
+      <label>
+        <div>Hashtags:</div>
+        <input hidden type="text" name="hashtags" />
+        <div id="hashTagPreviewList">
+          <div hidden class="hash-tag-preview">123</div>
+        </div>
+        <div>
+          <input type="text" id="hashtag" list="hashtags" />
+          <datalist id="hashtags">
+            <option>apple</option>
+            <option>pie</option>
+          </datalist>
+        </div>
+      </label>
+      <input type="submit" value="Submit" />
+      <input type="reset" value="Reset" />
+    </form>
+    <script>
+      let form = createPostForm;
+
+      form.reset();
+
+      fetch("/tags")
+        .then((res) => res.json())
+        .then((json) => {
+          hashtags.textContent = "";
+          json.hashtags.forEach((tag) => {
+            let option = document.createElement("option");
+            option.textContent =
+              tag.hashtag.replace(/-/g, " ") + ` (${tag.count})`;
+            option.value = tag.hashtag;
+            hashtags.appendChild(option);
+          });
+        });
+
+      hashtag.addEventListener("keypress", (event) => {
+        switch (event.key) {
+          case "Enter":
+          case ",":
+          case "#":
+            addHashTag();
+            event.preventDefault();
+            break;
+          default:
+          // allow normal input
+        }
+      });
+
+      function addHashTag() {
+        let node = document.createElement("div");
+        node.className = "hash-tag-preview";
+        node.textContent = hashtag.value;
+        hashTagPreviewList.appendChild(node);
+        node.addEventListener("click", () => removeHashTag(node));
+
+        if (form.hashtags.value.length > 0) {
+          form.hashtags.value += ", ";
+        }
+        form.hashtags.value += hashtag.value;
+        hashtag.value = "";
+      }
+
+      function removeHashTag(node) {
+        form.hashtags.value = form.hashtags.value
+          .split(", ")
+          .filter((part) => part !== node.textContent)
+          .join(", ");
+        node.remove();
+      }
+    </script>
+  </body>
+</html>

@@ -52,3 +52,16 @@ create table hashtag (
     id serial primary key,
     event_id integer,
 );
+-- 使用chatGPT翻譯Beeno的hashtage code
+CREATE TABLE post (id SERIAL PRIMARY KEY, content TEXT);
+CREATE TABLE (
+    id SERIAL PRIMARY KEY,
+    hashtag TEXT UNIQUE,
+    tag_group_id INTEGER REFERENCES tag_group(id)
+);
+CREATE TABLE tag_group (id SERIAL PRIMARY KEY, name TEXT UNIQUE);
+CREATE TABLE post_tag (
+    id SERIAL PRIMARY KEY,
+    post_id INTEGER REFERENCES post(id),
+    tag_id INTEGER REFERENCES tag(id)
+);
