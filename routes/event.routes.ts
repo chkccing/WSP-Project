@@ -105,6 +105,46 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
         res.json({})
       }})});
 
+eventRoutes.post("/joinEvent", async (req: Request, res: Response) =>{
+    try {    
+       let user_id= getSessionUser(req).id
+       let event_id= req.query.eventId
+       let result = await client.query(
+            /* sql */ `
+      select
+      event_participant.id, event_participant.event_id
+      from event_participant
+      inner join users on users.id = event_participant.user_id
+      inner join event on event.id = event_participant.event_id
+          `,
+            [],
+          )
+          result = await client.query(
+            /* sql */ `
+      insert into event_participant
+      (user_id, event_id)
+      values
+      ($1, $2)
+      returning id
+          `,
+            [user_id, event_id],
+          )
+
+
+              
+          let id = result.rows[0].id
+          console.log(id);
+          
+      
+          res.json(id);
+
+          
+    } catch (error) {
+        console.log(error)
+        res.json({})
+      }});
+
+
 eventRoutes.use('/uploads/event-images', express.static(uploadDir))
 
 eventRoutes.get("/viewEvent/:id", async (req, res, next) => {

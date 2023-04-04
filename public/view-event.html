@@ -20,8 +20,20 @@
         background-color: #fff;
         outline: black 1px solid;
       }
-      .deleteEvent {
+      /* #deleteEvent {
         background-color: grey;
+        color: #fff;
+        font-size: 20px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      } */
+      #joinEvent {
+        background-color: pink;
         color: #fff;
         font-size: 20px;
         padding: 10px 20px;
@@ -51,10 +63,12 @@
         <div class="row" id="cost"></div>
         <div class="row" id="location"></div>
         <div class="row" id="participants"></div>
+        <div class="row" id="joined">Number of joined:</div>
         <div class="row" id="FAQ"></div>
-        <button class="deleteEvent">Delete</button>
+        <!-- <button id="deleteEvent">Delete</button> -->
       </div>
     </template>
+    <button class="join_event">Join</button>
     <div class="event-result"></div>
     <script>
       let params = new URL(document.location).searchParams;
@@ -72,7 +86,7 @@
         //   showError("Failed to load event list", json.error);
         //   return;
         // }
-
+        // .rowCount
         let eventPicture = currentEvent.querySelector("#eventPicture");
         if (json.eventpicture) {
           eventPicture.src = "/uploads/event-images/" + json.eventpicture;
@@ -89,7 +103,8 @@
           "Start Date: " + json.start_date.split("T")[0];
         currentEvent.querySelector("#end_date").textContent =
           "End Date: " + json.end_date.split("T")[0];
-        currentEvent.querySelector("#cost").textContent = "Cost: " + json.cost;
+        currentEvent.querySelector("#cost").textContent =
+          "Cost: HKD" + json.cost;
         currentEvent.querySelector("#location").textContent =
           "Location: " + json.location;
         currentEvent.querySelector("#participants").textContent =
@@ -103,24 +118,37 @@
 
       viewEvent();
 
-      function deleteEvent(event) {
-        node
-          .querySelector(".deleteEvent")
-          .addEventListener("click", async (event) => {
-            let res = await fetch(`/events/${event.id}`, { method: "DELETE" });
-            let json = await res.json();
-            if (json.error) {
-              Swal.fire({
-                title: "Failed to delete memo",
-                text: json.error,
-                icon: "error",
-              });
-            } else {
-              node.remove();
-              showSuccessToast(`Deleted event #${event.id}`);
-            }
+      document
+        .querySelector(".join_event")
+        .addEventListener("click", async (event) => {
+          event.preventDefault();
+
+          const res = await fetch(`/joinEvent?eventId=${eventId}`, {
+            method: "POST",
           });
-      }
+
+          const result = await res.json(); // { success: true }
+          window.location = `/`;
+        });
+
+      // function deleteEvent(event) {
+      //   node
+      //     .querySelector(".deleteEvent")
+      //     .addEventListener("click", async (event) => {
+      //       let res = await fetch(`/events/${event.id}`, { method: "DELETE" });
+      //       let json = await res.json();
+      //       if (json.error) {
+      //         Swal.fire({
+      //           title: "Failed to delete memo",
+      //           text: json.error,
+      //           icon: "error",
+      //         });
+      //       } else {
+      //         node.remove();
+      //         showSuccessToast(`Deleted event #${event.id}`);
+      //       }
+      //     });
+      // }
     </script>
   </body>
 </html>
