@@ -63,7 +63,7 @@
         <div class="row" id="cost"></div>
         <div class="row" id="location"></div>
         <div class="row" id="participants"></div>
-        <div class="row" id="joined">Number of joined:</div>
+        <div class="row" id="joined"></div>
         <div class="row" id="FAQ"></div>
         <!-- <button id="deleteEvent">Delete</button> -->
       </div>
@@ -86,7 +86,6 @@
         //   showError("Failed to load event list", json.error);
         //   return;
         // }
-        // .rowCount
         let eventPicture = currentEvent.querySelector("#eventPicture");
         if (json.eventpicture) {
           eventPicture.src = "/uploads/event-images/" + json.eventpicture;
@@ -94,24 +93,30 @@
           eventPicture.src = "/uploads/event-images/default.jpg";
         }
         currentEvent.querySelector("#title").textContent =
-          "Title: " + json.title;
+          "Title: " + json.data.title;
         currentEvent.querySelector("#category").textContent =
-          "Category: " + json.category;
+          "Category: " + json.data.category;
         currentEvent.querySelector("#hashtag").textContent =
-          "Hashtag: " + json.hashtag;
+          "Hashtag: " + json.data.hashtag;
         currentEvent.querySelector("#start_date").textContent =
-          "Start Date: " + json.start_date.split("T")[0];
+          "Start Date: " + json.data.start_date.split("T")[0];
         currentEvent.querySelector("#end_date").textContent =
-          "End Date: " + json.end_date.split("T")[0];
+          "End Date: " + json.data.end_date.split("T")[0];
         currentEvent.querySelector("#cost").textContent =
-          "Cost: HKD" + json.cost;
+          "Cost: HKD " + json.data.cost;
         currentEvent.querySelector("#location").textContent =
-          "Location: " + json.location;
+          "Location: " + json.data.location;
         currentEvent.querySelector("#participants").textContent =
-          "Participants: " + json.participants;
+          "Participants: " + json.data.participants;
         currentEvent.querySelector("#location").textContent =
-          "Location: " + json.location;
-        currentEvent.querySelector("#FAQ").textContent = "FAQ: " + json.FAQ;
+          "Location: " + json.data.location;
+        if (!json.data.user_id) {
+          json.joined = 0;
+        }
+        currentEvent.querySelector("#participants").textContent =
+          "Number of joined: " + json.joined;
+        currentEvent.querySelector("#FAQ").textContent =
+          "FAQ: " + json.data.FAQ;
 
         eventResult.appendChild(currentEvent);
       }
