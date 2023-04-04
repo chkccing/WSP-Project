@@ -100,17 +100,26 @@
       loadRole()
 
 
+      //check password?=confirmPassword，new URLSearchParams(location.search)抽網址，location.search攞網址問號之後字串，
+      const searchParams = new URLSearchParams(location.search);
+      const errorMsg = searchParams.get("error");
+
+      if(errorMsg){
+        alert(errorMsg)
+      }
+
+
 
       //檢查密碼是否一致。
-      let passwordToken = document.querySelector('password')
-      let passwordConfirmToken = document.querySelector('confirmPassword')
-      function passwordNotSame (){
-        try {
-          passwordToken = passwordConfirmToken
-        }catch (error){
-          return
-        }
-      }
+      // let passwordToken = document.querySelector('password')
+      // let passwordConfirmToken = document.querySelector('confirmPassword')
+      // async function passwordNotSame (){
+      //   try {
+      //     await passwordToken = passwordConfirmToken
+      //   }catch (error){
+      //     return
+      //   }
+      // }
     </script>
   </body>
 </html>

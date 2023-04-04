@@ -50,11 +50,20 @@ userRoutes.post("/signUp", async (req, res, next) => {
     let username = getString(req, "username");
     let showedName = getString(req, "showedName");
     let password = getString(req, "password");
+
+    //check password?=confirmPassword
+    let confirmPassword = getString(req, "confirmPassword");
+
     let email = getString(req, "Email");
     let phone = getPhone(req, "phone");
     let password_hash = await hashPassword(password);
     //加上 >= 18，以判定是否18歲或以上。
     let is_age18 = req.body.age >= 18;
+
+    //check password?=confirmPassword
+    if (password !== confirmPassword) {
+      throw new HttpError(409, "Password not match");
+    }
 
     // //此句用於檢測bug在什麼地方，不用。
     // console.log({is_age18})
@@ -78,7 +87,7 @@ where username = $1
       throw new HttpError(409, "this username is already in use");
     }
 
-    result = await client.query(
+    const newUser = await client.query(
       /* sql */ `
 insert into users
 (username, showedName, password_hash, email, phone, is_age18)
@@ -90,10 +99,11 @@ returning id
     );
 
     req.session.user = {
-      id: user.id,
+      id: newUser.rows[0].id,
       name: username,
       avatar: null,
     };
+    console.log(newUser);
 
     req.session.save();
 
@@ -104,8 +114,11 @@ returning id
     // })
 
     res.redirect("/create-event.html");
-  } catch (error) {
-    next(error);
+  } catch (error: any) {
+    //?error=${error.message}是插入一個query，for front end 用，{error.message}會顯示出現error時的那一行error message。
+    res.redirect(`/sign-up.html?error=${error.message}`);
+
+    // next(error);
   }
 });
 
