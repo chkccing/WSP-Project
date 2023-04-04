@@ -16,7 +16,7 @@ export let hashtagRoutes = Router();
 let insert_post = async (content: string) => {
   const result = await client.query(
     /* sql */ `
-    INSERT INTO post (content) VALUES ($1) RETURNING id
+    insert into post (content) values ($1) returning id
   `,
     [content]
   );

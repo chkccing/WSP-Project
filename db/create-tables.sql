@@ -55,7 +55,7 @@ create table hashtag (
 );
 -- 使用chatGPT翻譯Beeno的hashtage code
 CREATE TABLE post (id SERIAL PRIMARY KEY, content TEXT);
-CREATE TABLE (
+CREATE TABLE tag (
     id SERIAL PRIMARY KEY,
     hashtag TEXT UNIQUE,
     tag_group_id INTEGER REFERENCES tag_group(id)
