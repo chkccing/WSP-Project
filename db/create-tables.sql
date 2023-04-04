@@ -28,6 +28,7 @@ create table event (
 create table event_participant (
     id serial primary key,
     event_timeslot_id integer,
+    event_id integer,
     user_id integer
 );
 create table event_rating (
