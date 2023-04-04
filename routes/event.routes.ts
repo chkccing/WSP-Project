@@ -186,6 +186,21 @@ eventRoutes.get("/viewEvent/:id", async (req, res, next) => {
 }
 )
 
+eventRoutes.get("/allParticipants/", async (req, res, next) => {
+  try {
+    let result = await client.query(
+    /* sql */`
+    select * from users
+    right join event_participant on users.id  = event_participant.user_id
+      `, [],);
+    let users = result.rows
+    res.json({ users })
+  } catch (error) {
+    next(error)
+  }
+}
+)
+
 
 eventRoutes.get("/allEvent/", async (req, res, next) => {
   try {

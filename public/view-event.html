@@ -48,11 +48,17 @@
         width: 30rem;
         height: 20rem;
       }
+      #participantsName {
+        background-color: aqua;
+        width: 5rem;
+        height: 2rem;
+        margin: 0.5rem;
+      }
     </style>
   </head>
   <body>
     <a href="/index.html"><i class="bi bi-x-lg"></i></a>
-    <template>
+    <template id="template1">
       <div class="currentEvent">
         <img class="row" id="eventPicture" />
         <div class="row" id="title"></div>
@@ -68,15 +74,21 @@
         <!-- <button id="deleteEvent">Delete</button> -->
       </div>
     </template>
-    <button class="join_event">Join</button>
+    <button class="join_event" id="join_btn">Join</button>
     <div class="event-result"></div>
+    <template id="template2">
+      <div class="participantsList">
+        <div id="participantsName" name="showedname"></div>
+      </div>
+    </template>
+    <div class="participants-result"></div>
     <script>
       let params = new URL(document.location).searchParams;
       let eventId = params.get("id");
       console.log(eventId);
 
       let eventResult = document.querySelector(".event-result");
-      let currentEventTemplate = document.querySelector("template");
+      let currentEventTemplate = document.querySelector("#template1");
       let currentEvent =
         currentEventTemplate.content.querySelector(".currentEvent");
       async function viewEvent() {
@@ -106,6 +118,7 @@
           "Cost: HKD " + json.data.cost;
         currentEvent.querySelector("#location").textContent =
           "Location: " + json.data.location;
+        console.log(json.data.participants);
         currentEvent.querySelector("#participants").textContent =
           "Participants: " + json.data.participants;
         currentEvent.querySelector("#location").textContent =
@@ -113,28 +126,68 @@
         if (!json.data.user_id) {
           json.joined = 0;
         }
-        currentEvent.querySelector("#participants").textContent =
+        currentEvent.querySelector("#joined").textContent =
           "Number of joined: " + json.joined;
         currentEvent.querySelector("#FAQ").textContent =
           "FAQ: " + json.data.FAQ;
-
         eventResult.appendChild(currentEvent);
+        console.log(json.data.user_id);
+
+        let template2 = document.querySelector("#template2").content;
+        let participantsList = document.querySelector(".participants-result");
+
+        function showParticipants(user) {
+          let node = template2.cloneNode(true);
+          node.querySelector("#participantsName").textContent = user.showedname;
+          participantsList.appendChild(node);
+        }
+
+        async function loadParticipants() {
+          let res = await fetch("/allParticipants");
+          let json = await res.json();
+          if (json.error) {
+            showError("Failed to load participants list", json.error);
+            return;
+          }
+          for (let user of json.users) {
+            showParticipants(user);
+          }
+        }
+        loadParticipants();
+
+        document
+          .querySelector("#join_btn")
+          .addEventListener("click", async (event) => {
+            event.preventDefault();
+            if (json.data.participants > json.joined) {
+              if (json.data.user_id != json.currentUser) {
+                const res = await fetch(`/joinEvent?eventId=${eventId}`, {
+                  method: "POST",
+                });
+
+                const result = await res.json(); // { success: true }
+                window.location = `/`;
+              } else console.lof("You have already joined event.");
+            } else {
+              console.log("The event is full.");
+            }
+          });
       }
 
       viewEvent();
 
-      document
-        .querySelector(".join_event")
-        .addEventListener("click", async (event) => {
-          event.preventDefault();
+      // document
+      // .querySelector(".join_event")
+      // .addEventListener("click", async (event) => {
+      //   event.preventDefault();
 
-          const res = await fetch(`/joinEvent?eventId=${eventId}`, {
-            method: "POST",
-          });
+      //   const res = await fetch(`/joinEvent?eventId=${eventId}`, {
+      //     method: "POST",
+      //   });
 
-          const result = await res.json(); // { success: true }
-          window.location = `/`;
-        });
+      //   const result = await res.json(); // { success: true }
+      //   window.location = `/`;
+      // });
 
       // function deleteEvent(event) {
       //   node
