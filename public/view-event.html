@@ -71,10 +71,11 @@
         <div class="row" id="participants"></div>
         <div class="row" id="joined"></div>
         <div class="row" id="FAQ"></div>
-        <!-- <button id="deleteEvent">Delete</button> -->
       </div>
     </template>
+    <div id="eventParticipants"></div>
     <button class="join_event" id="join_btn">Join</button>
+    <button class="delete_event" id="delete_btn">Delete</button>
     <div class="event-result"></div>
     <template id="template2">
       <div class="participantsList">
@@ -82,10 +83,10 @@
       </div>
     </template>
     <div class="participants-result"></div>
+    <div class="expired-result"></div>
     <script>
       let params = new URL(document.location).searchParams;
       let eventId = params.get("id");
-      console.log(eventId);
 
       let eventResult = document.querySelector(".event-result");
       let currentEventTemplate = document.querySelector("#template1");
@@ -118,7 +119,6 @@
           "Cost: HKD " + json.data.cost;
         currentEvent.querySelector("#location").textContent =
           "Location: " + json.data.location;
-        console.log(json.data.participants);
         currentEvent.querySelector("#participants").textContent =
           "Participants: " + json.data.participants;
         currentEvent.querySelector("#location").textContent =
@@ -131,7 +131,18 @@
         currentEvent.querySelector("#FAQ").textContent =
           "FAQ: " + json.data.FAQ;
         eventResult.appendChild(currentEvent);
-        console.log(json.data.user_id);
+
+        let today = new Date().toISOString().split("T")[0];
+        let end_date = json.data.end_date.split("T")[0];
+        if (end_date < today) {
+          console.log("The event is finished.");
+        }
+
+        async function eventParticipants() {
+          let res = await fetch(`/eventParticipants/${eventId}`);
+          let json = await res.json();
+        }
+        eventParticipants();
 
         let template2 = document.querySelector("#template2").content;
         let participantsList = document.querySelector(".participants-result");
@@ -163,47 +174,26 @@
               const res = await fetch(`/joinEvent?eventId=${eventId}`, {
                 method: "POST",
               });
-              const result = await res.json(); // { success: true }
+              let result = await res.json(); // { success: true }
               window.location = `/`;
             } else {
               console.log("The event is full.");
             }
           });
       }
+      document
+        .querySelector("#delete_btn")
+        .addEventListener("click", async (event) => {
+          event.preventDefault();
+          const res = await fetch(`/deleteEvent?eventId=${eventId}`, {
+            method: "DELETE",
+          });
+          let result = await res.json(); // { success: true }
+          window.location = `/`;
+          console.log("The event is deleted.");
+        });
 
       viewEvent();
-
-      // document
-      // .querySelector(".join_event")
-      // .addEventListener("click", async (event) => {
-      //   event.preventDefault();
-
-      //   const res = await fetch(`/joinEvent?eventId=${eventId}`, {
-      //     method: "POST",
-      //   });
-
-      //   const result = await res.json(); // { success: true }
-      //   window.location = `/`;
-      // });
-
-      // function deleteEvent(event) {
-      //   node
-      //     .querySelector(".deleteEvent")
-      //     .addEventListener("click", async (event) => {
-      //       let res = await fetch(`/events/${event.id}`, { method: "DELETE" });
-      //       let json = await res.json();
-      //       if (json.error) {
-      //         Swal.fire({
-      //           title: "Failed to delete memo",
-      //           text: json.error,
-      //           icon: "error",
-      //         });
-      //       } else {
-      //         node.remove();
-      //         showSuccessToast(`Deleted event #${event.id}`);
-      //       }
-      //     });
-      // }
     </script>
   </body>
 </html>

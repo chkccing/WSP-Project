@@ -191,6 +191,31 @@ eventRoutes.get("/allParticipants/:id", async (req, res, next) => {
 }
 )
 
+eventRoutes.get("/eventParticipants/:id", async (req, res, next) => {
+  let id = req.params.id
+  let user_id = getSessionUser(req).id
+  try {
+    let result = await client.query(
+    /* sql */`
+    select * from event_participant
+    left join users on users.id  = event_participant.user_id 
+    WHERE event_participant.event_id = $1
+      `, [id],);
+    let eventParticipant = result.rows[0]
+    let participants = eventParticipant.user_id
+    for (let participant of participants) {
+      if (participant == user_id) {
+        res.json({ eventParticipant })
+        console.log("You have joined this event.");
+      } if (user_id == null) { console.log("You haven't login.") }
+      else { console.log("You haven't joined this event.") }
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
+
 
 eventRoutes.get("/allEvent/", async (req, res, next) => {
   try {
@@ -206,16 +231,16 @@ eventRoutes.get("/allEvent/", async (req, res, next) => {
 }
 )
 
-eventRoutes.delete('/events/:id', hasLogin, async (req, res, next) => {
+eventRoutes.delete('/deleteEvent/:id', hasLogin, async (req, res, next) => {
   try {
-    let id = +req.params.id
+    let id = req.params.id
     let user_id = getSessionUser(req).id
 
     let result = await client.query(
       /* sql */ `
     select
       host_id
-    from events
+    from event
     where id = $1
   `,
       [id],
@@ -223,31 +248,26 @@ eventRoutes.delete('/events/:id', hasLogin, async (req, res, next) => {
     let event = result.rows[0]
 
     if (!event) {
-      res.json({ details: 'the memo is already deleted' })
+      res.json({ details: 'this event does not exist.' })
       return
     }
 
     if (event.host_id !== user_id) {
       throw new HttpError(
         403,
-        "You are not allowed to delete other users's memo",
+        "You are not allowed to delete other users' event",
       )
     }
 
     result = await client.query(
       /* sql */ `
-    delete from events
+    delete from event
     where id = $1
     and host_id = $2
   `,
       [id, user_id],
     )
 
-    if (result.rowCount > 0) {
-      res.json({ details: 'the memo is just deleted' })
-    } else {
-      res.json({ details: 'the memo is already deleted' })
-    }
   } catch (error) {
     next(error)
   }
