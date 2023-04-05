@@ -20,8 +20,10 @@ let insert_post = async (content: string) => {
   `,
     [content]
   );
+  console.log(result.rows[0].id);
   return result.rows[0].id;
 };
+console.log(insert_post);
 
 let select_tag_id = async (hashtag: string) => {
   const result = await client.query(
