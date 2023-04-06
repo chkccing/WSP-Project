@@ -43,6 +43,9 @@
         width: 5rem;
         height: 3rem;
       }
+      .event-list {
+        display: flex;
+      }
     </style>
     <link rel="stylesheet" href="/css/form.css" />
     <link rel="stylesheet" href="/css/styles.css" />
@@ -117,6 +120,7 @@
       //連同applyRole令div顯示用戶名稱
       let currentUsername = logoutForm.querySelector(".username");
 
+      //insert all event previews
       let template = document.querySelector("template");
       let eventList = document.querySelector(".event-list");
       let eventTemplate = template.content.querySelector("#link");

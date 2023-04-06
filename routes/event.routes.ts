@@ -8,9 +8,9 @@ import { mkdirSync } from 'fs'
 import { join } from 'path'
 import { client } from '../db'
 import { checkString, checkBoolean } from '../express'
-import { HttpError } from '../express'
+// import { HttpError } from '../express'
 import { getSessionUser } from '../guards'
-import { hasLogin } from '../guards'
+// import { hasLogin } from '../guards'
 let uploadDir = join('uploads', 'event-images')
 mkdirSync(uploadDir, { recursive: true })
 import '../session'
@@ -41,6 +41,7 @@ export type Event = {
 // const uploadDir = "uploads/event-images";
 // fs.mkdirSync(uploadDir, { recursive: true });
 
+//Photo Uploads
 const form = formidable({
   uploadDir,
   keepExtensions: true,
@@ -50,6 +51,7 @@ const form = formidable({
 });
 
 // When #contact-form submit, this route will receive the request
+//User Create Event
 eventRoutes.post("/createEvent", function (req: Request, res: Response) {
   form.parse(req, async (err, fields, files) => {
     try {
@@ -108,6 +110,7 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
   })
 });
 
+//Participants press the join button to join the event
 eventRoutes.post("/joinEvent", async (req: Request, res: Response) => {
   try {
     let user_id = getSessionUser(req).id
@@ -136,8 +139,7 @@ eventRoutes.post("/joinEvent", async (req: Request, res: Response) => {
 
 
     let id = result.rows[0].id
-    console.log(id);
-
+    if (user_id == undefined) { console.log("Please Login") }
 
     res.json(id);
 
@@ -148,10 +150,10 @@ eventRoutes.post("/joinEvent", async (req: Request, res: Response) => {
   }
 });
 
-
+//User upload photos when creating events
 eventRoutes.use('/uploads/event-images', express.static(uploadDir))
 
-
+//Show Event's all details
 eventRoutes.get("/viewEvent/:id", async (req, res, next) => {
   // let id=req.query.id
   let id = req.params.id
@@ -174,6 +176,7 @@ eventRoutes.get("/viewEvent/:id", async (req, res, next) => {
 }
 )
 
+//Show all participants name in single event page
 eventRoutes.get("/allParticipants/:id", async (req, res, next) => {
   let id = req.params.id
   try {
@@ -191,6 +194,7 @@ eventRoutes.get("/allParticipants/:id", async (req, res, next) => {
 }
 )
 
+//show user you have joined event or haven't joined event.
 eventRoutes.get("/eventParticipants/:id", async (req, res, next) => {
   let id = req.params.id
   let user_id = getSessionUser(req).id
@@ -200,15 +204,16 @@ eventRoutes.get("/eventParticipants/:id", async (req, res, next) => {
     select * from event_participant
     left join users on users.id  = event_participant.user_id 
     WHERE event_participant.event_id = $1
-      `, [id],);
-    let eventParticipant = result.rows[0]
-    let participants = eventParticipant.user_id
-    for (let participant of participants) {
-      if (participant == user_id) {
-        res.json({ eventParticipant })
-        console.log("You have joined this event.");
-      } if (user_id == null) { console.log("You haven't login.") }
-      else { console.log("You haven't joined this event.") }
+    AND event_participant.user_id = $2
+      `, [id, user_id]);
+
+    if (result.rows.length === 0) {
+      res.json(result.rows[0])
+      console.log("You haven't joined this event.")
+    } if (user_id == null) {
+      console.log("You haven't login.")
+    } else {
+      console.log("You haven't joined this event.")
     }
   } catch (error) {
     next(error)
@@ -216,12 +221,12 @@ eventRoutes.get("/eventParticipants/:id", async (req, res, next) => {
 })
 
 
-
+//show all event in index page
 eventRoutes.get("/allEvent/", async (req, res, next) => {
   try {
     let result = await client.query(
     /* sql */`
-    select id, eventPicture, title from event 
+    select id, eventPicture, title, is_private from event 
       `, [],);
     let events = result.rows
     res.json({ events })
@@ -231,44 +236,64 @@ eventRoutes.get("/allEvent/", async (req, res, next) => {
 }
 )
 
-eventRoutes.delete('/deleteEvent/:id', hasLogin, async (req, res, next) => {
-  try {
-    let id = req.params.id
-    let user_id = getSessionUser(req).id
+// eventRoutes.delete('/deleteEvent/:id', hasLogin, async (req, res, next) => {
+//   try {
+//     let id = req.params.id
+//     let user_id = getSessionUser(req).id
 
-    let result = await client.query(
-      /* sql */ `
-    select
-      host_id
-    from event
-    where id = $1
-  `,
-      [id],
-    )
-    let event = result.rows[0]
+//     let result = await client.query(
+//       /* sql */ `
+//     select
+//       host_id
+//     from event
+//     where id = $1
+//   `,
+//       [id],
+//     )
+//     let event = result.rows[0]
 
-    if (!event) {
-      res.json({ details: 'this event does not exist.' })
-      return
-    }
+//     if (!event) {
+//       res.json({ details: 'this event does not exist.' })
+//       return
+//     }
 
-    if (event.host_id !== user_id) {
-      throw new HttpError(
-        403,
-        "You are not allowed to delete other users' event",
-      )
-    }
+//     if (event.host_id !== user_id) {
+//       throw new HttpError(
+//         403,
+//         "You are not allowed to delete other users' event",
+//       )
+//     }
 
-    result = await client.query(
-      /* sql */ `
-    delete from event
-    where id = $1
-    and host_id = $2
-  `,
-      [id, user_id],
-    )
+//     result = await client.query(
+//       /* sql */ `
+//     delete from event
+//     where id = $1
+//     and host_id = $2
+//   `,
+//       [id, user_id],
+//     )
 
-  } catch (error) {
-    next(error)
-  }
-})
+//   } catch (error) {
+//     next(error)
+//   }
+// })
+
+// eventRoutes.post("/eventSearch", async (req, res) => {
+//   let search = req.body.search;
+//   let query = req.body.query;
+//   //console.log("search: ", search, "query", query);
+//   let searchList = await client.query(
+//     `
+//     SELECT event.title
+// FROM event
+// INNER JOIN hashtag ON employee.id = claim.employee_id
+// INNER JOIN department ON department.id = claim.department_id
+// WHERE ${search} Like $1
+// ORDER BY claim.id DESC;`,
+//     [`%${query}%`]
+//   );
+//   //let dbEmployee = dbEmployeeList.rows[0];
+//   //console.log(dbEmployee);
+//   //console.log("searchList from db searched by query+search", searchList.rows);
+//   res.json(searchList.rows);
+// });
