@@ -73,7 +73,7 @@
         <div class="row" id="FAQ"></div>
       </div>
     </template>
-    <div id="eventParticipants"></div>
+    <div id="joinStatus"></div>
     <button class="join_event" id="join_btn">Join</button>
     <button class="delete_event" id="delete_btn">Delete</button>
     <div class="event-result"></div>
@@ -140,11 +140,11 @@
           console.log("The event is finished.");
         }
         //show whether current user have joined the event.
-        async function eventParticipants() {
-          let res = await fetch(`/eventParticipants/${eventId}`);
+        async function joinStatus() {
+          let res = await fetch(`/joinStatus/${eventId}`);
           let json = await res.json();
         }
-        eventParticipants();
+        joinStatus();
 
         //insert all participants name. function for organizer.
         let template2 = document.querySelector("#template2").content;
