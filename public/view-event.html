@@ -70,7 +70,7 @@
         <div class="row" id="location"></div>
         <div class="row" id="participants"></div>
         <div class="row" id="joined"></div>
-        <div class="row" id="FAQ"></div>
+        <div class="row" id="faq"></div>
       </div>
     </template>
     <div id="joinStatus"></div>
@@ -102,8 +102,8 @@
         //   return;
         // }
         let eventPicture = currentEvent.querySelector("#eventPicture");
-        if (json.eventpicture) {
-          eventPicture.src = "/uploads/event-images/" + json.eventpicture;
+        if (json.data.eventpicture) {
+          eventPicture.src = "/uploads/event-images/" + json.data.eventpicture;
         } else {
           eventPicture.src = "/uploads/event-images/default.jpg";
         }
@@ -130,8 +130,8 @@
         }
         currentEvent.querySelector("#joined").textContent =
           "Number of joined: " + json.joined;
-        currentEvent.querySelector("#FAQ").textContent =
-          "FAQ: " + json.data.FAQ;
+        currentEvent.querySelector("#faq").textContent =
+          "FAQ: " + json.data.faq;
         eventResult.appendChild(currentEvent);
 
         let today = new Date().toISOString().split("T")[0];
@@ -143,6 +143,11 @@
         async function joinStatus() {
           let res = await fetch(`/joinStatus/${eventId}`);
           let json = await res.json();
+          if (json.hasJoin == true) {
+            console.log("You have joined this event.");
+          } else {
+            console.log("You haven't joined this event.");
+          }
         }
         joinStatus();
 
@@ -184,19 +189,18 @@
               console.log("The event is full.");
             }
           });
-      }
-      // document
-      //   .querySelector("#delete_btn")
-      //   .addEventListener("click", async (event) => {
-      //     event.preventDefault();
-      //     const res = await fetch(`/deleteEvent?eventId=${eventId}`, {
-      //       method: "DELETE",
-      //     });
-      //     let result = await res.json(); // { success: true }
-      //     window.location = `/`;
-      //     console.log("The event is deleted.");
-      //   });
 
+        document
+          .querySelector("#delete_btn")
+          .addEventListener("click", async (event) => {
+            event.preventDefault();
+            const res = await fetch(`/deleteEvent?eventId=${eventId}`, {
+              method: "POST",
+            });
+            let result = await res.json(); // { success: true }
+            window.location = "/index.html";
+          });
+      }
       viewEvent();
     </script>
   </body>
