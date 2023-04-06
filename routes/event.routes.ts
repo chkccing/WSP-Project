@@ -195,10 +195,10 @@ eventRoutes.get("/allParticipants/:id", async (req, res, next) => {
 )
 
 //show user you have joined event or haven't joined event.
-eventRoutes.get("/eventParticipants/:id", async (req, res, next) => {
+eventRoutes.get("/joinStatus/:id", async (req, res, next) => {
   let id = req.params.id
-  let user_id = getSessionUser(req).id
   try {
+    let user_id = getSessionUser(req).id
     let result = await client.query(
     /* sql */`
     select * from event_participant
@@ -210,12 +210,11 @@ eventRoutes.get("/eventParticipants/:id", async (req, res, next) => {
     if (result.rows.length === 0) {
       res.json(result.rows[0])
       console.log("You haven't joined this event.")
-    } if (user_id == null) {
-      console.log("You haven't login.")
     } else {
-      console.log("You haven't joined this event.")
+      console.log("You have joined this event.")
     }
   } catch (error) {
+    console.log("You haven't login.")
     next(error)
   }
 })
