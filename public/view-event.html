@@ -85,9 +85,11 @@
     <div class="participants-result"></div>
     <div class="expired-result"></div>
     <script>
+      //view event by event id
       let params = new URL(document.location).searchParams;
       let eventId = params.get("id");
 
+      // insert event details in templates
       let eventResult = document.querySelector(".event-result");
       let currentEventTemplate = document.querySelector("#template1");
       let currentEvent =
@@ -137,13 +139,14 @@
         if (end_date < today) {
           console.log("The event is finished.");
         }
-
+        //show whether current user have joined the event.
         async function eventParticipants() {
           let res = await fetch(`/eventParticipants/${eventId}`);
           let json = await res.json();
         }
         eventParticipants();
 
+        //insert all participants name. function for organizer.
         let template2 = document.querySelector("#template2").content;
         let participantsList = document.querySelector(".participants-result");
 
@@ -166,6 +169,7 @@
         }
         loadParticipants();
 
+        //function in join button for join event
         document
           .querySelector("#join_btn")
           .addEventListener("click", async (event) => {
@@ -181,17 +185,17 @@
             }
           });
       }
-      document
-        .querySelector("#delete_btn")
-        .addEventListener("click", async (event) => {
-          event.preventDefault();
-          const res = await fetch(`/deleteEvent?eventId=${eventId}`, {
-            method: "DELETE",
-          });
-          let result = await res.json(); // { success: true }
-          window.location = `/`;
-          console.log("The event is deleted.");
-        });
+      // document
+      //   .querySelector("#delete_btn")
+      //   .addEventListener("click", async (event) => {
+      //     event.preventDefault();
+      //     const res = await fetch(`/deleteEvent?eventId=${eventId}`, {
+      //       method: "DELETE",
+      //     });
+      //     let result = await res.json(); // { success: true }
+      //     window.location = `/`;
+      //     console.log("The event is deleted.");
+      //   });
 
       viewEvent();
     </script>

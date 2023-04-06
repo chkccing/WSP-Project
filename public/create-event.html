@@ -130,6 +130,7 @@
     </form>
     <script src="/js/alert.js"></script>
     <script>
+      //set start date cannot earlier than today
       let today = new Date().toISOString().split('T')[0];
       console.log(today)
       document.querySelector(".start_date").setAttribute('min', today);
@@ -141,7 +142,8 @@
         document.querySelector(".end_date").setAttribute('min', start_date);
 
       } )
- 
+    
+      //insert data to database
     document.querySelector("#Create-Event").addEventListener('submit', async (event)=> {
  
     event.preventDefault();
