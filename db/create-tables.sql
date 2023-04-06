@@ -32,24 +32,24 @@ create table event_participant (
     event_id integer,
     user_id integer
 );
-create table event_rating (
-    id serial primary key,
-    event_id integer,
-    user_id integer,
-    rating DECIMAL(1, 0),
-    comment varchar(250),
-    created_at timestamp not null default current_timestamp
-);
+-- create table event_rating (
+--     id serial primary key,
+--     event_id integer,
+--     user_id integer,
+--     rating DECIMAL(1, 0),
+--     comment varchar(250),
+--     created_at timestamp not null default current_timestamp
+-- );
 create table image (
     id serial primary key,
     event_image varchar(250),
     user_icon varchar(250)
 );
-create table event_timeslot (
-    id serial primary key,
-    date date,
-    timeslot time
-);
+-- create table event_timeslot (
+--     id serial primary key,
+--     date date,
+--     timeslot time
+-- );
 create table hashtag (
     id serial primary key,
     event_id integer,

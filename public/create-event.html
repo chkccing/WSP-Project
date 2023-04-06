@@ -159,9 +159,7 @@
     });
 
     const result = await res.json(); // { success: true }
-    console.log(result)
     window.location = `/view-event.html?id=${result}`
-    console.log("id:",result);
   });
       async function loadRole() {
         let res = await fetch('/role');

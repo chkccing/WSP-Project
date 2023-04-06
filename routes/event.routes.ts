@@ -126,17 +126,10 @@ eventRoutes.post("/joinEvent", async (req: Request, res: Response) => {
           `,
       [user_id, event_id],
     )
-
-
-
     let id = result.rows[0].id
-    if (user_id == undefined) { console.log("Please Login") }
-
     res.json(id);
-
-
   } catch (error) {
-    console.log(error)
+    if (getSessionUser(req).id == undefined) { console.log("Please Login") }
     res.json({})
   }
 });
@@ -217,7 +210,9 @@ eventRoutes.get("/allEvent/", async (req, res, next) => {
   try {
     let result = await client.query(
     /* sql */`
-    select id, eventPicture, title, is_private from event 
+    select id, eventPicture, title, end_date, is_private, active from event 
+    WHERE event.active = true
+    ORDER BY start_date
       `, [],);
     let events = result.rows
     res.json({ events })
@@ -226,6 +221,63 @@ eventRoutes.get("/allEvent/", async (req, res, next) => {
   }
 }
 )
+
+eventRoutes.post("/expireEvent", async (req: Request, res: Response) => {
+  try {
+    let result = await client.query(
+            /* sql */ `
+      select
+      event.id, event.end_date
+      from event
+      WHERE event.end_date < NOW();
+          `,
+      [],
+    )
+    result = await client.query(
+            /* sql */ `
+      update event set active = false 
+      returning id
+          `,
+      [],
+    )
+
+    res.json(result.rows);
+
+
+  } catch (error) {
+    console.log(error)
+    res.json({})
+  }
+});
+
+eventRoutes.post("/deleteEvent", async (req: Request, res: Response) => {
+  try {
+    let user_id = getSessionUser(req).id
+    let event_id = req.query.eventId
+    let result = await client.query(
+            /* sql */ `
+      select
+      event.id, event.host_id, event.active
+      from event
+      WHERE event.host_id = ${user_id} and event.active = true
+          `,
+      [],
+    )
+    result = await client.query(
+            /* sql */ `
+      update event set active = false 
+      WHERE id = $1
+      returning id
+          `,
+      [event_id],
+    )
+
+    let id = result.rows[0].id
+    res.json(id);
+  } catch (error) {
+    res.json({})
+  }
+});
 
 // eventRoutes.delete('/deleteEvent/:id', hasLogin, async (req, res, next) => {
 //   try {

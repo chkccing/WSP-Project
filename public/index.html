@@ -136,6 +136,14 @@
         }
         // let eventBox = node.querySelector(".eventBox");
         // console.log(eventBox);
+        let today = new Date().toISOString().split("T")[0];
+        if (event.end_date < today) {
+          async function expiredEvent() {
+            let res = await fetch("/expireEvent");
+            let json = await res.json();
+          }
+          expiredEvent();
+        }
         node.href = "/view-event.html?id=" + event.id;
         eventList.appendChild(node);
       }
