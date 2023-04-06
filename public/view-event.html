@@ -102,8 +102,8 @@
         //   return;
         // }
         let eventPicture = currentEvent.querySelector("#eventPicture");
-        if (json.eventpicture) {
-          eventPicture.src = "/uploads/event-images/" + json.eventpicture;
+        if (json.data.eventpicture) {
+          eventPicture.src = "/uploads/event-images/" + json.data.eventpicture;
         } else {
           eventPicture.src = "/uploads/event-images/default.jpg";
         }

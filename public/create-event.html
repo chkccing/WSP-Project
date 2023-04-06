@@ -117,7 +117,7 @@
         <input class = "line" type="number" placeholder="participants" name="participants" required/>
       </div>
       <div>
-        <textarea class = "line" type="text" placeholder="FAQ" name="FAQ"></textarea>
+        <textarea class = "line" type="text" placeholder="faq" name="faq"></textarea>
       </div>
       <div>
         <input type="checkbox" name="is_age18" /> Is age 18 required?
@@ -132,9 +132,7 @@
     <script>
       //set start date cannot earlier than today
       let today = new Date().toISOString().split('T')[0];
-      console.log(today)
       document.querySelector(".start_date").setAttribute('min', today);
-
       document.querySelector(".start_date").addEventListener("change",()=>{
 
         let start_date = document.querySelector(".start_date").value

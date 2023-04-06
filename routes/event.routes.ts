@@ -14,7 +14,6 @@ import { getSessionUser } from '../guards'
 let uploadDir = join('uploads', 'event-images')
 mkdirSync(uploadDir, { recursive: true })
 import '../session'
-// import { log } from 'console'
 
 
 
@@ -26,16 +25,16 @@ export type Event = {
   eventPicture?: string
   title: string
   category: string
-  Date: Date
-  Time: TimeRanges
-  Details: String
-  Hashtag: String
-  Cost: Number
-  Location: String
-  Participants: Number
-  FAQ: String
-  Is_age18: Boolean
-  Is_private: Boolean
+  date: Date
+  time: TimeRanges
+  details: String
+  hashtag: String
+  cost: Number
+  location: String
+  participants: Number
+  faq: String
+  is_age18: Boolean
+  is_private: Boolean
 }
 
 // const uploadDir = "uploads/event-images";
@@ -70,11 +69,9 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
       let location = checkString('location', fields.location)
       let participants = Number(checkString('participants', fields.participants))
       console.log({ participants });
-
-      let FAQ = checkString('FAQ', fields.FAQ)
+      let faq = checkString('faq', fields.faq)
       let is_age18 = checkBoolean('is_age18', fields.is_age18)
       let is_private = checkBoolean('is_private', fields.is_private)
-
       let result = await client.query(
             /* sql */ `
       select
@@ -84,25 +81,19 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
           `,
         [],
       )
-
       result = await client.query(
             /* sql */ `
       insert into event
-      (host_id, eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, FAQ, is_age18, is_private)
+      (host_id, eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, faq, is_age18, is_private)
       values
       ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
       returning id
           `,
-        [host_id, eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, FAQ, is_age18, is_private],
+        [host_id, eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, faq, is_age18, is_private],
       )
-
       let id = result.rows[0].id
       console.log(id);
-
-
       res.json(id);
-
-
     } catch (error) {
       console.log(error)
       res.json({})
@@ -208,13 +199,14 @@ eventRoutes.get("/joinStatus/:id", async (req, res, next) => {
       `, [id, user_id]);
 
     if (result.rows.length === 0) {
-      res.json(result.rows[0])
+      res.json({ hasJoin: false })
       console.log("You haven't joined this event.")
     } else {
+      res.json({ hasJoin: true })
       console.log("You have joined this event.")
     }
   } catch (error) {
-    console.log("You haven't login.")
+    res.json({ err: error })
     next(error)
   }
 })

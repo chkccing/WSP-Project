@@ -22,6 +22,7 @@ create table event (
     FAQ varchar(500),
     is_age18 boolean not null,
     is_private boolean not null,
+    active boolean not null default true,
     created_at timestamp not null default current_timestamp,
     updated_at timestamp
 );
