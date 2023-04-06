@@ -222,6 +222,7 @@ eventRoutes.get("/allEvent/", async (req, res, next) => {
 }
 )
 
+//organizer delete event
 eventRoutes.post("/deleteEvent", async (req: Request, res: Response) => {
   try {
     let user_id = getSessionUser(req).id
@@ -251,47 +252,36 @@ eventRoutes.post("/deleteEvent", async (req: Request, res: Response) => {
   }
 });
 
-// eventRoutes.delete('/deleteEvent/:id', hasLogin, async (req, res, next) => {
-//   try {
-//     let id = req.params.id
-//     let user_id = getSessionUser(req).id
+//organizer delete participant
+eventRoutes.post("/deleteParticipant", async (req: Request, res: Response) => {
+  try {
+    let user_id = getSessionUser(req).id
+    let event_id = req.query.eventId
+    let result = await client.query(
+            /* sql */ `
+      select
+      event.id, event.host_id, event.active
+      from event
+      WHERE event.host_id = ${user_id} and event.active = true
+          `,
+      [],
+    )
+    result = await client.query(
+            /* sql */ `
+      update event set active = false 
+      WHERE id = $1
+      returning id
+          `,
+      [event_id],
+    )
 
-//     let result = await client.query(
-//       /* sql */ `
-//     select
-//       host_id
-//     from event
-//     where id = $1
-//   `,
-//       [id],
-//     )
-//     let event = result.rows[0]
+    let id = result.rows[0].id
+    res.json(id);
+  } catch (error) {
+    res.json({})
+  }
+});
 
-//     if (!event) {
-//       res.json({ details: 'this event does not exist.' })
-//       return
-//     }
-
-//     if (event.host_id !== user_id) {
-//       throw new HttpError(
-//         403,
-//         "You are not allowed to delete other users' event",
-//       )
-//     }
-
-//     result = await client.query(
-//       /* sql */ `
-//     delete from event
-//     where id = $1
-//     and host_id = $2
-//   `,
-//       [id, user_id],
-//     )
-
-//   } catch (error) {
-//     next(error)
-//   }
-// })
 
 // eventRoutes.post("/eventSearch", async (req, res) => {
 //   let search = req.body.search;

@@ -10,7 +10,7 @@ alter table users
 add column bio varchar(255);
 alter table users
 add column email varchar(60) not null;
-alter table users
+alter table event_participant
 add column phone DECIMAL(8, 0) not null;
 alter table users
 alter column password_hash drop not null;

@@ -28,14 +28,14 @@ create table event (
 );
 create table event_participant (
     id serial primary key,
-    event_timeslot_id integer,
     event_id integer,
-    user_id integer
+    user_id integer,
+    active boolean not null default true
 );
 -- create table event_rating (
 --     id serial primary key,
 --     event_id integer,
---     user_id integer,
+--     user_id integer,y
 --     rating DECIMAL(1, 0),
 --     comment varchar(250),
 --     created_at timestamp not null default current_timestamp
