@@ -60,9 +60,10 @@ CREATE TABLE tag (
     hashtag TEXT UNIQUE,
     tag_group_id INTEGER REFERENCES tag_group(id)
 );
-CREATE TABLE tag_group (id SERIAL PRIMARY KEY, name TEXT UNIQUE);
 CREATE TABLE post_tag (
     id SERIAL PRIMARY KEY,
     post_id INTEGER REFERENCES post(id),
     tag_id INTEGER REFERENCES tag(id)
 );
+-- tag_group用唔着，commented。
+-- CREATE TABLE tag_group (id SERIAL PRIMARY KEY, name TEXT UNIQUE);
