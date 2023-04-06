@@ -97,9 +97,14 @@
           <option value="Photography">Photography</option>
         </select>
       </div>
+    </form>
+    <form>
+      <label></label>
       <div>
         <input class = "line" type="text" placeholder="hashtag" name="hashtag"/>
       </div>
+    </form>
+    <form id="Create-Event">
       <div>
         <input class="start_date date" type="text" placeholder="Start Date" name ="start_date" onfocus="(this.type='date')" onblur="(this.type='text')">
         <input class="end_date date" type="text" placeholder="End Date" name ="end_date" onfocus="(this.type='date')" onblur="(this.type='text')" >
@@ -130,7 +135,6 @@
     </form>
     <script src="/js/alert.js"></script>
     <script>
-      //set start date cannot earlier than today
       let today = new Date().toISOString().split('T')[0];
       console.log(today)
       document.querySelector(".start_date").setAttribute('min', today);
@@ -142,8 +146,7 @@
         document.querySelector(".end_date").setAttribute('min', start_date);
 
       } )
-    
-      //insert data to database
+ 
     document.querySelector("#Create-Event").addEventListener('submit', async (event)=> {
  
     event.preventDefault();

@@ -1,0 +1,737 @@
+我的guards.ts文件如下：
+import { NextFunction, Request, Response } from 'express'
+import { HttpError } from './express'
+import './session'
+
+export function hasLogin(req: Request, res: Response, next: NextFunction) {
+  if (req.session.user) {
+    next()
+    return
+  }
+  res.status(401)
+  res.json({ error: 'This API is only for authenticated users' })
+}
+
+export function getSessionUser(req: Request) {
+  let user = req.session.user
+  if (user) return user
+  throw new HttpError(401, 'This API is only for authenticated users')
+}
+
+我的event.routes.ts文件如下：
+import express from "express";
+import { Router } from "express";
+import { Request, Response } from "express";
+import formidable from "formidable";
+import { mkdirSync } from "fs";
+import { join } from "path";
+import { client } from "../db";
+import { checkString, checkBoolean } from "../express";
+
+import { getSessionUser } from "../guards";
+
+let uploadDir = join("uploads", "event-images");
+mkdirSync(uploadDir, { recursive: true });
+import "../session";
+
+import { extractTag } from "../tagRelatedFunction";
+
+export const eventRoutes = Router();
+
+export type Event = {
+  id: number;
+  host_id: number;
+  eventPicture?: string;
+  title: string;
+  category: string;
+  Date: Date;
+  Time: TimeRanges;
+  Details: String;
+  Hashtag: String;
+  Cost: Number;
+  Location: String;
+  Participants: Number;
+  FAQ: String;
+  Is_age18: Boolean;
+  Is_private: Boolean;
+};
+
+const form = formidable({
+  uploadDir,
+  keepExtensions: true,
+  maxFiles: 1,
+  maxFileSize: 1024 ** 2 * 200,
+  filter: (part) => part.mimetype?.startsWith("image/") || false,
+});
+
+let insert_post = async (content: string) => {
+  const result = await client.query(
+    /* sql */ `
+    insert into post (content) values ($1) returning id
+  `,
+    [content]
+  );
+  console.log(result.rows[0].id);
+  return result.rows[0].id;
+};
+console.log(insert_post);
+
+let select_tag_id = async (hashtag: string) => {
+  const result = await client.query(
+    /* sql */ `
+SELECT
+  id
+FROM tag
+WHERE hashtag = $1;
+  `,
+    [hashtag]
+  );
+  return result.rows[0]?.id;
+};
+
+let insert_tag = async (hashtag: string) => {
+  const result = await client.query(
+    /* sql */ `
+    INSERT INTO tag (hashtag) VALUES ($1) RETURNING id
+  `,
+    [hashtag]
+  );
+  return result.rows[0].id;
+};
+
+let insert_post_tag = async (post_id: number, tag_id: number) => {
+  await client.query(
+    /* sql */ `
+    INSERT INTO post_tag (post_id, tag_id) VALUES ($1, $2)
+  `,
+    [post_id, tag_id]
+  );
+};
+
+
+eventRoutes.post("/createEvent", function (req: Request, res: Response) {
+  form.parse(req, async (err, fields, files) => {
+    try {
+      let host_id = getSessionUser(req).id;
+      let eventPictureMaybeArray = files.eventPictures;
+      console.log("eventPictureMaybeArray:", files);
+      let eventPicture = Array.isArray(eventPictureMaybeArray)
+        ? eventPictureMaybeArray[0]
+        : eventPictureMaybeArray.newFilename;
+      let title = checkString("title", fields.title);
+      let category = checkString("category", fields.category);
+      let start_date = checkString("start_date", fields.start_date);
+      let end_date = checkString("end_date", fields.end_date);
+      let hashtag = checkString("hashtag", fields.hashtag);
+      let cost = Number(checkString("cost", fields.cost));
+      let location = checkString("location", fields.location);
+      let participants = Number(
+        checkString("participants", fields.participants)
+      );
+      console.log({ participants });
+
+      let FAQ = checkString("FAQ", fields.FAQ);
+      let is_age18 = checkBoolean("is_age18", fields.is_age18);
+      let is_private = checkBoolean("is_private", fields.is_private);
+
+      let result = await client.query(
+        /* sql */ `
+      select
+        event.id
+      from event
+      inner join users on users.id = event.host_id
+          `,
+        []
+      );
+
+
+      let decodeTag = extractTag(hashtag);
+
+      let tags = decodeTag;
+      let { id: post_id } = await insert_post(req.body.content);
+
+      for (let tag of tags) {
+        let tag_id = await select_tag_id(tag);
+        if (!tag_id) {
+          tag_id = (await insert_tag(tag)).lastInsertRowid;
+        }
+        await insert_post_tag(post_id, tag_id);
+      }
+
+
+      result = await client.query(
+        /* sql */ `
+      insert into event
+      (host_id, eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, FAQ, is_age18, is_private, decodeTag)
+      values
+      ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+      returning id
+          `,
+        [
+          host_id,
+          eventPicture,
+          title,
+          category,
+          hashtag,
+          start_date,
+          end_date,
+          cost,
+          location,
+          participants,
+          FAQ,
+          is_age18,
+          is_private,
+          decodeTag,
+        ]
+      );
+
+      let id = result.rows[0].id;
+      console.log(id);
+
+      res.json(id);
+    } catch (error) {
+      console.log(error);
+      res.json({});
+    }
+  });
+});
+
+
+eventRoutes.post("/joinEvent", async (req: Request, res: Response) => {
+  try {
+    let user_id = getSessionUser(req).id;
+    let event_id = req.query.eventId;
+    let result = await client.query(
+      /* sql */ `
+      select
+      event_participant.id, event_participant.event_id
+      from event_participant
+      inner join users on users.id = event_participant.user_id
+      inner join event on event.id = event_participant.event_id
+          `,
+      []
+    );
+    result = await client.query(
+      /* sql */ `
+      insert into event_participant
+      (user_id, event_id)
+      values
+      ($1, $2)
+      returning id
+          `,
+      [user_id, event_id]
+    );
+
+    let id = result.rows[0].id;
+    if (user_id == undefined) {
+      console.log("Please Login");
+    }
+
+    res.json(id);
+  } catch (error) {
+    console.log(error);
+    res.json({});
+  }
+});
+
+
+eventRoutes.use("/uploads/event-images", express.static(uploadDir));
+
+
+eventRoutes.get("/viewEvent/:id", async (req, res, next) => {
+
+  let id = req.params.id;
+  try {
+    let result = await client.query(
+      /* sql */ `
+    select * from event 
+    left join event_participant on event_participant.event_id  = event.id
+    WHERE event.id = $1
+      `,
+      [id]
+    );
+
+    res.json({ data: result.rows[0], joined: result.rowCount });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+
+eventRoutes.get("/allParticipants/:id", async (req, res, next) => {
+  let id = req.params.id;
+  try {
+    let result = await client.query(
+      /* sql */ `
+    select * from users
+    right join event_participant on users.id  = event_participant.user_id 
+    WHERE event_participant.event_id = $1
+      `,
+      [id]
+    );
+    let users = result.rows;
+    res.json({ users });
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+eventRoutes.get("/eventParticipants/:id", async (req, res, next) => {
+  let id = req.params.id;
+  let user_id = getSessionUser(req).id;
+  try {
+    let result = await client.query(
+      /* sql */ `
+    select * from event_participant
+    left join users on users.id  = event_participant.user_id 
+    WHERE event_participant.event_id = $1
+    AND event_participant.user_id = $2
+      `,
+      [id, user_id]
+    );
+
+    if (result.rows.length === 0) {
+      res.json(result.rows[0]);
+      console.log("You haven't joined this event.");
+    }
+    if (user_id == null) {
+      console.log("You haven't login.");
+    } else {
+      console.log("You haven't joined this event.");
+    }
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+eventRoutes.get("/allEvent/", async (req, res, next) => {
+  try {
+    let result = await client.query(
+      /* sql */ `
+    select id, eventPicture, title, is_private from event 
+      `,
+      []
+    );
+    let events = result.rows;
+    res.json({ events });
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+我有以下錯誤：
+HttpError: This API is only for authenticated users
+    at getSessionUser (C:\Users\alany\vsprojects\project2\WSP-Project\guards.ts:17:9)
+    at C:\Users\alany\vsprojects\project2\WSP-Project\routes\event.routes.ts:103:35
+    at Generator.next (<anonymous>)
+    at C:\Users\alany\vsprojects\project2\WSP-Project\routes\event.routes.ts:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (C:\Users\alany\vsprojects\project2\WSP-Project\routes\event.routes.ts:4:12)
+    at C:\Users\alany\vsprojects\project2\WSP-Project\routes\event.routes.ts:101:48
+    at zalgoSafe (C:\Users\alany\vsprojects\project2\WSP-Project\node_modules\dezalgo\dezalgo.js:20:10)
+    at f (C:\Users\alany\vsprojects\project2\WSP-Project\node_modules\once\once.js:25:25)
+    at IncomingForm.<anonymous> (C:\Users\alany\vsprojects\project2\WSP-Project\node_modules\formidable\src\Formidable.js:183:9) {
+  statusCode: 401
+}
+error: relation "event" does not exist
+    at Parser.parseErrorMessage (C:\Users\alany\vsprojects\project2\WSP-Project\node_modules\pg-protocol\src\parser.ts:369:69)
+    at Parser.handlePacket (C:\Users\alany\vsprojects\project2\WSP-Project\node_modules\pg-protocol\src\parser.ts:188:21)
+    at Parser.parse (C:\Users\alany\vsprojects\project2\WSP-Project\node_modules\pg-protocol\src\parser.ts:103:30)
+    at Socket.<anonymous> (C:\Users\alany\vsprojects\project2\WSP-Project\node_modules\pg-protocol\src\index.ts:7:48)
+    at Socket.emit (node:events:513:28)
+    at addChunk (node:internal/streams/readable:324:12)
+    at readableAddChunk (node:internal/streams/readable:297:9)
+    at Socket.Readable.push (node:internal/streams/readable:234:10)
+    at TCP.onStreamRead (node:internal/stream_base_commons:190:23) {
+  length: 104,
+  severity: 'ERROR',
+  code: '42P01',
+  detail: undefined,
+  hint: undefined,
+  position: '20',
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'parse_relation.c',
+  line: '1395',
+  routine: 'parserOpenTable'
+}
+
+如何修正﹖
+
+
+
+
+後備：
+//formidable，有上傳，有兩個cases，一個就object，多於一個就array，沒有就null。
+
+eventRoutes.post("/createEvent", function (req: Request, res: Response) {
+  form.parse(req, async (err, fields, files) => {
+    try {
+      let host_id = getSessionUser(req).id;
+      let eventPictureMaybeArray = files.eventPictures;
+      console.log("eventPictureMaybeArray:", files);
+      let eventPicture = Array.isArray(eventPictureMaybeArray)
+        ? eventPictureMaybeArray[0]
+        : eventPictureMaybeArray.newFilename
+        ? eventPictureMaybeArray.newFilename
+        : "";
+      let title = checkString("title", fields.title);
+      let category = checkString("category", fields.category);
+      let start_date = checkString("start_date", fields.start_date);
+      let end_date = checkString("end_date", fields.end_date);
+      let hashtag = checkString("hashtag", fields.hashtag);
+      let cost = Number(checkString("cost", fields.cost));
+      let location = checkString("location", fields.location);
+      let participants = Number(
+        checkString("participants", fields.participants)
+      );
+      console.log({ participants });
+
+      let FAQ = checkString("FAQ", fields.FAQ);
+      let is_age18 = checkBoolean("is_age18", fields.is_age18);
+      let is_private = checkBoolean("is_private", fields.is_private);
+
+      let result = await client.query(
+        /* sql */ `
+      select
+        event.id
+      from event
+      inner join users on users.id = event.host_id
+          `,
+        []
+      );
+
+      //加入拆解hashtag。
+      let decodeTag = extractTag(hashtag);
+      //加入把decodeTag資料放入tag table
+      let tags = decodeTag;
+      let { id: post_id } = await insert_post(req.body.content);
+
+      for (let tag of tags) {
+        let tag_id = await select_tag_id(tag);
+        if (!tag_id) {
+          tag_id = (await insert_tag(tag)).lastInsertRowid;
+        }
+        await insert_post_tag(post_id, tag_id);
+      }
+
+      // 加入decodeTag及$14
+      result = await client.query(
+        /* sql */ `
+      insert into event
+      (host_id, eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, FAQ, is_age18, is_private, decodeTag)
+      values
+      ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+      returning id
+          `,
+        [
+          host_id,
+          eventPicture,
+          title,
+          category,
+          hashtag,
+          start_date,
+          end_date,
+          cost,
+          location,
+          participants,
+          FAQ,
+          is_age18,
+          is_private,
+          decodeTag,
+        ]
+      );
+
+      let id = result.rows[0].id;
+      console.log(id);
+
+      res.json(id);
+    } catch (error) {
+      console.log(error);
+      res.json({});
+    }
+  });
+});
+
+VS VS VS
+
+entRoutes.post("/createEvent", function (req: Request, res: Response) {
+  form.parse(req, async (err, fields, files) => {
+    try {
+      let host_id = getSessionUser(req).id;
+      let eventPictureMaybeArray = files.eventPictures;
+      console.log("eventPictureMaybeArray:", files);
+      let eventPicture = Array.isArray(eventPictureMaybeArray)
+        ? eventPictureMaybeArray[0]
+        : eventPictureMaybeArray.newFilename;
+      let title = checkString("title", fields.title);
+      let category = checkString("category", fields.category);
+      let start_date = checkString("start_date", fields.start_date);
+      let end_date = checkString("end_date", fields.end_date);
+      let hashtag = checkString("hashtag", fields.hashtag);
+      let cost = Number(checkString("cost", fields.cost));
+      let location = checkString("location", fields.location);
+      let participants = Number(
+        checkString("participants", fields.participants)
+      );
+      console.log({ participants });
+
+/////////////
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="create-event" content="width=device-width, initial-scale=1.0" />
+    <title>Create Event</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <style>
+      form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 50px;
+      }
+
+      .line {
+        width: 30rem;
+      }
+      
+      textarea {
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: none;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        height: 15rem;
+      }
+
+      .date {
+        width: 15rem;
+      }
+
+      input {
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: none;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      }
+
+      select {
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        border: none;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      }
+
+      input[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        font-size: 20px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      input[type="submit"]:hover {
+        background-color: #0069d9;
+      }
+    </style>
+  </head>
+  <body>
+    <a href="/index.html"><i class="bi bi-x-lg"></i></a>
+    <a href="/login.html"><div>
+      <button id="logIn-btu">Login</button>
+    </div></a>
+    <form id="Create-Event">
+      <H2>Event Create</H2>
+      <div>
+          <label for="img">Event Pictures:</label>
+          <input action="/action_page.php" type="file" name="eventPictures" accept="image/*">
+      </div>
+      <div>
+        <input class = "line" type="text"  placeholder="title" name="title"/>
+      </div>
+      <div>
+        <select class = "line" type="text" placeholder="category" name="category" required>
+          <option value="Anime">Anime</option>
+          <option value="Board Game">Board Game</option>
+          <option value="Booking">Booking</option>
+          <option value="Celebrities">Celebrities</option>
+          <option value="Giveaway">Giveaway</option>
+          <option value="Match">Match</option>
+          <option value="Meeting">Meeting</option>
+          <option value="Photography">Photography</option>
+        </select>
+      </div>
+      <div>
+        <input class = "line" type="text" placeholder="hashtag" name="hashtag"/>
+      </div>
+      <div>
+        <input class="start_date date" type="text" placeholder="Start Date" name ="start_date" onfocus="(this.type='date')" onblur="(this.type='text')">
+        <input class="end_date date" type="text" placeholder="End Date" name ="end_date" onfocus="(this.type='date')" onblur="(this.type='text')" >
+      </div>
+      <div>
+        <input class = "line" type="time" placeholder="timeslot" name="timeslot" required/>
+      </div>
+      <div>
+        <input class = "line" type="number" placeholder="cost in HKD" name="cost" required/>
+      </div>
+      <div>
+        <input class = "line" type="text" placeholder="location" name="location" required/>
+      </div>
+      <div>
+        <input class = "line" type="number" placeholder="participants" name="participants" required/>
+      </div>
+      <div>
+        <textarea class = "line" type="text" placeholder="FAQ" name="FAQ"></textarea>
+      </div>
+      <div>
+        <input type="checkbox" name="is_age18" /> Is age 18 required?
+        <input type="checkbox" name="is_private" /> Is it the private event?
+      </div>
+      <div>
+        <input type="submit" id="submitForm" value="Create Event" />
+      </div>
+    </div> 
+    </form>
+    <script src="/js/alert.js"></script>
+    <script>
+      let today = new Date().toISOString().split('T')[0];
+      console.log(today)
+      document.querySelector(".start_date").setAttribute('min', today);
+
+      document.querySelector(".start_date").addEventListener("change",()=>{
+
+        let start_date = document.querySelector(".start_date").value
+     
+        document.querySelector(".end_date").setAttribute('min', start_date);
+
+      } )
+ 
+    document.querySelector("#Create-Event").addEventListener('submit', async (event)=> {
+ 
+    event.preventDefault();
+ 
+
+    // Serialize the Form afterwards
+    const form = event.target;
+    const formData = new FormData(form);
+
+
+    // Submit FormData(), no need to add "Content-Type": "application/json"
+    const res = await fetch("/createEvent", {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await res.json(); // { success: true }
+    console.log(result)
+    window.location = `/view-event.html?id=${result}`
+    console.log("id:",result);
+  });
+      async function loadRole() {
+        let res = await fetch('/role');
+        let json = await res.json();
+        if (!json.user) {
+          document.body.dataset.role = 'guest';
+          return;
+        }
+      }
+      loadRole();
+    </script>
+  </body>
+</html>
+
+
+\\\\\\\\\\\\
+<form id="Create-Event">
+      <H2>Event Create</H2>
+      <div>
+          <label for="img">Event Pictures:</label>
+          <input action="/action_page.php" type="file" name="eventPictures" accept="image/*">
+      </div>
+      <div>
+        <input class = "line" type="text"  placeholder="title" name="title"/>
+      </div>
+      <div>
+        <select class = "line" type="text" placeholder="category" name="category" required>
+          <option value="Anime">Anime</option>
+          <option value="Board Game">Board Game</option>
+          <option value="Booking">Booking</option>
+          <option value="Celebrities">Celebrities</option>
+          <option value="Giveaway">Giveaway</option>
+          <option value="Match">Match</option>
+          <option value="Meeting">Meeting</option>
+          <option value="Photography">Photography</option>
+        </select>
+      </div>
+    
+    <form id="createPostForm" method="post" action="/post">
+      <label>
+        <input hidden type="text" name="hashtags" />
+        <div id="hashTagPreviewList">
+          <div hidden class="hash-tag-preview">123</div>
+        </div>
+        <div>
+          <input class = "line" type="text" placeholder="hashtag" name="hashtag" id="hashtag" list="hashtags"/>
+          <datalist id="hashtags">
+            <!-- <option>apple</option>
+            <option>pie</option> -->
+          </datalist>
+        </div>        
+      </label>
+      <input type="submit" value="Submit" />
+      <input type="reset" value="Reset" />
+    </form>
+    <form id="Create-Event">
+      <div>
+        <input class="start_date date" type="text" placeholder="Start Date" name ="start_date" onfocus="(this.type='date')" onblur="(this.type='text')">
+        <input class="end_date date" type="text" placeholder="End Date" name ="end_date" onfocus="(this.type='date')" onblur="(this.type='text')" >
+      </div>
+      <div>
+        <input class = "line" type="time" placeholder="timeslot" name="timeslot" required/>
+      </div>
+      <div>
+        <input class = "line" type="number" placeholder="cost in HKD" name="cost" required/>
+      </div>
+      <div>
+        <input class = "line" type="text" placeholder="location" name="location" required/>
+      </div>
+      <div>
+        <input class = "line" type="number" placeholder="participants" name="participants" required/>
+      </div>
+      <div>
+        <textarea class = "line" type="text" placeholder="FAQ" name="FAQ"></textarea>
+      </div>
+      <div>
+        <input type="checkbox" name="is_age18" /> Is age 18 required?
+        <input type="checkbox" name="is_private" /> Is it the private event?
+      </div>
+      <div>
+        <input type="submit" id="submitForm" value="Create Event" />
+      </div>
+      </div> 
+    </form>
