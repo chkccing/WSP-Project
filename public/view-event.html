@@ -143,6 +143,11 @@
         async function joinStatus() {
           let res = await fetch(`/joinStatus/${eventId}`);
           let json = await res.json();
+          if (json.hasJoin == true) {
+            console.log("You have joined this event.");
+          } else {
+            console.log("You haven't joined this event.");
+          }
         }
         joinStatus();
 

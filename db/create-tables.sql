@@ -40,11 +40,11 @@ create table event_participant (
 --     comment varchar(250),
 --     created_at timestamp not null default current_timestamp
 -- );
-create table image (
-    id serial primary key,
-    event_image varchar(250),
-    user_icon varchar(250)
-);
+-- create table image (
+--     id serial primary key,
+--     event_image varchar(250),
+--     user_icon varchar(250)
+-- );
 -- create table event_timeslot (
 --     id serial primary key,
 --     date date,

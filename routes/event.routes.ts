@@ -211,7 +211,7 @@ eventRoutes.get("/allEvent/", async (req, res, next) => {
     let result = await client.query(
     /* sql */`
     select id, eventPicture, title, end_date, is_private, active from event 
-    WHERE event.active = true
+    WHERE event.active = true and event.end_date > NOW()
     ORDER BY start_date
       `, [],);
     let events = result.rows
@@ -221,34 +221,6 @@ eventRoutes.get("/allEvent/", async (req, res, next) => {
   }
 }
 )
-
-eventRoutes.post("/expireEvent", async (req: Request, res: Response) => {
-  try {
-    let result = await client.query(
-            /* sql */ `
-      select
-      event.id, event.end_date
-      from event
-      WHERE event.end_date < NOW();
-          `,
-      [],
-    )
-    result = await client.query(
-            /* sql */ `
-      update event set active = false 
-      returning id
-          `,
-      [],
-    )
-
-    res.json(result.rows);
-
-
-  } catch (error) {
-    console.log(error)
-    res.json({})
-  }
-});
 
 eventRoutes.post("/deleteEvent", async (req: Request, res: Response) => {
   try {
