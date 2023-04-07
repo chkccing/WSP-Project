@@ -11,7 +11,10 @@
       integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
+    />
     <style>
       form {
         display: flex;
@@ -23,7 +26,7 @@
       .line {
         width: 30rem;
       }
-      
+
       textarea {
         padding: 10px;
         margin-bottom: 20px;
@@ -69,24 +72,49 @@
       input[type="submit"]:hover {
         background-color: #0069d9;
       }
+
+      .hash-tag-preview {
+        background-color: #ddd;
+        color: black;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        display: inline-block;
+        margin: 0.5rem;
+      }
+      [hidden] {
+        display: none;
+      }
     </style>
   </head>
   <body>
     <a href="/index.html"><i class="bi bi-x-lg"></i></a>
-    <a href="/login.html"><div>
-      <button id="logIn-btu">Login</button>
-    </div></a>
-    <form id="Create-Event">
-      <H2>Event Create</H2>
+    <a href="/login.html"
+      ><div>
+        <button id="logIn-btu">Login</button>
+      </div></a
+    >
+    <form id="Create-Event" id="createPostForm" method="post" action="/post">
+      <h2>Event Create</h2>
       <div>
-          <label for="img">Event Pictures:</label>
-          <input action="/action_page.php" type="file" name="eventPictures" accept="image/*">
+        <label for="img">Event Pictures:</label>
+        <input
+          action="/action_page.php"
+          type="file"
+          name="eventPictures"
+          accept="image/*"
+        />
       </div>
       <div>
-        <input class = "line" type="text"  placeholder="title" name="title"/>
+        <input class="line" type="text" placeholder="title" name="title" />
       </div>
       <div>
-        <select class = "line" type="text" placeholder="category" name="category" required>
+        <select
+          class="line"
+          type="text"
+          placeholder="category"
+          name="category"
+          required
+        >
           <option value="Anime">Anime</option>
           <option value="Board Game">Board Game</option>
           <option value="Booking">Booking</option>
@@ -97,32 +125,93 @@
           <option value="Photography">Photography</option>
         </select>
       </div>
-    </form>
-    <form>
-      <label></label>
+
+      <label>
+        <div>
+          <input hidden type="text" name="hashtags" />
+        </div>
+        <div id="hashTagPreviewList">
+          <div hidden class="hash-tag-preview">123</div>
+        </div>
+        <div>
+          <input
+            type="text"
+            class="line"
+            id="hashtag"
+            list="hashtags"
+            placeholder="hashtag"
+            name="hashtag"
+          />
+          <datalist id="hashtags">
+            <option>apple</option>
+            <option>pie</option>
+          </datalist>
+        </div>
+      </label>
+      <input type="submit" value="Submit" />
+      <input type="reset" value="Reset" />
+
       <div>
-        <input class = "line" type="text" placeholder="hashtag" name="hashtag"/>
+        <input
+          class="start_date date"
+          type="text"
+          placeholder="Start Date"
+          name="start_date"
+          onfocus="(this.type='date')"
+          onblur="(this.type='text')"
+        />
+        <input
+          class="end_date date"
+          type="text"
+          placeholder="End Date"
+          name="end_date"
+          onfocus="(this.type='date')"
+          onblur="(this.type='text')"
+        />
       </div>
-    </form>
-    <form id="Create-Event">
       <div>
-        <input class="start_date date" type="text" placeholder="Start Date" name ="start_date" onfocus="(this.type='date')" onblur="(this.type='text')">
-        <input class="end_date date" type="text" placeholder="End Date" name ="end_date" onfocus="(this.type='date')" onblur="(this.type='text')" >
+        <input
+          class="line"
+          type="time"
+          placeholder="timeslot"
+          name="timeslot"
+          required
+        />
       </div>
       <div>
-        <input class = "line" type="time" placeholder="timeslot" name="timeslot" required/>
+        <input
+          class="line"
+          type="number"
+          placeholder="cost in HKD"
+          name="cost"
+          required
+        />
       </div>
       <div>
-        <input class = "line" type="number" placeholder="cost in HKD" name="cost" required/>
+        <input
+          class="line"
+          type="text"
+          placeholder="location"
+          name="location"
+          required
+        />
       </div>
       <div>
-        <input class = "line" type="text" placeholder="location" name="location" required/>
+        <input
+          class="line"
+          type="number"
+          placeholder="participants"
+          name="participants"
+          required
+        />
       </div>
       <div>
-        <input class = "line" type="number" placeholder="participants" name="participants" required/>
-      </div>
-      <div>
-        <textarea class = "line" type="text" placeholder="faq" name="faq"></textarea>
+        <textarea
+          class="line"
+          type="text"
+          placeholder="faq"
+          name="faq"
+        ></textarea>
       </div>
       <div>
         <input type="checkbox" name="is_age18" /> Is age 18 required?
@@ -131,44 +220,92 @@
       <div>
         <input type="submit" id="submitForm" value="Create Event" />
       </div>
-    </div> 
     </form>
     <script src="/js/alert.js"></script>
     <script>
-      let today = new Date().toISOString().split('T')[0];
-      document.querySelector(".start_date").setAttribute('min', today);
-      document.querySelector(".start_date").addEventListener("change",()=>{
+      //加入預示hashtag機制。
+      let form = createPostForm;
 
-        let start_date = document.querySelector(".start_date").value
-     
-        document.querySelector(".end_date").setAttribute('min', start_date);
+      form.reset();
 
-      } )
- 
-    document.querySelector("#Create-Event").addEventListener('submit', async (event)=> {
- 
-    event.preventDefault();
- 
+      fetch("/tags")
+        .then((res) => res.json())
+        .then((json) => {
+          hashtags.textContent = "";
+          json.hashtags.forEach((tag) => {
+            let option = document.createElement("option");
+            option.textContent =
+              tag.hashtag.replace(/-/g, " ") + ` (${tag.count})`;
+            option.value = tag.hashtag;
+            hashtags.appendChild(option);
+          });
+        });
 
-    // Serialize the Form afterwards
-    const form = event.target;
-    const formData = new FormData(form);
+      hashtag.addEventListener("keypress", (event) => {
+        switch (event.key) {
+          case "Enter":
+          case ",":
+          case "#":
+            addHashTag();
+            event.preventDefault();
+            break;
+          default:
+          // allow normal input
+        }
+      });
 
+      function addHashTag() {
+        let node = document.createElement("div");
+        node.className = "hash-tag-preview";
+        node.textContent = hashtag.value;
+        hashTagPreviewList.appendChild(node);
+        node.addEventListener("click", () => removeHashTag(node));
 
-    // Submit FormData(), no need to add "Content-Type": "application/json"
-    const res = await fetch("/createEvent", {
-      method: "POST",
-      body: formData,
-    });
+        if (form.hashtags.value.length > 0) {
+          form.hashtags.value += ", ";
+        }
+        form.hashtags.value += hashtag.value;
+        hashtag.value = "";
+      }
 
-    const result = await res.json(); // { success: true }
-    window.location = `/view-event.html?id=${result}`
-  });
+      function removeHashTag(node) {
+        form.hashtags.value = form.hashtags.value
+          .split(", ")
+          .filter((part) => part !== node.textContent)
+          .join(", ");
+        node.remove();
+      }
+      //加入完畢。
+
+      let today = new Date().toISOString().split("T")[0];
+      document.querySelector(".start_date").setAttribute("min", today);
+      document.querySelector(".start_date").addEventListener("change", () => {
+        let start_date = document.querySelector(".start_date").value;
+
+        document.querySelector(".end_date").setAttribute("min", start_date);
+      });
+
+      document
+        .querySelector("#Create-Event")
+        .addEventListener("submit", async (event) => {
+          event.preventDefault();
+          // Serialize the Form afterwards
+          const form = event.target;
+          const formData = new FormData(form);
+          // Submit FormData(), no need to add "Content-Type": "application/json"
+          const res = await fetch("/createEvent", {
+            method: "POST",
+            body: formData,
+          });
+
+          const result = await res.json(); // { success: true }
+          window.location = `/view-event.html?id=${result}`;
+        });
       async function loadRole() {
-        let res = await fetch('/role');
+        let res = await fetch("/role");
         let json = await res.json();
         if (!json.user) {
-          document.body.dataset.role = 'guest';
+          document.body.dataset.role = "guest";
           return;
         }
       }

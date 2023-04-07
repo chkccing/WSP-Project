@@ -14,6 +14,7 @@ import { getSessionUser } from "../guards";
 let uploadDir = join("uploads", "event-images");
 mkdirSync(uploadDir, { recursive: true });
 import "../session";
+// import { log } from 'console'
 import { extractTag } from "../tagRelatedFunction";
 // 引用拆解hashtag的function。
 
@@ -25,16 +26,16 @@ export type Event = {
   eventPicture?: string;
   title: string;
   category: string;
-  date: Date;
-  time: TimeRanges;
-  details: String;
-  hashtag: String;
-  cost: Number;
-  location: String;
-  participants: Number;
-  faq: String;
-  is_age18: Boolean;
-  is_private: Boolean;
+  Date: Date;
+  Time: TimeRanges;
+  Details: String;
+  Hashtag: String;
+  Cost: Number;
+  Location: String;
+  Participants: Number;
+  FAQ: String;
+  Is_age18: Boolean;
+  Is_private: Boolean;
 };
 
 // const uploadDir = "uploads/event-images";
@@ -119,9 +120,11 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
         checkString("participants", fields.participants)
       );
       console.log({ participants });
-      let faq = checkString("faq", fields.faq);
+
+      let FAQ = checkString("FAQ", fields.FAQ);
       let is_age18 = checkBoolean("is_age18", fields.is_age18);
       let is_private = checkBoolean("is_private", fields.is_private);
+
       let result = await client.query(
         /* sql */ `
       select
@@ -146,11 +149,12 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
         }
         await insert_post_tag(post_id, tag_id);
       }
+
       // 加入decodeTag及$14
       result = await client.query(
         /* sql */ `
       insert into event
-      (host_id, eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, faq, is_age18, is_private, decodeTag)
+      (host_id, eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, FAQ, is_age18, is_private, decodeTag)
       values
       ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
       returning id
@@ -166,12 +170,13 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
           cost,
           location,
           participants,
-          faq,
+          FAQ,
           is_age18,
           is_private,
           decodeTag,
         ]
       );
+
       let id = result.rows[0].id;
       console.log(id);
 
@@ -231,12 +236,17 @@ eventRoutes.post("/joinEvent", async (req: Request, res: Response) => {
       ($1, $2)
       returning id
           `,
-      [user_id, event_id],
-    )
-    let id = result.rows[0].id
+      [user_id, event_id]
+    );
+
+    let id = result.rows[0].id;
+    if (user_id == undefined) {
+      console.log("Please Login");
+    }
+
     res.json(id);
   } catch (error) {
-    if (getSessionUser(req).id == undefined) { console.log("Please Login") };
+    console.log(error);
     res.json({});
   }
 });
@@ -285,13 +295,10 @@ eventRoutes.get("/allParticipants/:id", async (req, res, next) => {
 });
 
 //show user you have joined event or haven't joined event.
-eventRoutes.get("/joinStatus/:id", async (req, res, next) => {
-  let id = req.params.id
 eventRoutes.get("/eventParticipants/:id", async (req, res, next) => {
   let id = req.params.id;
   let user_id = getSessionUser(req).id;
   try {
-    let user_id = getSessionUser(req).id
     let result = await client.query(
       /* sql */ `
     select * from event_participant
@@ -303,14 +310,15 @@ eventRoutes.get("/eventParticipants/:id", async (req, res, next) => {
     );
 
     if (result.rows.length === 0) {
-      res.json({ hasJoin: false })
-      console.log("You haven't joined this event.")
+      res.json(result.rows[0]);
+      console.log("You haven't joined this event.");
+    }
+    if (user_id == null) {
+      console.log("You haven't login.");
     } else {
-      res.json({ hasJoin: true })
-      console.log("You have joined this event.");
+      console.log("You haven't joined this event.");
     }
   } catch (error) {
-    res.json({ err: error })
     next(error);
   }
 });
@@ -320,9 +328,7 @@ eventRoutes.get("/allEvent/", async (req, res, next) => {
   try {
     let result = await client.query(
       /* sql */ `
-    select id, eventPicture, title, end_date, is_private, active from event 
-    WHERE event.active = true and event.end_date > NOW()
-    ORDER BY start_date
+    select id, eventPicture, title, is_private from event 
       `,
       []
     );
@@ -333,101 +339,47 @@ eventRoutes.get("/allEvent/", async (req, res, next) => {
   }
 });
 
-//organizer delete event
-eventRoutes.post("/deleteEvent", async (req: Request, res: Response) => {
-  try {
-    let user_id = getSessionUser(req).id
-    let event_id = req.query.eventId
-    let result = await client.query(
-            /* sql */ `
-      select
-      event.id, event.host_id, event.active
-      from event
-      WHERE event.host_id = ${user_id} and event.active = true
-          `,
-      [],
-    )
-    result = await client.query(
-            /* sql */ `
-      update event set active = false 
-      WHERE id = $1
-      returning id
-          `,
-      [event_id],
-    )
-
-    let id = result.rows[0].id
-    res.json(id);
-  } catch (error) {
-    res.json({})
-  }
-});
-
-//organizer delete participant
-eventRoutes.post("/deleteParticipant", async (req: Request, res: Response) => {
-  try {
-    let user_id = getSessionUser(req).id
-    let event_id = req.query.eventId
-    let result = await client.query(
-            /* sql */ `
-      select
-      event.id, event.host_id, event.active
-      from event
-      WHERE event.host_id = ${user_id} and event.active = true
-          `,
-      [],
-    )
-    result = await client.query(
-            /* sql */ `
-      update event set active = false 
-      WHERE id = $1
-      returning id
-          `,
-      [event_id],
-    )
-
 // eventRoutes.delete('/deleteEvent/:id', hasLogin, async (req, res, next) => {
 //   try {
 //     let id = req.params.id
 //     let user_id = getSessionUser(req).id
 
-    let id = result.rows[0].id
-    res.json(id);
-  } catch (error) {
-    res.json({})
-  }
-});
+//     let result = await client.query(
+//       /* sql */ `
+//     select
+//       host_id
+//     from event
+//     where id = $1
+//   `,
+//       [id],
+//     )
+//     let event = result.rows[0]
 
-//organizer delete participant
-eventRoutes.post("/deleteParticipant", async (req: Request, res: Response) => {
-  try {
-    let user_id = getSessionUser(req).id
-    let event_id = req.query.eventId
-    let result = await client.query(
-            /* sql */ `
-      select
-      event.id, event.host_id, event.active
-      from event
-      WHERE event.host_id = ${user_id} and event.active = true
-          `,
-      [],
-    )
-    result = await client.query(
-            /* sql */ `
-      update event set active = false 
-      WHERE id = $1
-      returning id
-          `,
-      [event_id],
-    )
+//     if (!event) {
+//       res.json({ details: 'this event does not exist.' })
+//       return
+//     }
 
-    let id = result.rows[0].id
-    res.json(id);
-  } catch (error) {
-    res.json({})
-  }
-});
+//     if (event.host_id !== user_id) {
+//       throw new HttpError(
+//         403,
+//         "You are not allowed to delete other users' event",
+//       )
+//     }
 
+//     result = await client.query(
+//       /* sql */ `
+//     delete from event
+//     where id = $1
+//     and host_id = $2
+//   `,
+//       [id, user_id],
+//     )
+
+//   } catch (error) {
+//     next(error)
+//   }
+// })
 
 // eventRoutes.post("/eventSearch", async (req, res) => {
 //   let search = req.body.search;
