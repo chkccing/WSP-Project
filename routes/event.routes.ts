@@ -188,20 +188,20 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
   });
 });
 
-//按hashtag的被註冊次數多少來排序
-let select_hashtags = async () => {
-  const result = await client.query(/* sql */ `
-    SELECT
-      tag.id,
-      tag.hashtag,
-      COUNT(post_tag.post_id) AS count
-    FROM tag
-    INNER JOIN post_tag ON post_tag.tag_id = tag.id
-    GROUP BY tag.id
-    ORDER BY count DESC
-  `);
-  return result.rows;
-};
+// //按hashtag的被註冊次數多少來排序
+// let select_hashtags = async () => {
+//   const result = await client.query(/* sql */ `
+//     SELECT
+//       tag.id,
+//       tag.hashtag,
+//       COUNT(post_tag.post_id) AS count
+//     FROM tag
+//     INNER JOIN post_tag ON post_tag.tag_id = tag.id
+//     GROUP BY tag.id
+//     ORDER BY count DESC
+//   `);
+//   return result.rows;
+// };
 
 //輸入部份字母便預示完整的hashtags
 eventRoutes.get("/tags", async (req, res, next) => {
@@ -217,11 +217,13 @@ eventRoutes.get("/tags", async (req, res, next) => {
 eventRoutes.post("/editEvent", function (req: Request, res: Response) {
   form.parse(req, async (err, fields, files) => {
     try {
-      // let eventPictureMaybeArray = files.eventPictures
-      // console.log("eventPictureMaybeArray:", files)
-      // let eventPicture = Array.isArray(eventPictureMaybeArray)
-      //   ? eventPictureMaybeArray[0]
-      //   : eventPictureMaybeArray.newFilename
+      let eventPictureMaybeArray = files.eventPictures;
+      console.log("eventPictureMaybeArray:", files);
+      let eventPicture = Array.isArray(eventPictureMaybeArray)
+        ? eventPictureMaybeArray[0]
+        : eventPictureMaybeArray
+          ? eventPictureMaybeArray.newFilename
+          : "";
       let id = req.params.id
       let event_id = req.query.eventId
       let title = checkString('title', fields.title)
@@ -245,15 +247,39 @@ eventRoutes.post("/editEvent", function (req: Request, res: Response) {
           `,
         [id],
       )
+
+      let decodeTag = extractTag(hashtag);
+      //加入把decodeTag資料放入tag table
+      let tags = decodeTag;
+      let { id: post_id } = await insert_post(title);
+
+      for (let tag of tags) {
+        let tag_id = await select_tag_id(tag);
+        if (!tag_id) {
+          tag_id = (await insert_tag(tag)).lastInsertRowid;
+        }
+        await insert_post_tag(post_id, tag_id);
+      }
+
       result = await client.query(
         /* sql */ `
-      insert into event
-      (host_id, eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, FAQ, is_age18, is_private, decodeTag)
-      values
-      ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+        update event set 
+      title = $1,  
+      category = $2,  
+      hashtag = $3,  
+      start_date = $4,  
+      end_date = $5,  
+      cost = $6,  
+      location = $7,  
+      participants = $8,  
+      faq = $9, 
+      is_age18 = $10,  
+      is_private = $11 
+      decodeTag = $12
+      WHERE id = $13
       returning id
           `,
-        [title, category, hashtag, start_date, end_date, cost, location, participants, faq, is_age18, is_private, event_id],
+        [eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, faq, is_age18, is_private, decodeTag, event_id],
       )
       res.json(result.rows[0].id);
     } catch (error) {
@@ -370,41 +396,39 @@ eventRoutes.get("/allParticipants/:id", async (req, res, next) => {
   }
 });
 
-//show user you have joined event or haven't joined event.
-eventRoutes.get("/eventParticipants/:id", async (req, res, next) => {
-  let id = req.params.id;
-  let user_id = getSessionUser(req).id;
+//show user you have joined event or haven't joined event. 
+eventRoutes.get("/joinStatus/:id", async (req, res, next) => {
+  let id = req.params.id
   try {
+    let user_id = getSessionUser(req).id
     let result = await client.query(
-      /* sql */ `
-    select * from event_participant
-    left join users on users.id  = event_participant.user_id 
-    WHERE event_participant.event_id = $1
-    AND event_participant.user_id = $2
-      `,
-      [id, user_id]
-    );
-
+    /* sql */` 
+    select * from event_participant 
+    left join users on users.id  = event_participant.user_id  
+    WHERE event_participant.event_id = $1 
+    AND event_participant.user_id = $2 
+      `, [id, user_id]);
     if (result.rows.length === 0) {
-      res.json(result.rows[0]);
-      console.log("You haven't joined this event.");
-    }
-    if (user_id == null) {
-      console.log("You haven't login.");
+      res.json({ hasJoin: false })
+      console.log("You haven't joined this event.")
     } else {
-      console.log("You haven't joined this event.");
+      res.json({ hasJoin: true })
+      console.log("You have joined this event.")
     }
   } catch (error) {
-    next(error);
+    res.json({ err: error })
+    next(error)
   }
-});
+})
 
 //show all event in index page
 eventRoutes.get("/allEvent/", async (req, res, next) => {
   try {
     let result = await client.query(
       /* sql */ `
-    select id, eventPicture, title, is_private from event 
+      select id, eventPicture, title, end_date, is_private, active from event  
+      WHERE event.active = true and event.end_date >= NOW() 
+        ORDER BY start_date 
       `,
       []
     );
@@ -416,10 +440,10 @@ eventRoutes.get("/allEvent/", async (req, res, next) => {
 });
 
 //organizer delete participant
-eventRoutes.post("/deleteParticipant", async (req: Request, res: Response) => {
+eventRoutes.post("/events/:event_id/participants/:user_id", async (req: Request, res: Response) => {
   try {
     let user_id = getSessionUser(req).id
-    let event_id = req.query.eventId
+    let event_id = req.params.event_id
     let result = await client.query(
             /* sql */ `
       select
@@ -436,15 +460,10 @@ eventRoutes.post("/deleteParticipant", async (req: Request, res: Response) => {
           `,
       [],)
     let id = result.rows[0].id
-
     res.json(id);
-
   } catch (error) {
-
     res.json({})
-
   }
-
 });
 
 

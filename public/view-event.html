@@ -84,8 +84,8 @@
     <div class="event-result"></div>
     <template id="template2">
       <div class="participantsList">
-        <div id="participantsName" name="showedname"></div>
-        <button id="deleteParticipant_btn" name="deleteParticipant">x</button>
+        <div class="participantsName" name="showedname"></div>
+        <button class="deleteParticipant_btn">x</button>
       </div>
     </template>
     <div class="participants-result"></div>
@@ -163,16 +163,19 @@
 
         function showParticipants(user) {
           let node = template2.cloneNode(true);
-          node.querySelector("#participantsName").textContent = user.showedname;
+          node.querySelector(".participantsName").textContent = user.showedname;
           participantsList.appendChild(node);
 
           document
-            .querySelector("#deleteParticipant_btn")
+            .querySelector(".deleteParticipant_btn")
             .addEventListener("click", async (event) => {
               event.preventDefault();
-              const res = await fetch(`/deleteParticipant`, {
-                method: "POST",
-              });
+              const res = await fetch(
+                `/events/${event.id}/participants/${user.id}`,
+                {
+                  method: "POST",
+                }
+              );
               let result = await res.json(); // { success: true }
               window.location = `/`;
             });
