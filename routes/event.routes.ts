@@ -255,15 +255,12 @@ eventRoutes.post("/editEvent", function (req: Request, res: Response) {
           `,
         [title, category, hashtag, start_date, end_date, cost, location, participants, faq, is_age18, is_private, event_id],
       )
-      let id = result.rows[0].id
-      console.log(id);
-
-      res.json(id);
+      res.json(result.rows[0].id);
     } catch (error) {
-      console.log(error);
-      res.json({});
+      console.log(error)
+      res.json({})
     }
-  });
+  })
 });
 
 //按hashtag的被註冊次數多少來排序
@@ -437,72 +434,42 @@ eventRoutes.post("/deleteParticipant", async (req: Request, res: Response) => {
       update event_participant set active = false 
       returning id
           `,
-      [],
-    )
-    // eventRoutes.delete('/deleteEvent/:id', hasLogin, async (req, res, next) => {
-    //   try {
-    //     let id = req.params.id
-    //     let user_id = getSessionUser(req).id
+      [],)
+    let id = result.rows[0].id
 
-    //     let result = await client.query(
-    //       /* sql */ `
-    //     select
-    //       host_id
-    //     from event
-    //     where id = $1
-    //   `,
-    //       [id],
-    //     )
-    //     let event = result.rows[0]
+    res.json(id);
 
-    //     if (!event) {
-    //       res.json({ details: 'this event does not exist.' })
-    //       return
-    //     }
+  } catch (error) {
 
-    //     if (event.host_id !== user_id) {
-    //       throw new HttpError(
-    //         403,
-    //         "You are not allowed to delete other users' event",
-    //       )
-    //     }
+    res.json({})
 
-    //     result = await client.query(
-    //       /* sql */ `
-    //     delete from event
-    //     where id = $1
-    //     and host_id = $2
-    //   `,
-    //       [id, user_id],
-    //     )
+  }
 
-    //   } catch (error) {
-    //     next(error)
-    //   }
-    // })
+});
 
-    eventRoutes.get("/allCreateEvent", async (req, res, next) => {
-      try {
-        let user_id = getSessionUser(req).id
-        let result = await client.query(
+
+eventRoutes.get("/allCreateEvent", async (req, res, next) => {
+  try {
+    let user_id = getSessionUser(req).id
+    let result = await client.query(
     /* sql */`
     select id, host_id, eventPicture, title, end_date, active from event 
     WHERE event.active = false and event.end_date >= NOW() and event.host_id = ${user_id}
     ORDER BY start_date
       `, [],);
-        let events = result.rows
-        res.json({ events })
-      } catch (error) {
-        next(error)
-      }
-    }
-    )
+    let events = result.rows
+    res.json({ events })
+  } catch (error) {
+    next(error)
+  }
+}
+)
 
-    eventRoutes.get("/allJoinedEvent", async (req, res, next) => {
-      try {
-        let user_id = getSessionUser(req).id
+eventRoutes.get("/allJoinedEvent", async (req, res, next) => {
+  try {
+    let user_id = getSessionUser(req).id
 
-        let result = await client.query(
+    let result = await client.query(
     /* sql */`
     select event.id,
     event.eventPicture, 
@@ -514,13 +481,13 @@ eventRoutes.post("/deleteParticipant", async (req: Request, res: Response) => {
     WHERE event.active = false and event.end_date >= NOW() and event_participant.user_id = ${user_id}
     ORDER BY start_date
       `, [],);
-        let events = result.rows
-        res.json({ events })
-      } catch (error) {
-        next(error)
-      }
-    }
-    )
+    let events = result.rows
+    res.json({ events })
+  } catch (error) {
+    next(error)
+  }
+}
+)
 
 // event.active = false and event.end_date >= NOW() and
 
