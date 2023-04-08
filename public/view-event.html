@@ -54,6 +54,10 @@
         height: 2rem;
         margin: 0.5rem;
       }
+      #deleteParticipant {
+        height: 1rem;
+        width: 1rem;
+      }
     </style>
   </head>
   <body>
@@ -75,11 +79,13 @@
     </template>
     <div id="joinStatus"></div>
     <button class="join_event" id="join_btn">Join</button>
-    <button class="delete_event" id="delete_btn">Delete</button>
+    <button class="delete_event" id="deleteEvent_btn">Delete</button>
+    <button class="edit_event" id="edit_btn">Edit</button>
     <div class="event-result"></div>
     <template id="template2">
       <div class="participantsList">
         <div id="participantsName" name="showedname"></div>
+        <button id="deleteParticipant_btn" name="deleteParticipant">x</button>
       </div>
     </template>
     <div class="participants-result"></div>
@@ -159,6 +165,17 @@
           let node = template2.cloneNode(true);
           node.querySelector("#participantsName").textContent = user.showedname;
           participantsList.appendChild(node);
+
+          document
+            .querySelector("#deleteParticipant_btn")
+            .addEventListener("click", async (event) => {
+              event.preventDefault();
+              const res = await fetch(`/deleteParticipant`, {
+                method: "POST",
+              });
+              let result = await res.json(); // { success: true }
+              window.location = `/`;
+            });
         }
 
         async function loadParticipants() {
@@ -191,7 +208,7 @@
           });
 
         document
-          .querySelector("#delete_btn")
+          .querySelector("#deleteEvent_btn")
           .addEventListener("click", async (event) => {
             event.preventDefault();
             const res = await fetch(`/deleteEvent?eventId=${eventId}`, {
@@ -200,6 +217,10 @@
             let result = await res.json(); // { success: true }
             window.location = "/index.html";
           });
+
+        document.querySelector("#edit_btn").addEventListener("click", () => {
+          window.location = `/edit-event.html?id=${eventId}`;
+        });
       }
       viewEvent();
     </script>

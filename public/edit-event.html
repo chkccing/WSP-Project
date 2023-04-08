@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="create-event" content="width=device-width, initial-scale=1.0" />
-    <title>Create Event</title>
+    <meta name="edit-event" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Event</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -76,8 +76,8 @@
     <a href="/login.html"><div>
       <button id="logIn-btu">Login</button>
     </div></a>
-    <form id="Create-Event">
-      <H2>Event Create</H2>
+    <form id="Edit-Event">
+      <H2>Edit Event</H2>
       <div>
           <label for="img">Event Pictures:</label>
           <input action="/action_page.php" type="file" name="eventPictures" accept="image/*">
@@ -124,7 +124,7 @@
         <input type="checkbox" name="is_private" /> Is it the private event?
       </div>
       <div>
-        <input type="submit" id="submitForm" value="Create Event" />
+        <input type="submit" id="submitForm" value="Edit Event" />
       </div>
     </div> 
     </form>
@@ -142,7 +142,10 @@
       } )
     
       //insert data to database
-    document.querySelector("#Create-Event").addEventListener('submit', async (event)=> {
+      let params = new URL(document.location).searchParams;
+      let eventId = params.get("id");
+      
+      document.querySelector("#Edit-Event").addEventListener('submit', async (event)=> {
  
     event.preventDefault();
  
@@ -153,7 +156,7 @@
 
 
     // Submit FormData(), no need to add "Content-Type": "application/json"
-    const res = await fetch("/createEvent", {
+    const res = await fetch(`/editEvent?eventId=${eventId}`, {
       method: "POST",
       body: formData,
     });
