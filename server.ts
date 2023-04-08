@@ -3,7 +3,7 @@ import { print } from "listening-on";
 import { eventRoutes } from "./routes/event.routes";
 import { userRoutes } from "./routes/user.routes";
 import { sessionMiddleware } from "./session";
-import { hashtagRoutes } from "./routes/hashtagRoutes";
+// import { hashtagRoutes } from "./routes/hashtagRoutes";
 
 let app = express();
 
@@ -16,7 +16,7 @@ app.use(sessionMiddleware);
 
 app.use(userRoutes);
 app.use(eventRoutes);
-app.use(hashtagRoutes);
+// app.use(hashtagRoutes);
 
 app.use((error: any, req: Request, res: Response, next: NextFunction) => {
   if ("statusCode" in error) {
