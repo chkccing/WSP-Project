@@ -510,9 +510,10 @@ eventRoutes.delete("/events/:eventId/participants/:user_id", async (req: Request
     result = await client.query(
             /* sql */ `
       update event_participant set active = false 
+      WHERE id = $1
       returning id
           `,
-      [],)
+      [event_id],)
     let id = result.rows[0].id
     res.json(id);
   } catch (error) {

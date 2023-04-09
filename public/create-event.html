@@ -16,73 +16,79 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
     />
     <style>
-      form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 50px;
-      }
+      @media only screen and (max-width: 600px) {
+        /* For mobile phones: */
+        [class*="col-"] {
+          width: 100%;
+        }
+        form {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin-top: 50px;
+        }
 
-      .line {
-        width: 30rem;
-      }
+        .line {
+          width: 30rem;
+        }
 
-      textarea {
-        padding: 10px;
-        margin-bottom: 20px;
-        border-radius: 5px;
-        border: none;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-        height: 15rem;
-      }
+        textarea {
+          padding: 10px;
+          margin-bottom: 20px;
+          border-radius: 5px;
+          border: none;
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+          height: 15rem;
+        }
 
-      .date {
-        width: 15rem;
-      }
+        .date {
+          width: 15rem;
+        }
 
-      input {
-        padding: 10px;
-        margin-bottom: 20px;
-        border-radius: 5px;
-        border: none;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-      }
+        input {
+          padding: 10px;
+          margin-bottom: 20px;
+          border-radius: 5px;
+          border: none;
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
 
-      select {
-        padding: 10px;
-        margin-bottom: 20px;
-        border-radius: 5px;
-        border: none;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-      }
+        select {
+          padding: 10px;
+          margin-bottom: 20px;
+          border-radius: 5px;
+          border: none;
+          box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
 
-      input[type="submit"] {
-        background-color: #007bff;
-        color: #fff;
-        font-size: 20px;
-        padding: 10px 20px;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+        input[type="submit"] {
+          background-color: #007bff;
+          color: #fff;
+          font-size: 20px;
+          padding: 10px 20px;
+          border-radius: 5px;
+          border: none;
+          cursor: pointer;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
 
-      input[type="submit"]:hover {
-        background-color: #0069d9;
-      }
+        input[type="submit"]:hover {
+          background-color: #0069d9;
+        }
 
-      .hash-tag-preview {
-        background-color: #ddd;
-        color: black;
-        padding: 0.5rem;
-        border-radius: 0.5rem;
-        display: inline-block;
-        margin: 0.5rem;
-      }
-      [hidden] {
-        display: none;
+        .hash-tag-preview {
+          background-color: #ddd;
+          color: black;
+          padding: 0.5rem;
+          border-radius: 0.5rem;
+          display: inline-block;
+          margin: 0.5rem;
+        }
+        [hidden] {
+          display: none;
+        }
       }
     </style>
   </head>

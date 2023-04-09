@@ -6,48 +6,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Index</title>
     <style>
-      body {
-        margin: 0;
-      }
-      .container {
-        margin-left: 5rem;
-      }
-      .header {
-        margin-top: 0.5rem;
-        margin-bottom: 0.5rem;
-        /* position: absolute; */
-      }
-      .column {
-        display: flex;
-        align-items: center;
-      }
-      .logo {
-        height: 2.8rem;
-        width: 3.5rem;
-      }
-      .logoWord {
-        font-size: 2rem;
-        font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-        color: rgb(111, 203, 234);
-      }
-      .nav {
-        padding: 1rem 1rem;
-      }
-      .eventBox1,
-      .eventBox2 {
-        width: 5rem;
-        height: 5rem;
-        background-color: orange;
-        margin: 0.5rem;
-      }
-      #eventPicture1,
-      #eventPicture2 {
-        width: 5rem;
-        height: 3rem;
-      }
-      .event-list1,
-      .event-list2 {
-        display: flex;
+      @media only screen and (max-width: 600px) {
+        /* For mobile phones: */
+        [class*="col-"] {
+          width: 100%;
+        }
+        body {
+          margin: 0;
+        }
+        .container {
+          margin-left: 5rem;
+        }
+        .header {
+          margin-top: 0.5rem;
+          margin-bottom: 0.5rem;
+          /* position: absolute; */
+        }
+        .column {
+          display: flex;
+          align-items: center;
+        }
+        .logo {
+          height: 2.8rem;
+          width: 3.5rem;
+        }
+        .logoWord {
+          font-size: 2rem;
+          font-family: "Franklin Gothic Medium", "Arial Narrow", Arial,
+            sans-serif;
+          color: rgb(111, 203, 234);
+        }
+        .nav {
+          padding: 1rem 1rem;
+        }
+        .eventBox1,
+        .eventBox2 {
+          width: 5rem;
+          height: 5rem;
+          background-color: orange;
+          margin: 0.5rem;
+        }
+        #eventPicture1,
+        #eventPicture2 {
+          width: 5rem;
+          height: 3rem;
+        }
+        .event-list1,
+        .event-list2 {
+          display: flex;
+        }
       }
     </style>
     <link rel="stylesheet" href="/css/form.css" />
