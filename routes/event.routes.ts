@@ -421,6 +421,30 @@ eventRoutes.get("/joinStatus/:id", async (req, res, next) => {
   }
 })
 
+//show organizer panel. 
+eventRoutes.get("/organizerPanel/:id", async (req, res, next) => {
+  let id = req.params.id
+  try {
+    let user_id = getSessionUser(req).id
+    let result = await client.query(
+    /* sql */` 
+    select * from event 
+    WHERE id = $1 
+    AND host_id = $2 
+      `, [id, user_id]);
+    if (result.rows.length === 0) {
+      res.json({ organizer: false })
+      console.log("You aren't this event organizer.")
+    } else {
+      res.json({ organizer: true })
+      console.log("You are this event organizer.")
+    }
+  } catch (error) {
+    res.json({ err: error })
+    next(error)
+  }
+})
+
 //show all event in index page
 eventRoutes.get("/allEvent/", async (req, res, next) => {
   try {
@@ -439,11 +463,41 @@ eventRoutes.get("/allEvent/", async (req, res, next) => {
   }
 });
 
-//organizer delete participant
-eventRoutes.post("/events/:event_id/participants/:user_id", async (req: Request, res: Response) => {
+//organizer delete event 
+
+eventRoutes.post("/deleteEvent", async (req: Request, res: Response) => {
   try {
     let user_id = getSessionUser(req).id
-    let event_id = req.params.event_id
+    let event_id = req.query.eventId
+    let result = await client.query(
+            /* sql */ ` 
+      select 
+      event.id, event.host_id, event.active 
+      from event 
+      WHERE event.host_id = ${user_id} and event.active = true 
+          `,
+      [],
+    )
+    result = await client.query(
+            /* sql */ ` 
+      update event set active = false  
+      WHERE id = $1 
+      returning id 
+          `,
+      [event_id],
+    )
+    let id = result.rows[0].id
+    res.json(id);
+  } catch (error) {
+    res.json({})
+  }
+});
+
+//organizer delete participant
+eventRoutes.delete("/events/:eventId/participants/:user_id", async (req: Request, res: Response) => {
+  try {
+    let user_id = getSessionUser(req).id
+    let event_id = req.params.eventId
     let result = await client.query(
             /* sql */ `
       select
