@@ -535,32 +535,43 @@ eventRoutes.post("/deleteEvent", async (req: Request, res: Response) => {
 
 //organizer delete participant
 eventRoutes.delete(
-  "/events/:eventId/participants/:user_id",
+  "/events/:event_id/participants/:user_id",
   async (req: Request, res: Response) => {
     try {
       let user_id = getSessionUser(req).id;
-      let event_id = req.params.eventId;
+      let event_id = req.params.event_id;
       let result = await client.query(
         /* sql */ `
       select
-      * from event
-      inner join event_participant on event_participant.event_id = event.id
-      WHERE event.host_id = $1 and event.id = $2 and event_participant.active = true
-          `,
-        [user_id, event_id]
-      );
-      result = await client.query(
-        /* sql */ `
-      update event_participant set active = false 
-      WHERE id = $1
-      returning id
+        host_id
+      from event
+      WHERE event.id = $1
           `,
         [event_id]
       );
-      let id = result.rows[0].id;
-      res.json(id);
-    } catch (error) {
+      let event = result.rows[0];
+      if (!event) {
+        res.status(404);
+        res.json({ error: "event not found" });
+        return;
+      }
+      if (event.host_id != user_id) {
+        res.status(403);
+        res.json({ error: "only event host can delete participant" });
+        return;
+      }
+      result = await client.query(
+        /* sql */ `
+      update event_participant set active = false 
+      WHERE event_id = $1
+        and user_id = $2
+          `,
+        [event_id, req.params.user_id]
+      );
       res.json({});
+    } catch (error) {
+      res.status(500);
+      res.json({ error: String(error) });
     }
   }
 );
