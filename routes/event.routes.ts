@@ -463,6 +463,26 @@ eventRoutes.get("/allEvent/", async (req, res, next) => {
   }
 });
 
+//?Š??…¥event search?ŠŸ?ƒ?
+export let searchRoutes = Router();
+
+searchRoutes.get("/searchEvent", async (req, res) => {
+  try {
+    let searchEvent = req.body.search;
+    let result = await client.query(
+      /* sql */
+      `SELECT id 
+    FROM event
+    WHERE title, hashtag = $1`,
+      [`%${searchEvent}%`]
+    );
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error searching records");
+  }
+});
+
 //organizer delete event 
 
 eventRoutes.post("/deleteEvent", async (req: Request, res: Response) => {
