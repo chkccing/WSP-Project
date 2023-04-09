@@ -1,71 +1,87 @@
-user
-----
+# Visualize on https://erd.surge.sh
+# or https://quick-erd.surge.sh
+#
+# Relationship Types
+#  -    - one to one
+#  -<   - one to many
+#  >-   - many to one
+#  >-<  - many to many
+#  -0   - one to zero or one
+#  0-   - zero or one to one
+#  0-0  - zero or one to zero or one
+#  -0<  - one to zero or many
+#  >0-  - zero or many to one
+#
+////////////////////////////////////
+
+
+users
+-----
 id integer PK
-username varchar(32)
-showedName varchar(32)
-icon user_icon FK >0- image.user_icon
-rating integer
-bio varchar(250)
+password_hash char(60)
+username varchar(20) unique
+rating numeric NULL
+showedname varchar(20)
+bio varchar(255) NULL
 email varchar(60)
-phone varchar(8)
-password varchar(30)
 is_age18 boolean
-is_admin boolean
-created_at datetime
-updated_at datetime
+is_admin boolean NULL
+avatar varchar(250) NULL
+
+
+tag_group
+---------
+id integer PK
+name text NULL unique
+
+
+tag
+---
+id integer PK
+tag_group_id integer NULL FK >0- tag_group.id
+hashtag text NULL unique
+
+
+event_tag
+---------
+id integer PK
+event_id integer NULL FK >0- event.id
+tag_id integer NULL FK >0- tag.id
 
 
 event
 -----
 id integer PK
-host_id integer FK >0- user.id
-eventPicture url FK >0- image.event_image
+host_id integer NULL FK >0- users.id
 title varchar(60)
-category varchar(20)
-hashtag varchar(20)
+category varchar(250)
+hashtag varchar(250)
 start_date date
+active boolean
 end_date date
 cost integer
+participants integer
+decodetag varchar(250)
+eventpicture varchar(250) NULL
 location varchar(20)
-Participants integer
-FAQ varchar(500)
 is_age18 boolean
 is_private boolean
-created_at datetime
-updated_at datetime
+faq varchar(500) NULL
 
 
 event_participant
 -----------------
 id integer PK
-event_timeslot_id integer FK >0- event_timeslot.id
-user_id integer FK >0- user.id
+event_id integer NULL FK >0- event.id
+user_id integer NULL FK >0- users.id
+active boolean
+phone numeric
 
 
 event_rating
 ------------
 id integer PK
 event_id integer FK >0- event.id
-user_id integer FK >0- user.id
-rating rating
-command varchar(250)
-created_at datetime
-
-
-image
------
-id integer PK
-event_image url
-user_icon url
-
-event_timeslot
---------------
-id integer
-event_id integer FK >0- event.id
-data date 
-timeslot datetime 
-
-hashtag
--------
-id
-event_id FK >0- event.id
+user_id integer FK >0- users.id
+rating numeric
+comment varchar(250) NULL

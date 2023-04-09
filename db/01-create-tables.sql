@@ -32,30 +32,19 @@ create table event_participant (
     user_id integer,
     active boolean not null default true
 );
--- create table event_rating (
---     id serial primary key,
---     event_id integer,
---     user_id integer,y
---     rating DECIMAL(1, 0),
---     comment varchar(250),
---     created_at timestamp not null default current_timestamp
--- );
--- create table image (
---     id serial primary key,
---     event_image varchar(250),
---     user_icon varchar(250)
--- );
 -- create table event_timeslot (
 --     id serial primary key,
 --     date date,
 --     timeslot time
 -- );
-create table hashtag (
-    id serial primary key,
-    event_id integer,
-);
+-- create table hashtag (
+--     id serial primary key,
+--     event_id integer,
+-- );
 -- 使用chatGPT翻譯Beeno的hashtage code
 CREATE TABLE post (id SERIAL PRIMARY KEY, content TEXT);
+-- tag_group用唔着，commented。
+CREATE TABLE tag_group (id SERIAL PRIMARY KEY, name TEXT UNIQUE);
 CREATE TABLE tag (
     id SERIAL PRIMARY KEY,
     hashtag TEXT UNIQUE,
@@ -66,5 +55,3 @@ CREATE TABLE post_tag (
     post_id INTEGER REFERENCES post(id),
     tag_id INTEGER REFERENCES tag(id)
 );
--- tag_group用唔着，commented。
--- CREATE TABLE tag_group (id SERIAL PRIMARY KEY, name TEXT UNIQUE);
