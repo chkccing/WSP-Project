@@ -97,11 +97,10 @@
         <div class="row" id="faq"></div>
       </div>
     </template>
-    <div id="joinStatus"></div>
+    <div class="event-result"></div>
     <button class="join_event" id="join_btn">Join</button>
     <button class="delete_event" id="deleteEvent_btn">Delete</button>
     <button class="edit_event" id="edit_btn">Edit</button>
-    <div class="event-result"></div>
     <template id="template2">
       <div class="participantsList">
         <div class="participantsName" name="showedname"></div>
@@ -173,6 +172,19 @@
           }
         }
         joinStatus();
+
+        //organizer control
+        async function organizerPanel() {
+          let res = await fetch(`/organizerPanel/${eventId}`);
+          let json = await res.json();
+          if (json.organizer == false) {
+            document.querySelector(".delete_event").style.display = "none";
+            document.querySelector(".edit_event").style.display = "none";
+            document.querySelector(".participants-result").style.display =
+              "none";
+          }
+        }
+        organizerPanel();
 
         //insert all participants name. function for organizer.
         let template2 = document.querySelector("#template2").content;
