@@ -180,6 +180,9 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
       let id = result.rows[0].id;
       console.log(id);
 
+      // 成功create event後換頁
+      // res.redirect("/view-event.html");
+
       res.json(id);
     } catch (error) {
       console.log(error);

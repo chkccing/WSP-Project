@@ -16,3 +16,6 @@ CREATE TABLE event_tag (
 );
 -- 7: remove unused image, it is inline in event table now
 drop table image;
+-- 加返phone
+ALTER TABLE users
+add column phone DECIMAL(8, 0) not null;
