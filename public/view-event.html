@@ -214,18 +214,22 @@
           margin-left: 2rem;
           margin-top: 1rem;
         }
-        [data-role="guest"] #join_btn,
+        .fullStatus {
+          display: flex;
+          justify-content: center;
+        }
+        /* [data-role="guest"] #join_btn,
         #edit_btn,
         #deleteEvent_btn,
         .fullStatus,
         .participantsListBox,
         .joined {
           display: none;
-        }
+        } */
       }
     </style>
   </head>
-  <body>
+  <body data-role="user">
     <nav
       class="navbar navbar-expand-md mb-4"
       style="background-color: rgb(111, 203, 234)"
@@ -350,13 +354,13 @@
           </div>
         </template>
         <div class="event-result"></div>
-        <div class="row organizerPanel" data-role="user">
+        <div class="row organizerPanel">
           <button class="join_event" id="join_btn">Join</button>
           <button class="edit_event" id="edit_btn">Edit</button>
           <button class="delete_event" id="deleteEvent_btn">Delete</button>
           <div class="fullStatus"></div>
         </div>
-        <div class="participantsListBox" data-role="user">
+        <div class="participantsListBox">
           <h2 class="participantTitle">Participant List</h2>
           <template id="template2">
             <div class="participantsList">
@@ -370,6 +374,7 @@
         </div>
       </div>
     </div>
+    <div class="footer">© 2023 Chocolate IceCream Limited</div>
     <script>
       //view event by event id
       let params = new URL(document.location).searchParams;
