@@ -1,9 +1,6 @@
 [data-role="user"] #logIn-btu {
   display: none;
 }
-[data-role="guest"] #logout {
-  display: none;
-}
 
 [data-role="guest"] .navbar-toggler {
   display: none;
@@ -17,6 +14,13 @@
 }
 
 [data-role="guest"] #logOut {
+  display: none !important;
+}
+
+[data-role="guest"] button#edit_btn,
+[data-role="guest"] button#deleteEvent_btn,
+[data-role="guest"] div.participantsListBox,
+[data-role="guest"] div.joined {
   display: none !important;
 }
 
