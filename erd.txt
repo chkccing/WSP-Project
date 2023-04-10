@@ -1,3 +1,48 @@
+user
+----
+id integer PK
+username varchar(32)
+showedName varchar(32)
+icon user_icon FK >0- image.user_icon
+rating integer
+bio varchar(250)
+email varchar(60)
+phone varchar(8)
+password varchar(30)
+is_age18 boolean
+is_admin boolean
+created_at datetime
+updated_at datetime
+
+
+event
+-----
+id integer PK
+host_id integer FK >0- user.id
+eventPicture url FK >0- image.event_image
+title varchar(60)
+category varchar(20)
+hashtag varchar(20)
+start_date date
+end_date date
+cost integer
+location varchar(20)
+FAQ varchar(500)
+is_age18 boolean
+is_private boolean
+
+
+event_participant
+-----------------
+id integer PK
+event_id integer FK >0- event.id
+user_id integer FK >0- user.id
+
+
+
+
+
+
 # Visualize on https://erd.surge.sh
 # or https://quick-erd.surge.sh
 #

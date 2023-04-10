@@ -98,3 +98,12 @@
   .nav-link:hover{
     color: aliceblue !important;
   }
+  .footer {
+    width: 100vw;
+    height: 20vh;;
+    background-color: rgb(111, 203, 234);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+  }

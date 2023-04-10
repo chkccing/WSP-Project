@@ -1,13 +1,3 @@
-.form-list {
-  display: inline-flex;
-  flex-direction: column;
-  width: fit-content;
-}
-
-input[type="file"] {
-  max-width: 25ch;
-}
-
 [data-role="user"] #logIn-btu {
   display: none;
 }
