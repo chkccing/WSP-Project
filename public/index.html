@@ -17,21 +17,22 @@
     crossorigin="anonymous"
   ></script>
     <style>
-          .bd-placeholder-img {
+      @media only screen and (max-width: 600px) {
+        /* For mobile phones: */
+        [class*="col-"] {
+          width: 100%;
+        }    
+        .bd-placeholder-img {
         font-size: 1.125rem;
         text-anchor: middle;
         -webkit-user-select: none;
         -moz-user-select: none;
         user-select: none;
-      }
-      body {
-        min-height: 75rem;
-      }
-      @media only screen and (max-width: 600px) {
-        /* For mobile phones: */
-        [class*="col-"] {
-          width: 100%;
         }
+        body {
+          min-height: 75rem;
+        }
+      
         .b-example-divider {
         width: 100%;
         height: 3rem;
