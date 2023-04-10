@@ -26,6 +26,14 @@ input[type="file"] {
   display: none;
 }
 
+[data-role="guest"] form#logout button.btn.btn-outline-light {
+  display: none;
+}
+
+[data-role="user"] form#logout button.btn.btn-outline-light {
+  display: block;
+}
+
 #logIn-btu {
   border-radius: 0.5rem;
   background-color: black;

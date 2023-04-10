@@ -124,12 +124,12 @@
             </li>
           </ul>
           <a href="/Login.html" class="d-flex justify-content-lg-end text-decoration-none">
-            <button type="button" class="btn btn-outline-light me-2">
+            <button id="loginBtn" type="button" class="btn btn-outline-light me-2">
               Login
             </button>
           </a>
             <form id="logout" method="POST" action="/logout">
-                <button type="button" value="Logout" class="btn btn-outline-light me-2">Logout</button>
+                <button id="logoutBtn" type="submit" class="btn btn-outline-light me-2">Logout</button>
             </form>
           
         </div>
@@ -265,6 +265,11 @@
         document.body.dataset.role = user ? "user" : "guest";
         if (user) {
           currentUsername.textContent = user.name;
+
+          
+          document.getElementById("loginBtn").style.display = "none";
+        } else {
+          document.getElementById("loginBtn").style.display = "block";          
         }
       }
       async function loadRole() {
