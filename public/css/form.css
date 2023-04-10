@@ -4,34 +4,30 @@
   width: fit-content;
 }
 
-form {
-  /* background-color: darkred; */
-  display: flex;
-  flex-direction: column;
-  margin: 1rem;
-  padding: 1rem;
-  padding-top: 0;
-  color: white;
-  width: 10rem;
-}
-
 input[type="file"] {
   max-width: 25ch;
 }
 
-[data-role="user"] button#logIn-btu {
+[data-role="user"] #logIn-btu {
   display: none;
 }
-[data-role="guest"] button#logout {
+[data-role="guest"] #logout {
+  display: none;
+}
+
+[data-role="guest"] .navbar-toggler {
   display: none;
 }
 
 [data-role="user"] #logIn {
   display: none !important;
 }
+[data-role="user"] #signUp {
+  display: none !important;
+}
 
 [data-role="guest"] #logOut {
-  display: none;
+  display: none !important;
 }
 
 #logIn-btu {

@@ -17,6 +17,7 @@
       crossorigin="anonymous"
     ></script>
     <link rel="stylesheet" href="/css/nav.css" />
+    <link rel="stylesheet" href="/css/form.css" />
     <style>
       @media only screen and (max-width: 600px) {
         /* For mobile phones: */
@@ -112,6 +113,20 @@
         <a class="navbar-brand" href="/index.html">
           <img id="logo" src="img/Logo.png" width="60" height="47" />Pecky
         </a>
+        <div class="rowEnd">
+          <a
+            href="/Login.html"
+            class="nav-link d-flex px-2 text-dark"
+            id="logIn"
+            >LogIn</a
+          >/
+          <a
+            href="/sign-up.html"
+            class="nav-link d-flex px-2 text-dark"
+            id="signUp"
+            >Sign Up</a
+          >
+        </div>
         <button
           class="navbar-toggler"
           type="button"
@@ -125,78 +140,33 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
-            <li class="nav-item">
-              <a href="/Login.html" class="nav-link d-flex px-2 text-dark"
-                >LogIn</a
-              >
-              <a href="/sign-up.html" class="nav-link d-flex px-2 text-dark"
-                >Sign Up</a
-              >
-            </li>
-
-            <li class="nav-item">
-              <a href="/index.html" class="nav-link px-2 text-dark">Home</a>
-              <a href="/Login.html" class="nav-link d-flex px-2 text-dark"
-                >LogIn</a
-              >
-              <a href="/sign-up.html" class="nav-link d-flex px-2 text-dark"
-                >Sign Up</a
-              >
-            </li>
-
+            <div class="message">
+              Welcome back -<span class="username"></span>
+            </div>
             <li class="nav-item">
               <a href="/index.html" class="nav-link px-2 text-dark">Home</a>
             </li>
             <li class="nav-item">
-              <a
-                href="/create-event.html"
-                class="nav-link px-2 text-dark"
-                <a
-                href="/create-event.html"
-                class="nav-link px-2 text-dark"
+              <a href="/create-event.html" class="nav-link px-2 text-dark"
                 >Create event</a
               >
             </li>
             <li class="nav-item">
-              <a
-                href="/manage-event.html"
-                class="nav-link px-2 text-dark"
-                <a
-                href="/manage-event.html"
-                class="nav-link px-2 text-dark"
+              <a href="/manage-event.html" class="nav-link px-2 text-dark"
                 >Manage event</a
               >
             </li>
-            <li class="nav-item">
-              <a
-                href="/edit-event.html"
-                class="nav-link px-2 text-dark"
-                <a
-                href="/edit-event.html"
-                class="nav-link px-2 text-dark"
-                >Edit event</a
-              >
-            </li>
           </ul>
-          <form id="logout" method="POST" action="/logout">
+          <form id="logOut" method="POST" action="/logout" class="nav-item">
             <button
-              button
               id="logoutBtn"
-              type="submit"
-              type="submit"
               value="Logout"
-              class="btn btn-outline-dark me-2"
-              class="btn btn-outline-dark me-2"
+              class="btn nav-link text-dark me-2"
             >
-              Logout
+              Log out
             </button>
           </form>
         </div>
-      </div>
-      <div>
-        <a class="navbar-brand" href="/index.html">
-          <img id="logo" src="img/Logo.png" width="60" height="47" />Pecky
-        </a>
       </div>
     </nav>
     <form
@@ -432,13 +402,36 @@
           const result = await res.json(); // { success: true }
           window.location = `/view-event.html?id=${result}`;
         });
+
+      let logoutForm = document.querySelector("form#logOut");
+      //連同applyRole令div顯示用戶名稱
+      let currentUsername = document.querySelector(".username");
+
+      logoutForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        let form = logoutForm;
+        let res = await fetch(form.action, {
+          method: form.method,
+        });
+        let json = await res.json();
+        if (json.role == "guest") {
+          applyRole();
+        }
+        window.location = `/index.html`;
+      });
+
+      function applyRole(user) {
+        console.log("current user:", user);
+        document.body.dataset.role = user ? "user" : "guest";
+        if (user) {
+          currentUsername.textContent = user.name;
+        }
+      }
+
       async function loadRole() {
         let res = await fetch("/role");
         let json = await res.json();
-        if (!json.user) {
-          document.body.dataset.role = "guest";
-          return;
-        }
+        applyRole(json.user);
       }
       loadRole();
     </script>
