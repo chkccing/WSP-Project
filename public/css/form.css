@@ -26,12 +26,12 @@ input[type="file"] {
   display: none;
 }
 
-[data-role="guest"] form#logout button.btn.btn-outline-light {
+[data-role="user"] a#logIn a.nav-link d-flex px-2 text-dark {
   display: none;
 }
 
-[data-role="user"] form#logout button.btn.btn-outline-light {
-  display: block;
+[data-role="guest"] form#logOut button.btn btn-outline-dark me-2 {
+  display: none;
 }
 
 #logIn-btu {
@@ -50,4 +50,8 @@ input[type="file"] {
   font-size: larger;
   margin: 0.5rem;
   text-align: center;
+}
+
+.small-font {
+  font-size: 0.6rem;
 }

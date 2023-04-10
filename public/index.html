@@ -41,7 +41,7 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
             <li class="nav-item">
-              <a href="/Login.html" class="nav-link d-flex px-2 text-dark">LogIn</a>
+              
               <a href="/sign-up.html" class="nav-link d-flex px-2 text-dark">Sign Up</a>
             </li>
 
@@ -64,14 +64,16 @@
             >
             </li>
           </ul>
-          <a href="/Login.html" class="d-flex justify-content-lg-end text-decoration-none">
+          <!-- <a href="/Login.html" class="d-flex justify-content-lg-end text-decoration-none">
             <button id="loginBtn" type="button" class="btn btn-outline-light me-2">
               Login
             </button>
-          </a>
-            <form id="logout" method="POST" action="/logout">
-                <button button id="logoutBtn"  type="submit" value="Logout" class="btn btn-outline-dark me-2">Logout</button>
-            </form>
+          </a> -->
+          <a href="/Login.html" id="logIn" class="nav-link d-flex px-2 text-dark">LogIn</a>
+          <form id="logOut" method="POST" action="/logout">              
+              <button id="logoutBtn"  type="submit" value="Logout" class="btn btn-outline-dark me-2">Logout</button>
+              <div class="small-font">You have login as <span class="username"></span></div>
+          </form>
         </div>
       </div>
     </nav>
@@ -148,9 +150,10 @@
     <h2 class="category-title">photography</h2>
     <div class="event-list photography"></div>
     <script>
-      let logoutForm = document.querySelector("form#logout");
+      let logoutForm = document.querySelector("form#logOut");
       //連同applyRole令div顯示用戶名稱
       let currentUsername = logoutForm.querySelector(".username");
+
 
       //insert all event previews
       let template = document.querySelector("template");
@@ -225,13 +228,10 @@
         document.body.dataset.role = user ? "user" : "guest";
         if (user) {
           currentUsername.textContent = user.name;
-
-          
-          document.getElementById("loginBtn").style.display = "none";
-        } else {
-          document.getElementById("loginBtn").style.display = "block";          
         }
       }
+
+
       async function loadRole() {
         let res = await fetch("/role");
         let json = await res.json();
