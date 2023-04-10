@@ -26,6 +26,10 @@
           margin-left: 2rem;;
           margin-top: 2rem;
         }
+        .carouselimg {
+          height: 100%;
+          object-fit: cover;
+        }
         #carouselExampleIndicators{
           margin-top: 4.5rem;
           width: 100vw;
@@ -54,17 +58,16 @@
         </a>
         <div class="rowEnd">
           <a
-            href="/Login.html"
-            class="nav-link d-flex px-2 text-dark"
-            id="logIn"
-            >LogIn</a
-          >/
-          <a
             href="/sign-up.html"
             class="nav-link d-flex px-2 text-dark"
             id="signUp"
             >Sign Up</a
-          >
+          >/<a
+            href="/Login.html"
+            class="nav-link d-flex px-2 text-dark"
+            id="logIn"
+            >LogIn</a
+          >          
         </div>
         <button
           class="navbar-toggler"
@@ -117,13 +120,13 @@
     </div>
     <div class="carousel-inner">
       <div class="carousel-item active">
-        <img class="d-block w-100" id="caurosel1">
+        <img class="d-block w-100 carouselimg" id="caurosel1">
       </div>
       <div class="carousel-item">
-        <img class="d-block w-100" id="caurosel2">
+        <img class="d-block w-100 carouselimg" id="caurosel2">
       </div>
       <div class="carousel-item">
-        <img class="d-block w-100" id="caurosel3">
+        <img class="d-block w-100 carouselimg" id="caurosel3">
       </div>
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -200,10 +203,14 @@
         let node = eventTemplate.cloneNode(true);
         node.querySelector(".eventTitle").textContent = event.title;
         let img = node.querySelector(".image");
-        if (event.eventpicture) {
+        if(event.is_age18 == false) {
+          if (event.eventpicture) {
           img.src = "/uploads/event-images/" + event.eventpicture;
         } else {
           img.src = "/uploads/event-images/default.jpg";
+        }
+        } else {
+          img.src = "/uploads/event-images/r18.jpg";
         }
 
         node.href = "/view-event.html?id=" + event.id;
