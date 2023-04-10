@@ -107,8 +107,8 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
       let eventPicture = Array.isArray(eventPictureMaybeArray)
         ? eventPictureMaybeArray[0]
         : eventPictureMaybeArray
-        ? eventPictureMaybeArray.newFilename
-        : "";
+          ? eventPictureMaybeArray.newFilename
+          : "";
       let title = checkString("title", fields.title);
       let category = checkString("category", fields.category);
       let start_date = checkString("start_date", fields.start_date);
@@ -222,8 +222,8 @@ eventRoutes.post("/editEvent", function (req: Request, res: Response) {
       let eventPicture = Array.isArray(eventPictureMaybeArray)
         ? eventPictureMaybeArray[0]
         : eventPictureMaybeArray
-        ? eventPictureMaybeArray.newFilename
-        : "";
+          ? eventPictureMaybeArray.newFilename
+          : "";
       let id = req.params.id;
       let event_id = req.query.eventId;
       let title = checkString("title", fields.title);
@@ -471,7 +471,7 @@ eventRoutes.get("/allEvent/", async (req, res, next) => {
   try {
     let result = await client.query(
       /* sql */ `
-      select id, eventPicture, title, end_date, is_age18, is_private, active from event  
+      select id, eventPicture, category, title, end_date, is_age18, is_private, active from event  
       WHERE event.active = true and event.is_private = false and event.end_date >= NOW() 
         ORDER BY start_date 
       `,
@@ -619,8 +619,6 @@ eventRoutes.get("/allJoinedEvent", async (req, res, next) => {
     next(error);
   }
 });
-
-// event.active = false and event.end_date >= NOW() and
 
 // eventRoutes.post("/eventSearch", async (req, res) => {
 //   let search = req.body.search;
