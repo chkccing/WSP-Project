@@ -172,26 +172,23 @@
         </select>
       </div>
       <div>
-        <input class = "line" type="text" placeholder="hashtag" name="hashtag" id="hashtag" required/>
+        <input class = "line" type="text" placeholder="" name="hashtag" id="hashtag" required/>
       </div>
       <div>
-        <input class="start_date date" type="text" placeholder="Start Date" name ="start_date" id="start_date" onfocus="(this.type='date')" onblur="(this.type='text')">
-        <input class="end_date date" type="text" placeholder="End Date" name ="end_date" id="end_date" onfocus="(this.type='date')" onblur="(this.type='text')" >
+        <input class="start_date date" type="text" placeholder="" name ="start_date" id="start_date" onfocus="(this.type='date')" onblur="(this.type='text')">
+        <input class="end_date date" type="text" placeholder="" name ="end_date" id="end_date" onfocus="(this.type='date')" onblur="(this.type='text')" >
       </div>
       <div>
-        <input class = "line" type="time" placeholder="timeslot" name="timeslot" required/>
+        <input class = "line" type="number" placeholder="" name="cost" id="cost" required/>
       </div>
       <div>
-        <input class = "line" type="number" placeholder="cost in HKD" name="cost" id="cost" required/>
+        <input class = "line" type="text" placeholder="" name="location" id="location" required/>
       </div>
       <div>
-        <input class = "line" type="text" placeholder="location" name="location" id="location" required/>
+        <input class = "line" type="number" placeholder="" name="participants" id ="participants" required/>
       </div>
       <div>
-        <input class = "line" type="number" placeholder="participants" name="participants" id ="participants" required/>
-      </div>
-      <div>
-        <textarea class = "line" type="text" placeholder="faq" name="faq" id="faq" required></textarea>
+        <textarea class = "line" type="text" placeholder="" name="faq" id="faq" required></textarea>
       </div>
       <div>
         <input type="checkbox" name="is_age18" /> Is age 18 required?
@@ -250,7 +247,6 @@
       async function viewEvent() {
         let res = await fetch(`/viewEvent/${eventId}`);
         let json = await res.json();
-        console.log(json.data.title)
         document.querySelector("#title").placeholder = json.data.title;
         document.querySelector("#hashtag").placeholder = json.data.hashtag;
         document.querySelector("#start_date").placeholder = json.data.start_date.split("T")[0];;
@@ -261,9 +257,8 @@
           json.data.location;
         document.querySelector("#participants").placeholder =
           json.data.participants;
-        document.querySelector("#joined").placeholder  =
-          json.joined;
         document.querySelector("#faq").placeholder = json.data.faq;
+
 
       }
       viewEvent();

@@ -15,7 +15,7 @@ let uploadDir = join("uploads", "event-images");
 mkdirSync(uploadDir, { recursive: true });
 import "../session";
 // import { log } from 'console'
-import { extractTag } from "../tagRelatedFunction";
+// import { extractTag } from "../tagRelatedFunction";
 // 引用拆解hashtag的function。
 
 export const eventRoutes = Router();
@@ -50,50 +50,50 @@ const form = formidable({
   filter: (part) => part.mimetype?.startsWith("image/") || false,
 });
 
-//加入拆解hashtags的結構，不留空白與符號。
-let insert_post = async (content: string) => {
-  const result = await client.query(
-    /* sql */ `
-    insert into post (content) values ($1) returning id
-  `,
-    [content]
-  );
-  console.log(result.rows[0].id);
-  return result.rows[0].id;
-};
-console.log(insert_post);
+// //加入拆解hashtags的結構，不留空白與符號。
+// let insert_post = async (content: string) => {
+//   const result = await client.query(
+//     /* sql */ `
+//     insert into post (content) values ($1) returning id
+//   `,
+//     [content]
+//   );
+//   console.log(result.rows[0].id);
+//   return result.rows[0].id;
+// };
+// console.log(insert_post);
 
-let select_tag_id = async (hashtag: string) => {
-  const result = await client.query(
-    /* sql */ `
-SELECT
-  id
-FROM tag
-WHERE hashtag = $1;
-  `,
-    [hashtag]
-  );
-  return result.rows[0]?.id;
-};
+// let select_tag_id = async (hashtag: string) => {
+//   const result = await client.query(
+//     /* sql */ `
+// SELECT
+//   id
+// FROM tag
+// WHERE hashtag = $1;
+//   `,
+//     [hashtag]
+//   );
+//   return result.rows[0]?.id;
+// };
 
-let insert_tag = async (hashtag: string) => {
-  const result = await client.query(
-    /* sql */ `
-    INSERT INTO tag (hashtag) VALUES ($1) RETURNING id
-  `,
-    [hashtag]
-  );
-  return result.rows[0].id;
-};
+// let insert_tag = async (hashtag: string) => {
+//   const result = await client.query(
+//     /* sql */ `
+//     INSERT INTO tag (hashtag) VALUES ($1) RETURNING id
+//   `,
+//     [hashtag]
+//   );
+//   return result.rows[0].id;
+// };
 
-let insert_post_tag = async (post_id: number, tag_id: number) => {
-  await client.query(
-    /* sql */ `
-    INSERT INTO post_tag (post_id, tag_id) VALUES ($1, $2)
-  `,
-    [post_id, tag_id]
-  );
-};
+// let insert_post_tag = async (post_id: number, tag_id: number) => {
+//   await client.query(
+//     /* sql */ `
+//     INSERT INTO post_tag (post_id, tag_id) VALUES ($1, $2)
+//   `,
+//     [post_id, tag_id]
+//   );
+// };
 
 //formidable，有上傳，有兩個cases，一個就object，多於一個就array，沒有就null。
 // When #contact-form submit, this route will receive the request
@@ -250,34 +250,34 @@ eventRoutes.post("/editEvent", function (req: Request, res: Response) {
         [id]
       );
 
-      let decodeTag = extractTag(hashtag);
-      //加入把decodeTag資料放入tag table
-      let tags = decodeTag;
-      let { id: post_id } = await insert_post(title);
+      // let decodeTag = extractTag(hashtag);
+      // //加入把decodeTag資料放入tag table
+      // let tags = decodeTag;
+      // let { id: post_id } = await insert_post(title);
 
-      for (let tag of tags) {
-        let tag_id = await select_tag_id(tag);
-        if (!tag_id) {
-          tag_id = (await insert_tag(tag)).lastInsertRowid;
-        }
-        await insert_post_tag(post_id, tag_id);
-      }
+      // for (let tag of tags) {
+      //   let tag_id = await select_tag_id(tag);
+      //   if (!tag_id) {
+      //     tag_id = (await insert_tag(tag)).lastInsertRowid;
+      //   }
+      //   await insert_post_tag(post_id, tag_id);
+      // }
 
       result = await client.query(
         /* sql */ `
         update event set 
-      title = $1,  
-      category = $2,  
-      hashtag = $3,  
-      start_date = $4,  
-      end_date = $5,  
-      cost = $6,  
-      location = $7,  
-      participants = $8,  
-      faq = $9, 
-      is_age18 = $10,  
-      is_private = $11 
-      decodeTag = $12
+      eventpicture = $1,
+      title = $2,  
+      category = $3,  
+      hashtag = $4,  
+      start_date = $5,  
+      end_date = $6,  
+      cost = $7,  
+      location = $8,  
+      participants = $9,  
+      faq = $10, 
+      is_age18 = $11,  
+      is_private = $12 
       WHERE id = $13
       returning id
           `,
@@ -294,7 +294,6 @@ eventRoutes.post("/editEvent", function (req: Request, res: Response) {
           faq,
           is_age18,
           is_private,
-          decodeTag,
           event_id,
         ]
       );
