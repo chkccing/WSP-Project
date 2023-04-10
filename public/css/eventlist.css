@@ -1,0 +1,37 @@
+@media only screen and (max-width: 600px) {
+    /* For mobile phones: */
+    [class*="col-"] {
+      width: 100%;
+    }    .eventBox {
+    width: 5rem;
+    height: 5rem;
+    background-color: rgb(220, 255, 248);
+    margin: 0.5rem;
+  }
+  .eventBox{
+    width: 15rem;
+    height: 16rem;
+    justify-content: center;
+    border-radius: 20px;
+    z-index: 3;
+    margin: 1.5rem;
+  }
+  #eventPicture {
+    width: 15rem;
+    height: 10rem;
+    border-radius: 20px 20px 0 0;
+    object-fit: fill;
+    margin-top: 0;
+  }
+  a:link { text-decoration: none; }
+  #title {
+    color: black;
+    margin: 0.25rem 1rem;
+    font-size: 1rem ;
+  }
+  .eventBox:hover {
+    transform: scale(1.1);
+  }
+  .event-list {
+    display: flex;
+  }}
