@@ -506,33 +506,38 @@ searchRoutes.get("/searchEvent", async (req, res) => {
 
 //organizer delete event
 
-eventRoutes.post("/deleteEvent", async (req: Request, res: Response) => {
-  try {
-    let user_id = getSessionUser(req).id;
-    let event_id = req.query.eventId;
-    let result = await client.query(
-      /* sql */ ` 
-      select 
-      event.id, event.host_id, event.active 
-      from event 
-      WHERE event.host_id = ${user_id} and event.active = true 
-          `,
-      []
-    );
-    result = await client.query(
-      /* sql */ ` 
-      update event set active = false  
-      WHERE id = $1 
-      returning id 
-          `,
-      [event_id]
-    );
-    let id = result.rows[0].id;
-    res.json(id);
-  } catch (error) {
-    res.json({});
-  }
-});
+eventRoutes.delete(
+  "/events/:event_id/participants/:user_id",
+  async (req: Request, res: Response) => {
+    try {
+      let user_id = getSessionUser(req).id;
+      let event_id = req.params.event_id;
+      let result = await client.query(
+        /* sql */ `select   host_id
+      from event
+      WHERE event.id = $1`, [event_id]
+      );
+      let event = result.rows[0];
+      if (!event) {
+        res.status(404);
+        res.json({ error: "event not found" });
+        return;
+      }
+      if (event.host_id != user_id) {
+        res.status(403);
+        res.json({ error: "only event host can delete participant" });
+        return;
+      }
+      result = await client.query(
+        /* sql */ `  WHERE event_id = $1
+        and user_id = $2`, [event_id, req.params.user_id]
+      );
+      res.json({});
+    } catch (error) {
+      res.status(500);
+      res.json({ error: String(error) });
+    }
+  });
 
 //organizer delete participant
 eventRoutes.delete(
@@ -547,7 +552,7 @@ eventRoutes.delete(
         host_id
       from event
       WHERE event.id = $1
-          `,
+        `,
         [event_id]
       );
       let event = result.rows[0];
@@ -566,7 +571,7 @@ eventRoutes.delete(
       update event_participant set active = false 
       WHERE event_id = $1
         and user_id = $2
-          `,
+        `,
         [event_id, req.params.user_id]
       );
       res.json({});
@@ -585,7 +590,7 @@ eventRoutes.get("/allCreateEvent", async (req, res, next) => {
     select id, host_id, eventPicture, title, end_date, active from event 
     WHERE event.active = false and event.end_date >= NOW() and event.host_id = ${user_id}
     ORDER BY start_date
-      `,
+        `,
       []
     );
     let events = result.rows;
@@ -602,15 +607,15 @@ eventRoutes.get("/allJoinedEvent", async (req, res, next) => {
     let result = await client.query(
       /* sql */ `
     select event.id,
-    event.eventPicture, 
-    event.title, 
-    event.end_date,
-    event.active 
+        event.eventPicture,
+        event.title,
+        event.end_date,
+        event.active 
     from event_participant 
     inner join event on event_participant.event_id = event.id
     WHERE event.active = false and event.end_date >= NOW() and event_participant.user_id = ${user_id}
     ORDER BY start_date
-      `,
+        `,
       []
     );
     let events = result.rows;
