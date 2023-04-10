@@ -26,11 +26,11 @@ input[type="file"] {
   display: none;
 }
 
-[data-role="user"] a#logIn a.nav-link d-flex px-2 text-dark {
+[data-role="user"] #logIn {
   display: none;
 }
 
-[data-role="guest"] form#logOut button.btn btn-outline-dark me-2 {
+[data-role="guest"] #logOut {
   display: none;
 }
 
