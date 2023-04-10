@@ -126,7 +126,13 @@
         />
       </div>
       <div>
-        <input class="line" type="text" placeholder="title" name="title" />
+        <input
+          class="line"
+          type="text"
+          placeholder="title"
+          name="title"
+          required
+        />
       </div>
       <div>
         <select
@@ -177,8 +183,9 @@
           class="line"
           id="hashtag"
           list="hashtags"
-          placeholder="hashtag"
+          placeholder="Key Description"
           name="hashtag"
+          required
         />
       </div>
       <div>
@@ -189,6 +196,7 @@
           name="start_date"
           onfocus="(this.type='date')"
           onblur="(this.type='text')"
+          required
         />
         <input
           class="end_date date"
@@ -197,6 +205,7 @@
           name="end_date"
           onfocus="(this.type='date')"
           onblur="(this.type='text')"
+          required
         />
       </div>
       <div>
@@ -241,6 +250,7 @@
           type="text"
           placeholder="Details"
           name="faq"
+          required
         ></textarea>
       </div>
       <div>
