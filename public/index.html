@@ -17,7 +17,12 @@
     crossorigin="anonymous"
   ></script>
     <style>
-          .bd-placeholder-img {
+      @media only screen and (max-width: 600px) {
+        /* For mobile phones: */
+        [class*="col-"] {
+          width: 100%;
+        }    
+        .bd-placeholder-img {
         font-size: 1.125rem;
         text-anchor: middle;
         -webkit-user-select: none;
@@ -65,39 +70,53 @@
         white-space: nowrap;
         -webkit-overflow-scrolling: touch;
       }
-      .container {
-        margin-left: 5rem;
-      }
       .logoWord {
         font-size: 2rem;
         font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
         color: rgb(111, 203, 234);
       }
-      .eventBox {
-        width: 5rem;
-        height: 5rem;
-        background-color: orange;
-        margin: 0.5rem;
+      #events{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 20px;
       }
+      .card{
+        width: 15rem;
+        height: 16rem;
+        justify-content: center;
+        border-radius: 20px;
+        z-index: 3;
+      }
+      .col{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
       #eventPicture {
-        width: 5rem;
-        height: 3rem;
+        width: 14rem;
+        height: 10rem;
+        border-radius: 20px;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 9px;
       }
       .event-list {
         display: flex;
       }
-
     }
+  }
     </style>
     <link rel="stylesheet" href="/css/form.css" />
     <link rel="stylesheet" href="/css/styles.css" />
   </head>
   <body data-role="guest">
 
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+    <nav class="navbar navbar-expand-md mb-4" style="background-color: rgb(111, 203, 234);">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-          <img class="logo" src="img/Logo.png" width="60" height="47"/>
+        <a class="navbar-brand" href="/index.html">
+          <img id="logo" src="img/Logo.png" width="60" height="47"/>Pecky
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -105,20 +124,25 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
             <li class="nav-item">
-              <a href="/index.html" class="nav-link px-2 text-white">Home</a>
+              <a href="/Login.html" class="nav-link d-flex px-2 text-dark">LogIn</a>
+              <a href="/sign-up.html" class="nav-link d-flex px-2 text-dark">Sign Up</a>
+            </li>
+
+            <li class="nav-item">
+              <a href="/index.html" class="nav-link px-2 text-dark">Home</a>
             </li>
             <li class="nav-item">
-              <a href="/create-event.html" class="nav-link px-2 text-white"
+              <a href="/create-event.html" class="nav-link px-2 text-dark"
               >Create event</a
             >
             </li>
             <li class="nav-item">
-              <a href="/manage-event.html" class="nav-link px-2 text-white"
+              <a href="/manage-event.html" class="nav-link px-2 text-dark"
                 >Manage event</a
               >
             </li>
             <li class="nav-item">
-              <a href="/edit-event.html" class="nav-link px-2 text-white"
+              <a href="/edit-event.html" class="nav-link px-2 text-dark"
               >Edit event</a
             >
             </li>
@@ -129,16 +153,14 @@
             </button>
           </a>
             <form id="logout" method="POST" action="/logout">
-                <button id="logoutBtn" type="submit" class="btn btn-outline-light me-2">Logout</button>
+                <button type="submit" value="Logout" class="btn btn-outline-dark me-2">Logout</button>
             </form>
-          
         </div>
       </div>
     </nav>
 
-    </header>
-    <br /><br /><br /><br />
-    <section class="py-5 text-center container">
+<main>
+    <section class="d-flex justify-content py-5 text-center container">
       <div class="row py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">
           <h1 class="fw-light">For Your Joy</h1>
@@ -151,16 +173,109 @@
             <a href="/create-event.html"
               ><button class="btn btn-primary my-2">Create Event</button></a
             >
-            <a href="/sign-up.html"
-              ><button type="button" class="btn btn-primary my-2">
-                Sign-up
-              </button></a
-            >
           </p>
         </div>
       </div>
     </section>
 
+
+  
+    <div id="events" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+      <div class="col">
+        <div class="card">
+          <img class="image" id="eventPicture" src="img/2058157.jpg"/>
+          <a href="/view-event.html?id=1" id="link" class="text-dark text-decoration-none">
+          <div class="card-body">
+            <h2><div class="eventTitle" id="title">test1</div></h2>
+          </a>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <img class="image" id="eventPicture" />
+          <a href="/view-event.html?id=1" id="link" class="text-dark text-decoration-none">
+          <div class="card-body text-center">
+            <div class="eventTitle" id="title">test2</div>
+          </a>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <img class="image" id="eventPicture" />
+          <a href="/view-event.html?id=1" id="link" class="text-dark text-decoration-none">
+          <div class="card-body">
+            <div class="eventTitle" id="title">test3</div>
+          </a>
+        </div>
+      </div>
+    </div>
+      <div class="col">
+        <div class="card">
+          <img class="image" id="eventPicture" />
+          <a href="/view-event.html?id=1" id="link" class="text-dark text-decoration-none">
+          <div class="card-body">
+            <div class="eventTitle" id="title">test4</div>
+          </a>
+          </div>
+        </div>
+      </div>
+  </div>
+</main>
+
+<template>
+  <div id="events" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+    <div class="col">
+      <div class="card">
+        <img class="image" id="eventPicture"/>
+        <a href="/view-event.html?id=1" id="link" class="text-dark text-decoration-none">
+        <div class="card-body">
+          <h2><div class="eventTitle" id="title"></div></h2>
+        </a>
+        </div>
+      </div>
+    </div>
+</template>
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <a href="/view-event.html?id=1" id="link">
+      <div class="eventBox">
+        <img class="image" id="eventPicture" />
+        <div class="eventTitle" id="title">test1</div>
+      </div>
+    </a>      
+    <a href="/view-event.html?id=1" id="link">
+      <div class="eventBox">
+        <img class="image" id="eventPicture" />
+        <div class="eventTitle" id="title">test2</div>
+      </div>
+    </a>      
+    <a href="/view-event.html?id=1" id="link">
+      <div class="eventBox">
+        <img class="image" id="eventPicture" />
+        <div class="eventTitle" id="title">test3</div>
+      </div>
+    </a>      
+    <a href="/view-event.html?id=1" id="link">
+      <div class="eventBox">
+        <img class="image" id="eventPicture" />
+        <div class="eventTitle" id="title">test4</div>
+      </div>
+    </a>     
+     <a href="/view-event.html?id=1" id="link">
+      <div class="eventBox">
+        <img class="image" id="eventPicture" />
+        <div class="eventTitle" id="title">test5</div>
+      </div>
+    </a>
+
+
+
+
+
+
+
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
           <!-- <div class="right">
             <div>
               <a href="/index.html"><button id="logOut-btu">Logout</button></a>
@@ -177,16 +292,36 @@
           <button type="submit">Search</button>
         </form>
         <ul id="results-list"></ul> -->
-      
+
     <template>
-      <a href="/view-event.html?id=1" id="link">
-        <div class="eventBox">
-          <img class="image" id="eventPicture" />
-          <div class="eventTitle" id="title"></div>
+      <div id="events" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+        <div class="col">
+          <div class="card">
+            <img class="image" id="eventPicture" src="img/2058157.jpg"/>
+            <a href="/view-event.html?id=1" id="link" class="text-dark text-decoration-none">
+            <div class="card-body">
+              <div class="eventTitle" id="title">test1</div>
+            </a>
+            </div>
+          </div>
         </div>
-      </a>
     </template>
-    <div class="event-list"></div>
+    <h2 class="category-title">anime</h2>
+    <div class="event-list anime"></div>
+    <h2 class="category-title">boardGame</h2>
+    <div class="event-list boardGame"></div>
+    <h2 class="category-title">booking</h2>
+    <div class="event-list booking"></div>
+    <h2 class="category-title">celebrities</h2>
+    <div class="event-list celebrities"></div>
+    <h2 class="category-title">giveaway</h2>
+    <div class="event-list giveaway"></div>
+    <h2 class="category-title">match</h2>
+    <div class="event-list match"></div>
+    <h2 class="category-title">meeting</h2>
+    <div class="event-list meeting"></div>
+    <h2 class="category-title">photography</h2>
+    <div class="event-list photography"></div>
     <script>
       let logoutForm = document.querySelector("form#logout");
       //連同applyRole令div顯示用戶名稱

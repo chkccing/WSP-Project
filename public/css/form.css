@@ -22,7 +22,7 @@ input[type="file"] {
 [data-role="user"] button#logIn-btu {
   display: none;
 }
-[data-role="guest"] form#logout {
+[data-role="guest"] button#logout {
   display: none;
 }
 
