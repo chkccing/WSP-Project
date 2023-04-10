@@ -89,10 +89,6 @@
         </div>
       </div>
     </section>
-
-
-  
-    
 </main>
 
 
@@ -114,17 +110,12 @@
         <ul id="results-list"></ul> -->
 
     <template>
-      <div id="events" class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-        <div class="col">
-          <div class="card">
-            <img class="image" id="eventPicture" src="img/2058157.jpg"/>
-            <a href="/view-event.html?id=1" id="link" class="text-dark text-decoration-none">
-            <div class="card-body">
-              <div class="eventTitle" id="title">test1</div>
-            </a>
-            </div>
-          </div>
+      <a href="/view-event.html?id=1" id="link">
+        <div class="eventBox">
+          <img class="image" id="eventPicture" />
+          <div class="eventTitle" id="title">test1</div>
         </div>
+      </a>      
     </template>
     <h2 class="category-title">anime</h2>
     <div class="event-list anime"></div>
@@ -168,10 +159,9 @@
         } else {
           img.src = "/uploads/event-images/default.jpg";
         }
-        // let eventBox = node.querySelector(".eventBox");
-        // console.log(eventBox);
 
         node.href = "/view-event.html?id=" + event.id;
+        
         if(event.category == "Anime"){
           animeGameEventList.appendChild(node);}
         if(event.category == "Board Game"){

@@ -18,11 +18,12 @@
         /* For mobile phones: */
         [class*="col-"] {
           width: 100%;
-        }form {
+        }
+      form {
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-top: 50px;
+        margin-top: 6rem;
       }
       H2 {
         margin-bottom: 2rem;
@@ -79,10 +80,10 @@
     </style>
   </head>
   <body>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+    <nav class="navbar navbar-expand-md mb-4" style="background-color: rgb(111, 203, 234);">
       <div class="container-fluid">
         <a class="navbar-brand" href="/index.html">
-          <img class="logo" src="img/Logo.png" width="60" height="47"/>
+          <img id="logo" src="img/Logo.png" width="60" height="47"/>Pecky
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -90,33 +91,32 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
             <li class="nav-item">
-              <a href="/index.html" class="nav-link px-2 text-white">Home</a>
+              <a href="/Login.html" class="nav-link d-flex px-2 text-dark">LogIn</a>
+              <a href="/sign-up.html" class="nav-link d-flex px-2 text-dark">Sign Up</a>
+            </li>
+
+            <li class="nav-item">
+              <a href="/index.html" class="nav-link px-2 text-dark">Home</a>
             </li>
             <li class="nav-item">
-              <a href="/create-event.html" class="nav-link px-2 text-white"
+              <a href="/create-event.html" class="nav-link px-2 text-dark"
               >Create event</a
             >
             </li>
             <li class="nav-item">
-              <a href="/manage-event.html" class="nav-link px-2 text-white"
+              <a href="/manage-event.html" class="nav-link px-2 text-dark"
                 >Manage event</a
               >
             </li>
             <li class="nav-item">
-              <a href="/edit-event.html" class="nav-link px-2 text-white"
+              <a href="/edit-event.html" class="nav-link px-2 text-dark"
               >Edit event</a
             >
             </li>
           </ul>
-          <a href="/Login.html" class="d-flex justify-content-lg-end text-decoration-none">
-            <button type="button" class="btn btn-outline-light me-2">
-              Login
-            </button>
-          </a>
             <form id="logout" method="POST" action="/logout">
-                <button type="button" value="Logout" class="btn btn-outline-light me-2">Logout</button>
+                <button type="submit" value="Logout" class="btn btn-outline-dark me-2">Logout</button>
             </form>
-          
         </div>
       </div>
     </nav>
