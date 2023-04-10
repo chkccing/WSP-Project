@@ -2,36 +2,36 @@
     /* For mobile phones: */
     [class*="col-"] {
       width: 100%;
-    }    .eventBox {
-    width: 5rem;
-    height: 5rem;
-    background-color: rgb(220, 255, 248);
-    margin: 0.5rem;
-  }
-  .eventBox{
-    width: 15rem;
-    height: 16rem;
+    }    
+  .eventBox, .eventBox1, .eventBox2{
+    width: 42vw;
+    height: 45vw;
     justify-content: center;
     border-radius: 20px;
     z-index: 3;
-    margin: 1.5rem;
+    margin: 3.5vw;
+    background-color: rgb(220, 255, 248);
   }
-  #eventPicture {
-    width: 15rem;
-    height: 10rem;
+  #eventPicture, #eventPicture1, #eventPicture2 {
+    width: 42vw;
+    height: 30vw;
     border-radius: 20px 20px 0 0;
     object-fit: fill;
     margin-top: 0;
   }
   a:link { text-decoration: none; }
-  #title {
+  #title, #title1, #title2 {
     color: black;
     margin: 0.25rem 1rem;
     font-size: 1rem ;
+    font-weight: bold;
+    width: 36vw;
+    height: 15vw;
   }
-  .eventBox:hover {
+  .eventBox:hover, .eventBox1:hover, .eventBox2:hover {
     transform: scale(1.1);
   }
-  .event-list {
+  .event-list, .event-list1, .event-list2 {
     display: flex;
+    position: relative;
   }}

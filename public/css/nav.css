@@ -2,7 +2,10 @@
     /* For mobile phones: */
     [class*="col-"] {
       width: 100%;
-    }    
+    }  
+    html {
+      overflow-x: hidden;
+    }
     .bd-placeholder-img {
     font-size: 1.125rem;
     text-anchor: middle;
@@ -10,10 +13,15 @@
     -moz-user-select: none;
     user-select: none;
     }
-    body {
-      min-height: 75rem;
+    nav{
+    position: fixed !important;
+    width: 100vw;
+    top: 0;
+    z-index: 100;
     }
-  
+    .navbar-toggler{
+      margin-right: 1rem;
+    }
     .b-example-divider {
     width: 100%;
     height: 3rem;

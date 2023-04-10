@@ -16,54 +16,12 @@
       integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
       crossorigin="anonymous"
     ></script>
+    <link rel="stylesheet" href="/css/nav.css" />
     <style>
       @media only screen and (max-width: 600px) {
         /* For mobile phones: */
         [class*="col-"] {
           width: 100%;
-        }
-        .b-example-divider {
-          width: 100%;
-          height: 3rem;
-          background-color: rgba(0, 0, 0, 0.1);
-          border: solid rgba(0, 0, 0, 0.15);
-          border-width: 1px 0;
-          box-shadow: inset 0 0.5em 1.5em rgba(0, 0, 0, 0.1),
-            inset 0 0.125em 0.5em rgba(0, 0, 0, 0.15);
-        }
-        .b-example-vr {
-          flex-shrink: 0;
-          width: 1.5rem;
-          height: 100vh;
-        }
-        .bi {
-          vertical-align: -0.125em;
-          fill: currentColor;
-        }
-        .nav-scroller {
-          position: relative;
-          z-index: 2;
-          height: 2.75rem;
-          overflow-y: hidden;
-        }
-        .nav-scroller .nav {
-          display: flex;
-          flex-wrap: nowrap;
-          padding-bottom: 1rem;
-          margin-top: -1px;
-          overflow-x: auto;
-          text-align: center;
-          white-space: nowrap;
-          -webkit-overflow-scrolling: touch;
-        }
-        .container {
-          margin-left: 5rem;
-        }
-        .logoWord {
-          font-size: 2rem;
-          font-family: "Franklin Gothic Medium", "Arial Narrow", Arial,
-            sans-serif;
-          color: rgb(111, 203, 234);
         }
         h2 {
           margin-bottom: 2rem;
@@ -72,7 +30,7 @@
           display: flex;
           flex-direction: column;
           align-items: center;
-          margin-top: 50px;
+          margin-top: 6rem;
         }
 
         .line {
@@ -152,6 +110,9 @@
       style="background-color: rgb(111, 203, 234)"
     >
       <div class="container-fluid">
+        <a class="navbar-brand" href="/index.html">
+          <img id="logo" src="img/Logo.png" width="60" height="47" />Pecky
+        </a>
         <button
           class="navbar-toggler"
           type="button"
@@ -176,19 +137,44 @@
 
             <li class="nav-item">
               <a href="/index.html" class="nav-link px-2 text-dark">Home</a>
+              <a href="/Login.html" class="nav-link d-flex px-2 text-dark"
+                >LogIn</a
+              >
+              <a href="/sign-up.html" class="nav-link d-flex px-2 text-dark"
+                >Sign Up</a
+              >
+            </li>
+
+            <li class="nav-item">
+              <a href="/index.html" class="nav-link px-2 text-dark">Home</a>
             </li>
             <li class="nav-item">
-              <a href="/create-event.html" class="nav-link px-2 text-dark"
+              <a
+                href="/create-event.html"
+                class="nav-link px-2 text-dark"
+                <a
+                href="/create-event.html"
+                class="nav-link px-2 text-dark"
                 >Create event</a
               >
             </li>
             <li class="nav-item">
-              <a href="/manage-event.html" class="nav-link px-2 text-dark"
+              <a
+                href="/manage-event.html"
+                class="nav-link px-2 text-dark"
+                <a
+                href="/manage-event.html"
+                class="nav-link px-2 text-dark"
                 >Manage event</a
               >
             </li>
             <li class="nav-item">
-              <a href="/edit-event.html" class="nav-link px-2 text-dark"
+              <a
+                href="/edit-event.html"
+                class="nav-link px-2 text-dark"
+                <a
+                href="/edit-event.html"
+                class="nav-link px-2 text-dark"
                 >Edit event</a
               >
             </li>
@@ -218,7 +204,9 @@
               button
               id="logoutBtn"
               type="submit"
+              type="submit"
               value="Logout"
+              class="btn btn-outline-dark me-2"
               class="btn btn-outline-dark me-2"
             >
               Logout

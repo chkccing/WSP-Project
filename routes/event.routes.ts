@@ -588,7 +588,7 @@ eventRoutes.get("/allCreateEvent", async (req, res, next) => {
     let result = await client.query(
       /* sql */ `
     select id, host_id, eventPicture, title, end_date, active from event 
-    WHERE event.active = false and event.end_date >= NOW() and event.host_id = ${user_id}
+    WHERE event.active = true and event.end_date >= NOW() and event.host_id = ${user_id}
     ORDER BY start_date
         `,
       []
@@ -613,7 +613,7 @@ eventRoutes.get("/allJoinedEvent", async (req, res, next) => {
         event.active 
     from event_participant 
     inner join event on event_participant.event_id = event.id
-    WHERE event.active = false and event.end_date >= NOW() and event_participant.user_id = ${user_id}
+    WHERE event.active = true and event.end_date >= NOW() and event_participant.user_id = ${user_id}
     ORDER BY start_date
         `,
       []
