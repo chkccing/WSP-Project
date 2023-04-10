@@ -32,6 +32,11 @@
       body {
         min-height: 75rem;
       }
+      @media only screen and (max-width: 600px) {
+        /* For mobile phones: */
+        [class*="col-"] {
+          width: 100%;
+        }
         .b-example-divider {
         width: 100%;
         height: 3rem;
@@ -100,9 +105,9 @@
       .event-list {
         display: flex;
       }
-    }
     </style>
-  
+    <link rel="stylesheet" href="/css/form.css" />
+    <link rel="stylesheet" href="/css/styles.css" />
   </head>
   <body data-role="guest">
 
