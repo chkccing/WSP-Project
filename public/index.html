@@ -181,30 +181,6 @@
       </a>
     </template>
     <div class="event-list"></div>
-    <a href="/view-event.html?id=1" id="link">
-      <div class="eventBox">
-        <img class="image" id="eventPicture" />
-        <div class="eventTitle" id="title">hihi</div>
-      </div>
-      <div class="event-list"></div>
-    <a href="/view-event.html?id=1" id="link">
-      <div class="eventBox">
-        <img class="image" id="eventPicture" />
-        <div class="eventTitle" id="title">hihi</div>
-      </div>
-      <div class="event-list"></div>
-    <a href="/view-event.html?id=1" id="link">
-      <div class="eventBox">
-        <img class="image" id="eventPicture" />
-        <div class="eventTitle" id="title">hihi</div>
-      </div>
-      <div class="event-list"></div>
-    <a href="/view-event.html?id=1" id="link">
-      <div class="eventBox">
-        <img class="image" id="eventPicture" />
-        <div class="eventTitle" id="title">hihi</div>
-      </div>
-    </a>
     <script>
       let logoutForm = document.querySelector("form#logout");
       //連同applyRole令div顯示用戶名稱
@@ -212,7 +188,14 @@
 
       //insert all event previews
       let template = document.querySelector("template");
-      let eventList = document.querySelector(".event-list");
+      let animeGameEventList = document.querySelector(".anime");
+      let boardGameEventList = document.querySelector(".boardGame");
+      let bookingEventList = document.querySelector(".booking");
+      let celebritiesEventList = document.querySelector(".celebrities");
+      let giveawayEventList = document.querySelector(".giveaway");
+      let matchEventList = document.querySelector(".match");
+      let meetingEventList = document.querySelector(".meeting");
+      let photographyEventList = document.querySelector(".photography");
       let eventTemplate = template.content.querySelector("#link");
 
       function showEvent(event) {
@@ -228,7 +211,22 @@
         // console.log(eventBox);
 
         node.href = "/view-event.html?id=" + event.id;
-        eventList.appendChild(node);
+        if(event.category == "Anime"){
+          animeGameEventList.appendChild(node);}
+        if(event.category == "Board Game"){
+          boardGameEventList.appendChild(node);}
+        if(event.category == "Booking"){
+          bookingEventList.appendChild(node);}
+        if(event.category == "Celebrities"){
+          celebritiesEventList.appendChild(node);}
+        if(event.category == "Giveaway"){
+          giveawayEventList.appendChild(node);}
+        if(event.category == "Match"){
+          matchEventList.appendChild(node);}
+        if(event.category == "Meeting"){
+          meetingEventList.appendChild(node);}
+        if(event.category == "Photography"){
+          photographyEventList.appendChild(node);}
       }
 
       async function loadEvents() {
