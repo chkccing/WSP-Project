@@ -31,7 +31,32 @@
           font-size: 20px;
           display: inline;
         }
+        .currentEvent {
+          margin: 1rem;
+        }
+        .bi-chat-heart {
+          margin: 0rem 0rem 1rem 2rem;
+        }
+        .center {
+          display: flex;
+        }
+        .bi-hash {
+          margin-left: 2rem;
+        }
+        #title {
+          margin: 0rem 2rem 0rem 2rem;
+        }
+        #eventPicture {
+          width: 300px;
+          height: 200px;
+          object-fit: fill;
+          margin-bottom: 2rem;
+        }
+
         .row {
+          display: flex;
+        }
+        .key {
           display: flex;
         }
         #title {
@@ -42,23 +67,55 @@
         #category {
           margin-right: 1rem;
         }
-        .eventDetails {
-          margin: 1rem;
+        #faq {
+          margin: 0rem 2rem 1rem 2rem;
         }
         .row2 {
           margin-bottom: 0.5rem;
-          font-size: 1rem;
           flex-direction: row;
         }
-        #start_date {
-          margin-right: 0.5rem;
+        #category {
+          font-size: 1rem;
+          width: 11rem;
         }
-        #faq,
-        #cost,
-        #location,
-        #participants,
-        #joined {
+        .date {
+          display: flex;
+          width: 13rem;
+          margin: 0rem 2rem 1rem 2rem;
+        }
+        #start_date,
+        #end_date {
+          margin-right: 0.5rem;
+          font-size: 1rem;
+        }
+        .icon {
+          display: flex;
+          align-items: center;
+        }
+        .bi-balloon {
+          display: flex;
+          align-items: center;
+          margin-left: 1rem;
+        }
+        .detailBox {
+          border: #9f9f9f solid 1px;
+          padding-bottom: 1rem;
+          border-radius: 30px;
+          margin: 1rem;
+        }
+        .lineBox {
+          border: #9f9f9f solid 1px;
+          margin: 1rem;
+          border-radius: 30px;
+          padding: 1rem;
+        }
+        #faq {
+          margin: 0rem 2rem 2rem;
+        }
+        .line {
+          margin-top: 2rem;
           margin-bottom: 1rem;
+          align-items: end;
         }
         .organizerPanel {
           display: flex;
@@ -66,8 +123,8 @@
           margin: 2rem 2rem 5rem;
         }
         .edit_event {
-          background-color: aqua;
-          color: #fff;
+          background-color: rgb(146, 235, 235);
+          color: #4d4d4d;
           font-size: 20px;
           padding: 10px 20px;
           border-radius: 5px;
@@ -79,7 +136,7 @@
         }
         .delete_event {
           background-color: grey;
-          color: #fff;
+          color: #4d4d4d;
           font-size: 20px;
           padding: 10px 20px;
           border-radius: 5px;
@@ -117,8 +174,14 @@
           align-items: center;
         }
         .participantsListBox {
-          background-color: antiquewhite;
           padding: 1rem;
+          border: #9f9f9f solid 1px;
+          padding-bottom: 1rem;
+          border-radius: 30px;
+          margin: 1rem;
+        }
+        .participantTitle {
+          margin-left: 2rem;
         }
       }
     </style>
@@ -131,24 +194,64 @@
       <div class="column">
         <template id="template1">
           <div class="currentEvent">
-            <img class="row" id="eventPicture" />
-
-            <div class="row eventDetails" id="title"></div>
-            <div class="row">
-              <div class="row eventDetails">
-                <div class="row2" id="category"></div>
-                <div class="row2" id="hashtag"></div>
-              </div>
-              <div class="row eventDetails">
-                <div class="row2" id="start_date"></div>
-                <div class="row2" id="end_date"></div>
+            <div id="title"></div>
+            <div class="line">
+              <div class="key">
+                <i class="bi bi-hash icon"></i>
+                <div id="hashtag"></div>
               </div>
             </div>
-            <div class="row eventDetails" id="faq"></div>
-            <div class="row eventDetails" id="cost"></div>
-            <div class="row eventDetails" id="location"></div>
-            <div class="row eventDetails" id="participants"></div>
-            <div class="row eventDetails" id="joined"></div>
+            <div class="center">
+              <img class="row" id="eventPicture" />
+            </div>
+            <div class="row">
+              <div class="row">
+                <div class="key">
+                  <i class="bi bi-chat-heart"></i>
+                  <div class="row2" id="category"></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="date">
+                  <div class="key">
+                    <i class="bi bi-calendar"></i>
+                    <div class="row2" id="start_date"></div>
+                  </div>
+                  <div class="row2" id="end_date"></div>
+                </div>
+              </div>
+            </div>
+            <div class="detailBox">
+              <div class="key">
+                <i class="bi bi-balloon"></i>
+                <h2>Details</h2>
+              </div>
+              <div class="row" id="faq"></div>
+            </div>
+            <div class="row lineBox">
+              <div class="key">
+                <i class="bi bi-currency-dollar icon"></i>
+                <div id="cost"></div>
+              </div>
+            </div>
+            <div class="row lineBox">
+              <div class="key">
+                <i class="bi bi-pin-map-fill icon"></i>
+                <div id="location"></div>
+              </div>
+            </div>
+            <div class="row lineBox">
+              <div class="key">
+                <i class="bi bi-people-fill icon"></i>
+                <div id="participants"></div>
+              </div>
+            </div>
+            <div class="row lineBox">
+              <div class="key">
+                <i class="bi bi-person-vcard icon"></i>
+                <div id="joined"></div>
+              </div>
+            </div>
           </div>
         </template>
         <div class="event-result"></div>
@@ -159,7 +262,7 @@
           <div class="fullStatus"></div>
         </div>
         <div class="participantsListBox">
-          <h2>Participant List</h2>
+          <h2 class="participantTitle">Participant List</h2>
           <template id="template2">
             <div class="participantsList">
               <div class="row">
@@ -197,10 +300,10 @@
         }
         currentEvent.querySelector("#title").textContent = json.data.title;
         currentEvent.querySelector("#category").textContent =
-          "CAT: " + json.data.category;
+          json.data.category;
         currentEvent.querySelector("#hashtag").textContent = json.data.hashtag;
         currentEvent.querySelector("#start_date").textContent =
-          "from " + json.data.start_date.split("T")[0];
+          json.data.start_date.split("T")[0];
         currentEvent.querySelector("#end_date").textContent =
           "to " + json.data.end_date.split("T")[0];
         currentEvent.querySelector("#cost").textContent =
@@ -214,8 +317,7 @@
         }
         currentEvent.querySelector("#joined").textContent =
           "Number of joined: " + json.joined;
-        currentEvent.querySelector("#faq").textContent =
-          "Details: " + json.data.faq;
+        currentEvent.querySelector("#faq").textContent = json.data.faq;
         eventResult.appendChild(currentEvent);
 
         if (json.data.participants <= json.joined) {
