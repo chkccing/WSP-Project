@@ -33,7 +33,7 @@ export type Event = {
   Cost: Number;
   Location: String;
   Participants: Number;
-  FAQ: String;
+  faq: String;
   Is_age18: Boolean;
   Is_private: Boolean;
 };
@@ -119,9 +119,7 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
       let participants = Number(
         checkString("participants", fields.participants)
       );
-      console.log({ participants });
-
-      let FAQ = checkString("FAQ", fields.FAQ);
+      let faq = checkString("faq", fields.faq);
       let is_age18 = checkBoolean("is_age18", fields.is_age18);
       let is_private = checkBoolean("is_private", fields.is_private);
 
@@ -137,26 +135,26 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
 
       //冇req.body，因此res.body.title無效。已let名為「title」的 variable，因此直接食title已可。
       //加入拆解hashtag。
-      let decodeTag = extractTag(hashtag);
-      //加入把decodeTag資料放入tag table
-      let tags = decodeTag;
-      let { id: post_id } = await insert_post(title);
+      // let decodeTag = extractTag(hashtag);
+      // //加入把decodeTag資料放入tag table
+      // let tags = decodeTag;
+      // let { id: post_id } = await insert_post(title);
 
-      for (let tag of tags) {
-        let tag_id = await select_tag_id(tag);
-        if (!tag_id) {
-          tag_id = (await insert_tag(tag)).lastInsertRowid;
-        }
-        await insert_post_tag(post_id, tag_id);
-      }
+      // for (let tag of tags) {
+      //   let tag_id = await select_tag_id(tag);
+      //   if (!tag_id) {
+      //     tag_id = (await insert_tag(tag)).lastInsertRowid;
+      //   }
+      //   await insert_post_tag(post_id, tag_id);
+      // }
 
       // 加入decodeTag及$14
       result = await client.query(
         /* sql */ `
       insert into event
-      (host_id, eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, FAQ, is_age18, is_private, decodeTag)
+      (host_id, eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, faq, is_age18, is_private)
       values
-      ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+      ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
       returning id
           `,
         [
@@ -170,10 +168,9 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
           cost,
           location,
           participants,
-          FAQ,
+          faq,
           is_age18,
           is_private,
-          decodeTag,
         ]
       );
 
@@ -390,6 +387,7 @@ eventRoutes.get("/allParticipants/:id", async (req, res, next) => {
       [id]
     );
     let users = result.rows;
+
     res.json({ users });
   } catch (error) {
     next(error);
@@ -450,8 +448,8 @@ eventRoutes.get("/allEvent/", async (req, res, next) => {
   try {
     let result = await client.query(
       /* sql */ `
-      select id, eventPicture, title, end_date, is_private, active from event  
-      WHERE event.active = true and event.end_date >= NOW() 
+      select id, eventPicture, title, end_date, is_age18, is_private, active from event  
+      WHERE event.active = true and event.is_private = false and event.end_date >= NOW() 
         ORDER BY start_date 
       `,
       []

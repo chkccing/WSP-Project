@@ -113,7 +113,7 @@ returning id
     //   id,
     // })
 
-    res.redirect("/create-event.html");
+    res.redirect("/index.html");
   } catch (error: any) {
     //?error=${error.message}是插入一個query，for front end 用，{error.message}會顯示出現error時的那一行error message。
     res.redirect(`/sign-up.html?error=${error.message}`);

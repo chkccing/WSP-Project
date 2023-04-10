@@ -32,6 +32,12 @@
           width: 30rem;
         }
 
+        .imgbox {
+          align-items: center;
+          height: 10rem;
+          width: 30rem;
+        }
+
         textarea {
           padding: 10px;
           margin-bottom: 20px;
@@ -102,8 +108,9 @@
     <form id="Create-Event" id="createPostForm" method="post" action="/post">
       <h2>Event Create</h2>
       <div>
-        <label for="img">Event Pictures:</label>
+        <label for="img"></label>
         <input
+          class="imgbox"
           action="/action_page.php"
           type="file"
           name="eventPictures"
@@ -132,7 +139,7 @@
         </select>
       </div>
 
-      <label>
+      <!-- <label>
         <div>
           <input hidden type="text" name="hashtags" />
         </div>
@@ -153,10 +160,19 @@
             <option>pie</option>
           </datalist>
         </div>
-      </label>
-      <input type="submit" value="Submit" />
-      <input type="reset" value="Reset" />
-
+      </label> -->
+      <!-- <input type="submit" value="Submit" />
+      <input type="reset" value="Reset" /> -->
+      <div>
+        <input
+          type="text"
+          class="line"
+          id="hashtag"
+          list="hashtags"
+          placeholder="hashtag"
+          name="hashtag"
+        />
+      </div>
       <div>
         <input
           class="start_date date"
@@ -179,7 +195,7 @@
         <input
           class="line"
           type="time"
-          placeholder="timeslot"
+          placeholder="Time"
           name="timeslot"
           required
         />
@@ -188,7 +204,7 @@
         <input
           class="line"
           type="number"
-          placeholder="cost in HKD"
+          placeholder="Cost in HKD"
           name="cost"
           required
         />
@@ -197,7 +213,7 @@
         <input
           class="line"
           type="text"
-          placeholder="location"
+          placeholder="Location"
           name="location"
           required
         />
@@ -206,7 +222,7 @@
         <input
           class="line"
           type="number"
-          placeholder="participants"
+          placeholder="Quota"
           name="participants"
           required
         />
@@ -215,7 +231,7 @@
         <textarea
           class="line"
           type="text"
-          placeholder="faq"
+          placeholder="Details"
           name="faq"
         ></textarea>
       </div>
@@ -229,59 +245,59 @@
     </form>
     <script src="/js/alert.js"></script>
     <script>
-      //加入預示hashtag機制。
-      let form = createPostForm;
+      // //加入預示hashtag機制。
+      // let form = createPostForm;
 
-      form.reset();
+      // form.reset();
 
-      fetch("/tags")
-        .then((res) => res.json())
-        .then((json) => {
-          hashtags.textContent = "";
-          json.hashtags.forEach((tag) => {
-            let option = document.createElement("option");
-            option.textContent =
-              tag.hashtag.replace(/-/g, " ") + ` (${tag.count})`;
-            option.value = tag.hashtag;
-            hashtags.appendChild(option);
-          });
-        });
+      // fetch("/tags")
+      //   .then((res) => res.json())
+      //   .then((json) => {
+      //     hashtags.textContent = "";
+      //     json.hashtags.forEach((tag) => {
+      //       let option = document.createElement("option");
+      //       option.textContent =
+      //         tag.hashtag.replace(/-/g, " ") + ` (${tag.count})`;
+      //       option.value = tag.hashtag;
+      //       hashtags.appendChild(option);
+      //     });
+      //   });
 
-      hashtag.addEventListener("keypress", (event) => {
-        switch (event.key) {
-          case "Enter":
-          case ",":
-          case "#":
-            addHashTag();
-            event.preventDefault();
-            break;
-          default:
-          // allow normal input
-        }
-      });
+      // hashtag.addEventListener("keypress", (event) => {
+      //   switch (event.key) {
+      //     case "Enter":
+      //     case ",":
+      //     case "#":
+      //       addHashTag();
+      //       event.preventDefault();
+      //       break;
+      //     default:
+      //     // allow normal input
+      //   }
+      // });
 
-      function addHashTag() {
-        let node = document.createElement("div");
-        node.className = "hash-tag-preview";
-        node.textContent = hashtag.value;
-        hashTagPreviewList.appendChild(node);
-        node.addEventListener("click", () => removeHashTag(node));
+      // function addHashTag() {
+      //   let node = document.createElement("div");
+      //   node.className = "hash-tag-preview";
+      //   node.textContent = hashtag.value;
+      //   hashTagPreviewList.appendChild(node);
+      //   node.addEventListener("click", () => removeHashTag(node));
 
-        if (form.hashtags.value.length > 0) {
-          form.hashtags.value += ", ";
-        }
-        form.hashtags.value += hashtag.value;
-        hashtag.value = "";
-      }
+      //   if (form.hashtags.value.length > 0) {
+      //     form.hashtags.value += ", ";
+      //   }
+      //   form.hashtags.value += hashtag.value;
+      //   hashtag.value = "";
+      // }
 
-      function removeHashTag(node) {
-        form.hashtags.value = form.hashtags.value
-          .split(", ")
-          .filter((part) => part !== node.textContent)
-          .join(", ");
-        node.remove();
-      }
-      //加入完畢。
+      // function removeHashTag(node) {
+      //   form.hashtags.value = form.hashtags.value
+      //     .split(", ")
+      //     .filter((part) => part !== node.textContent)
+      //     .join(", ");
+      //   node.remove();
+      // }
+      // //加入完畢。
 
       let today = new Date().toISOString().split("T")[0];
       document.querySelector(".start_date").setAttribute("min", today);

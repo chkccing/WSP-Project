@@ -25,10 +25,11 @@
           padding: 0;
           margin: 0;
         }
-        i {
+        [data-role="user"] i {
           height: 1rem;
           width: 1rem;
           font-size: 20px;
+          display: inline;
         }
         .row {
           display: flex;
@@ -155,6 +156,7 @@
           <button class="join_event" id="join_btn">Join</button>
           <button class="edit_event" id="edit_btn">Edit</button>
           <button class="delete_event" id="deleteEvent_btn">Delete</button>
+          <div class="fullStatus"></div>
         </div>
         <div class="participantsListBox">
           <h2>Participant List</h2>
@@ -207,8 +209,6 @@
           "Location: " + json.data.location;
         currentEvent.querySelector("#participants").textContent =
           "Quota: " + json.data.participants;
-        currentEvent.querySelector("#location").textContent =
-          "Location: " + json.data.location;
         if (!json.data.user_id) {
           json.joined = 0;
         }
@@ -217,6 +217,12 @@
         currentEvent.querySelector("#faq").textContent =
           "Details: " + json.data.faq;
         eventResult.appendChild(currentEvent);
+
+        if (json.data.participants <= json.joined) {
+          document.querySelector(".join_event").style.display = "none";
+          document.querySelector(".fullStatus").textContent =
+            "This event is full. Thank you.";
+        }
 
         let today = new Date().toISOString().split("T")[0];
         let end_date = json.data.end_date.split("T")[0];
@@ -242,8 +248,9 @@
             document.querySelector(".edit_event").style.display = "none";
             document.querySelector(".participantsListBox").style.display =
               "none";
-          } else if (json.organizer == true) {
+          } else {
             document.querySelector(".join_event").style.display = "none";
+            document.querySelector(".fullStatus").style.display = "none";
           }
         }
         organizerPanel();
@@ -318,6 +325,18 @@
       }
 
       viewEvent();
+
+      async function loadRole() {
+        let res = await fetch("/role");
+        let json = await res.json();
+        if (!json.user) {
+          document.body.dataset.role = "guest";
+          return;
+        }
+        profileForm.querySelector(".user-name").textContent = json.user.name;
+        document.body.dataset.role = "user";
+      }
+      loadRole();
     </script>
   </body>
 </html>
