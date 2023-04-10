@@ -19,6 +19,38 @@
     top: 0;
     z-index: 100;
     }
+    .navbar-toggler {
+      border-color: transparent;
+    }
+    .rowEnd {
+      display: flex;
+      font-size: 0.5rem;
+      padding: -5rem !important;
+    }
+    [data-role="user"] .rowEnd {
+      display: none;
+    }
+    .message {
+      display: flex;
+      margin-left: 0.5rem;
+      margin-bottom: 0.25rem;
+      margin-top: 0.25rem;
+      color:rgb(73, 73, 73);
+    }
+    .navbar-brand{
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+    #signUp {
+      margin-right: 1rem;
+    }
+    #logiocontainer{
+      display: flex;
+  }
+    #logoutBtn {
+      margin-left: 0.5rem !important;
+      margin-bottom: 0.5rem !important;
+    }
     .navbar-toggler{
       margin-right: 1rem;
     }
@@ -63,3 +95,6 @@
     font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
     color: rgb(111, 203, 234);
   }}
+  .nav-link:hover{
+    color: aliceblue !important;
+  }

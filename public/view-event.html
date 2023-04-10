@@ -15,6 +15,7 @@
       integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="/css/form.css" />
     <link rel="stylesheet" href="/css/nav.css" />
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
@@ -213,6 +214,14 @@
           margin-left: 2rem;
           margin-top: 1rem;
         }
+        [data-role="guest"] #join_btn,
+        #edit_btn,
+        #deleteEvent_btn,
+        .fullStatus,
+        .participantsListBox,
+        .joined {
+          display: none;
+        }
       }
     </style>
   </head>
@@ -225,6 +234,20 @@
         <a class="navbar-brand" href="/index.html">
           <img id="logo" src="img/Logo.png" width="60" height="47" />Pecky
         </a>
+        <div class="rowEnd">
+          <a
+            href="/Login.html"
+            class="nav-link d-flex px-2 text-dark"
+            id="logIn"
+            >LogIn</a
+          >/
+          <a
+            href="/sign-up.html"
+            class="nav-link d-flex px-2 text-dark"
+            id="signUp"
+            >Sign Up</a
+          >
+        </div>
         <button
           class="navbar-toggler"
           type="button"
@@ -238,15 +261,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
-            <li class="nav-item">
-              <a href="/Login.html" class="nav-link d-flex px-2 text-dark"
-                >LogIn</a
-              >
-              <a href="/sign-up.html" class="nav-link d-flex px-2 text-dark"
-                >Sign Up</a
-              >
-            </li>
-
+            <div class="message">
+              Welcome back -<span class="username"></span>
+            </div>
             <li class="nav-item">
               <a href="/index.html" class="nav-link px-2 text-dark">Home</a>
             </li>
@@ -260,19 +277,14 @@
                 >Manage event</a
               >
             </li>
-            <li class="nav-item">
-              <a href="/edit-event.html" class="nav-link px-2 text-dark"
-                >Edit event</a
-              >
-            </li>
           </ul>
-          <form id="logout" method="POST" action="/logout">
+          <form id="logOut" method="POST" action="/logout" class="nav-item">
             <button
-              type="submit"
+              id="logoutBtn"
               value="Logout"
-              class="btn btn-outline-dark me-2"
+              class="btn nav-link text-dark me-2"
             >
-              Logout
+              Log out
             </button>
           </form>
         </div>
@@ -514,6 +526,23 @@
 
       viewEvent();
 
+      let logoutForm = document.querySelector("form#logOut");
+      //連同applyRole令div顯示用戶名稱
+      let currentUsername = document.querySelector(".username");
+
+      logoutForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        let form = logoutForm;
+        let res = await fetch(form.action, {
+          method: form.method,
+        });
+        let json = await res.json();
+        if (json.role == "guest") {
+          applyRole();
+        }
+        window.location = `/index.html`;
+      });
+
       function applyRole(user) {
         console.log("current user:", user);
         document.body.dataset.role = user ? "user" : "guest";
@@ -521,6 +550,7 @@
           currentUsername.textContent = user.name;
         }
       }
+
       async function loadRole() {
         let res = await fetch("/role");
         let json = await res.json();
