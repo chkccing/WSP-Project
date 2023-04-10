@@ -16,10 +16,6 @@
       integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
       crossorigin="anonymous"
     ></script>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"
-    />
     <style>
       @media only screen and (max-width: 600px) {
         /* For mobile phones: */
@@ -150,11 +146,11 @@
     </style>
   </head>
   <body>
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+    <nav
+      class="navbar navbar-expand-md mb-4"
+      style="background-color: rgb(111, 203, 234)"
+    >
       <div class="container-fluid">
-        <a class="navbar-brand" href="/index.html">
-          <img class="logo" src="img/Logo.png" width="60" height="47" />
-        </a>
         <button
           class="navbar-toggler"
           type="button"
@@ -169,42 +165,50 @@
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
             <li class="nav-item">
-              <a href="/index.html" class="nav-link px-2 text-white">Home</a>
+              <a href="/Login.html" class="nav-link d-flex px-2 text-dark"
+                >LogIn</a
+              >
+              <a href="/sign-up.html" class="nav-link d-flex px-2 text-dark"
+                >Sign Up</a
+              >
+            </li>
+
+            <li class="nav-item">
+              <a href="/index.html" class="nav-link px-2 text-dark">Home</a>
             </li>
             <li class="nav-item">
-              <a href="/create-event.html" class="nav-link px-2 text-white"
+              <a href="/create-event.html" class="nav-link px-2 text-dark"
                 >Create event</a
               >
             </li>
             <li class="nav-item">
-              <a href="/manage-event.html" class="nav-link px-2 text-white"
+              <a href="/manage-event.html" class="nav-link px-2 text-dark"
                 >Manage event</a
               >
             </li>
             <li class="nav-item">
-              <a href="/edit-event.html" class="nav-link px-2 text-white"
+              <a href="/edit-event.html" class="nav-link px-2 text-dark"
                 >Edit event</a
               >
             </li>
           </ul>
-          <a
-            href="/Login.html"
-            class="d-flex justify-content-lg-end text-decoration-none"
-          >
-            <button type="button" class="btn btn-outline-light me-2">
-              Login
-            </button>
-          </a>
           <form id="logout" method="POST" action="/logout">
             <button
-              type="button"
+              button
+              id="logoutBtn"
+              type="submit"
               value="Logout"
-              class="btn btn-outline-light me-2"
+              class="btn btn-outline-dark me-2"
             >
               Logout
             </button>
           </form>
         </div>
+      </div>
+      <div>
+        <a class="navbar-brand" href="/index.html">
+          <img id="logo" src="img/Logo.png" width="60" height="47" />Pecky
+        </a>
       </div>
     </nav>
     <form
