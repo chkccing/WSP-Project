@@ -17,7 +17,12 @@
     crossorigin="anonymous"
   ></script>
     <style>
-          .bd-placeholder-img {
+      @media only screen and (max-width: 600px) {
+        /* For mobile phones: */
+        [class*="col-"] {
+          width: 100%;
+        }    
+        .bd-placeholder-img {
         font-size: 1.125rem;
         text-anchor: middle;
         -webkit-user-select: none;
@@ -27,11 +32,11 @@
       body {
         min-height: 75rem;
       }
-      main{
-        display: inline;
-        justify-content: center;
-        align-items: center;
-      }
+      @media only screen and (max-width: 600px) {
+        /* For mobile phones: */
+        [class*="col-"] {
+          width: 100%;
+        }
         .b-example-divider {
         width: 100%;
         height: 3rem;
@@ -283,7 +288,22 @@
         </div>
       </a>
     </template>
-    <div class="event-list"></div>
+    <h2 class="category-title">anime</h2>
+    <div class="event-list anime"></div>
+    <h2 class="category-title">boardGame</h2>
+    <div class="event-list boardGame"></div>
+    <h2 class="category-title">booking</h2>
+    <div class="event-list booking"></div>
+    <h2 class="category-title">celebrities</h2>
+    <div class="event-list celebrities"></div>
+    <h2 class="category-title">giveaway</h2>
+    <div class="event-list giveaway"></div>
+    <h2 class="category-title">match</h2>
+    <div class="event-list match"></div>
+    <h2 class="category-title">meeting</h2>
+    <div class="event-list meeting"></div>
+    <h2 class="category-title">photography</h2>
+    <div class="event-list photography"></div>
     <script>
       let logoutForm = document.querySelector("form#logout");
       //連同applyRole令div顯示用戶名稱
