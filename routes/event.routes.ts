@@ -107,8 +107,8 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
       let eventPicture = Array.isArray(eventPictureMaybeArray)
         ? eventPictureMaybeArray[0]
         : eventPictureMaybeArray
-          ? eventPictureMaybeArray.newFilename
-          : "";
+        ? eventPictureMaybeArray.newFilename
+        : "";
       let title = checkString("title", fields.title);
       let category = checkString("category", fields.category);
       let start_date = checkString("start_date", fields.start_date);
@@ -177,6 +177,9 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
       let id = result.rows[0].id;
       console.log(id);
 
+      // 成功create event後換頁
+      // res.redirect("/view-event.html");
+
       res.json(id);
     } catch (error) {
       console.log(error);
@@ -219,31 +222,33 @@ eventRoutes.post("/editEvent", function (req: Request, res: Response) {
       let eventPicture = Array.isArray(eventPictureMaybeArray)
         ? eventPictureMaybeArray[0]
         : eventPictureMaybeArray
-          ? eventPictureMaybeArray.newFilename
-          : "";
-      let id = req.params.id
-      let event_id = req.query.eventId
-      let title = checkString('title', fields.title)
-      let category = checkString('category', fields.category)
-      let start_date = checkString('start_date', fields.start_date)
-      let end_date = checkString('end_date', fields.end_date)
-      let hashtag = checkString('hashtag', fields.hashtag)
-      let cost = Number(checkString('cost', fields.cost))
-      let location = checkString('location', fields.location)
-      let participants = Number(checkString('participants', fields.participants))
+        ? eventPictureMaybeArray.newFilename
+        : "";
+      let id = req.params.id;
+      let event_id = req.query.eventId;
+      let title = checkString("title", fields.title);
+      let category = checkString("category", fields.category);
+      let start_date = checkString("start_date", fields.start_date);
+      let end_date = checkString("end_date", fields.end_date);
+      let hashtag = checkString("hashtag", fields.hashtag);
+      let cost = Number(checkString("cost", fields.cost));
+      let location = checkString("location", fields.location);
+      let participants = Number(
+        checkString("participants", fields.participants)
+      );
       console.log({ participants });
-      let faq = checkString('faq', fields.faq)
-      let is_age18 = checkBoolean('is_age18', fields.is_age18)
-      let is_private = checkBoolean('is_private', fields.is_private)
+      let faq = checkString("faq", fields.faq);
+      let is_age18 = checkBoolean("is_age18", fields.is_age18);
+      let is_private = checkBoolean("is_private", fields.is_private);
       let result = await client.query(
-            /* sql */ `
+        /* sql */ `
       select
         event.id
       from event
       WHERE event.id = $1
           `,
-        [id],
-      )
+        [id]
+      );
 
       let decodeTag = extractTag(hashtag);
       //加入把decodeTag資料放入tag table
@@ -276,14 +281,29 @@ eventRoutes.post("/editEvent", function (req: Request, res: Response) {
       WHERE id = $13
       returning id
           `,
-        [eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, faq, is_age18, is_private, decodeTag, event_id],
-      )
+        [
+          eventPicture,
+          title,
+          category,
+          hashtag,
+          start_date,
+          end_date,
+          cost,
+          location,
+          participants,
+          faq,
+          is_age18,
+          is_private,
+          decodeTag,
+          event_id,
+        ]
+      );
       res.json(result.rows[0].id);
     } catch (error) {
-      console.log(error)
-      res.json({})
+      console.log(error);
+      res.json({});
     }
-  })
+  });
 });
 
 //按hashtag的被註冊次數多少來排序
@@ -310,7 +330,6 @@ eventRoutes.get("/tags", async (req, res, next) => {
     next(error);
   }
 });
-
 
 //Participants press the join button to join the event
 eventRoutes.post("/joinEvent", async (req: Request, res: Response) => {
@@ -394,54 +413,58 @@ eventRoutes.get("/allParticipants/:id", async (req, res, next) => {
   }
 });
 
-//show user you have joined event or haven't joined event. 
+//show user you have joined event or haven't joined event.
 eventRoutes.get("/joinStatus/:id", async (req, res, next) => {
-  let id = req.params.id
+  let id = req.params.id;
   try {
-    let user_id = getSessionUser(req).id
+    let user_id = getSessionUser(req).id;
     let result = await client.query(
-    /* sql */` 
+      /* sql */ ` 
     select * from event_participant 
     left join users on users.id  = event_participant.user_id  
     WHERE event_participant.event_id = $1 
     AND event_participant.user_id = $2 
-      `, [id, user_id]);
+      `,
+      [id, user_id]
+    );
     if (result.rows.length === 0) {
-      res.json({ hasJoin: false })
-      console.log("You haven't joined this event.")
+      res.json({ hasJoin: false });
+      console.log("You haven't joined this event.");
     } else {
-      res.json({ hasJoin: true })
-      console.log("You have joined this event.")
+      res.json({ hasJoin: true });
+      console.log("You have joined this event.");
     }
   } catch (error) {
-    res.json({ err: error })
-    next(error)
+    res.json({ err: error });
+    next(error);
   }
-})
+});
 
-//show organizer panel. 
+//show organizer panel.
 eventRoutes.get("/organizerPanel/:id", async (req, res, next) => {
-  let id = req.params.id
+  let id = req.params.id;
   try {
-    let user_id = getSessionUser(req).id
+    let user_id = getSessionUser(req).id;
     let result = await client.query(
-    /* sql */` 
+      /* sql */ ` 
     select * from event 
     WHERE id = $1 
     AND host_id = $2 
-      `, [id, user_id]);
+      `,
+      [id, user_id]
+    );
     if (result.rows.length === 0) {
-      res.json({ organizer: false })
-      console.log("You aren't this event organizer.")
+      res.json({ organizer: false });
+      console.log("You aren't this event organizer.");
     } else {
-      res.json({ organizer: true })
-      console.log("You are this event organizer.")
+      res.json({ organizer: true });
+      console.log("You are this event organizer.");
     }
   } catch (error) {
-    res.json({ err: error })
-    next(error)
+    res.json({ err: error });
+    next(error);
   }
-})
+});
 
 //show all event in index page
 eventRoutes.get("/allEvent/", async (req, res, next) => {
@@ -461,88 +484,123 @@ eventRoutes.get("/allEvent/", async (req, res, next) => {
   }
 });
 
-//organizer delete event 
+//加入event search功能
+export let searchRoutes = Router();
+
+searchRoutes.get("/searchEvent", async (req, res) => {
+  try {
+    let searchEvent = req.body.search;
+    let result = await client.query(
+      /* sql */
+      `SELECT id 
+    FROM event
+    WHERE title, hashtag = $1`,
+      [`%${searchEvent}%`]
+    );
+    res.status(200).json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error searching records");
+  }
+});
+
+//organizer delete event
 
 eventRoutes.post("/deleteEvent", async (req: Request, res: Response) => {
   try {
-    let user_id = getSessionUser(req).id
-    let event_id = req.query.eventId
+    let user_id = getSessionUser(req).id;
+    let event_id = req.query.eventId;
     let result = await client.query(
-            /* sql */ ` 
+      /* sql */ ` 
       select 
       event.id, event.host_id, event.active 
       from event 
       WHERE event.host_id = ${user_id} and event.active = true 
           `,
-      [],
-    )
+      []
+    );
     result = await client.query(
-            /* sql */ ` 
+      /* sql */ ` 
       update event set active = false  
       WHERE id = $1 
       returning id 
           `,
-      [event_id],
-    )
-    let id = result.rows[0].id
+      [event_id]
+    );
+    let id = result.rows[0].id;
     res.json(id);
   } catch (error) {
-    res.json({})
+    res.json({});
   }
 });
 
 //organizer delete participant
-eventRoutes.delete("/events/:eventId/participants/:user_id", async (req: Request, res: Response) => {
-  try {
-    let user_id = getSessionUser(req).id
-    let event_id = req.params.eventId
-    let result = await client.query(
-            /* sql */ `
+eventRoutes.delete(
+  "/events/:event_id/participants/:user_id",
+  async (req: Request, res: Response) => {
+    try {
+      let user_id = getSessionUser(req).id;
+      let event_id = req.params.event_id;
+      let result = await client.query(
+        /* sql */ `
       select
-      * from event
-      inner join event_participant on event_participant.event_id = event.id
-      WHERE event.host_id = $1 and event.id = $2 and event_participant.active = true
+        host_id
+      from event
+      WHERE event.id = $1
           `,
-      [user_id, event_id],
-    )
-    result = await client.query(
-            /* sql */ `
+        [event_id]
+      );
+      let event = result.rows[0];
+      if (!event) {
+        res.status(404);
+        res.json({ error: "event not found" });
+        return;
+      }
+      if (event.host_id != user_id) {
+        res.status(403);
+        res.json({ error: "only event host can delete participant" });
+        return;
+      }
+      result = await client.query(
+        /* sql */ `
       update event_participant set active = false 
-      WHERE id = $1
-      returning id
+      WHERE event_id = $1
+        and user_id = $2
           `,
-      [event_id],)
-    let id = result.rows[0].id
-    res.json(id);
-  } catch (error) {
-    res.json({})
+        [event_id, req.params.user_id]
+      );
+      res.json({});
+    } catch (error) {
+      res.status(500);
+      res.json({ error: String(error) });
+    }
   }
-});
-
+);
 
 eventRoutes.get("/allCreateEvent", async (req, res, next) => {
   try {
-    let user_id = getSessionUser(req).id
+    let user_id = getSessionUser(req).id;
     let result = await client.query(
-    /* sql */`
+      /* sql */ `
     select id, host_id, eventPicture, title, end_date, active from event 
     WHERE event.active = false and event.end_date >= NOW() and event.host_id = ${user_id}
     ORDER BY start_date
-      `, [],);
-    let events = result.rows
-    res.json({ events })
+      `,
+      []
+    );
+    let events = result.rows;
+    res.json({ events });
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
-)
+});
 
 eventRoutes.get("/allJoinedEvent", async (req, res, next) => {
   try {
-    let user_id = getSessionUser(req).id
+    let user_id = getSessionUser(req).id;
 
     let result = await client.query(
-    /* sql */`
+      /* sql */ `
     select event.id,
     event.eventPicture, 
     event.title, 
@@ -552,14 +610,15 @@ eventRoutes.get("/allJoinedEvent", async (req, res, next) => {
     inner join event on event_participant.event_id = event.id
     WHERE event.active = false and event.end_date >= NOW() and event_participant.user_id = ${user_id}
     ORDER BY start_date
-      `, [],);
-    let events = result.rows
-    res.json({ events })
+      `,
+      []
+    );
+    let events = result.rows;
+    res.json({ events });
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
-)
+});
 
 // event.active = false and event.end_date >= NOW() and
 

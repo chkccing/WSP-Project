@@ -1,6 +1,4 @@
 alter table users
-add column username not null;
-alter table users
 add unique (username);
 alter table users
 add column showedName varchar(20) not null;
