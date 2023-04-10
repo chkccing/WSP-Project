@@ -47,36 +47,47 @@
       input[type="submit"]:hover {
         background-color: #0069d9;
       }
+      .close {
+        position: absolute;
+        right: 35px;
+        top: 15px;
+        font-size: 40px;
+        font-weight: bold;
+        color: #f1f1f1;
+      }
     </style>
   </head>
 
   <body>
-    <a href="/index.html"><i class="bi bi-x-lg"></i></a>
-    <div>
-      <a href="/create-event.html"><button>Create Event</button></a>
+    <div class="close">
+      <a href="/index.html"><i class="bi bi-x-lg"></i></a>
     </div>
-    <form method="POST" action="/login" id="login">
-      <h3 class="text-center">Login</h3>
-      <div class="form-group">
-        <label>
-          Username:
-          <input type="text" name="username" class="form-control" required />
-        </label>
-      </div>
-      <div class="form-group">
-        <label>
-          Password:
-          <input
-            type="password"
-            name="password"
-            class="form-control"
-            required
-          />
-        </label>
-      </div>
-      <div id="error-message"></div>
-      <input type="submit" class="btn btn-primary" value="Login" />
-    </form>
+    <main class="from-signin w-100 m-auto">
+      <form method="POST" action="/login" id="login">
+        <img class="logo" src="img/Logo.png" alt="" width="72" height="57" />
+
+        <h3 class="text-center">Please Sign In</h3>
+        <div class="form-group">
+          <label>
+            Username:
+            <input type="text" name="username" class="form-control" required />
+          </label>
+        </div>
+        <div class="form-group">
+          <label>
+            Password:
+            <input
+              type="password"
+              name="password"
+              class="form-control"
+              required
+            />
+          </label>
+        </div>
+        <div id="error-message"></div>
+        <input type="submit" class="btn btn-primary" value="Login" />
+      </form>
+    </main>
     <script src="/js/alert.js"></script>
     <script>
       function applyRole(user) {
