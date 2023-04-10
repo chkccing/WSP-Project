@@ -27,7 +27,7 @@ input[type="file"] {
 }
 
 [data-role="user"] #logIn {
-  display: none;
+  display: none !important;
 }
 
 [data-role="guest"] #logOut {
