@@ -105,6 +105,8 @@
       .event-list {
         display: flex;
       }
+    }
+  }
     </style>
     <link rel="stylesheet" href="/css/form.css" />
     <link rel="stylesheet" href="/css/styles.css" />
@@ -121,6 +123,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <li class="nav-item">
+              <a href="/Login.html" class="nav-link d-flex px-2 text-dark">LogIn</a>
+              <a href="/sign-up.html" class="nav-link d-flex px-2 text-dark">Sign Up</a>
+            </li>
+
             <li class="nav-item">
               <a href="/index.html" class="nav-link px-2 text-dark">Home</a>
             </li>
@@ -140,11 +147,6 @@
             >
             </li>
           </ul>
-          <a href="/Login.html" class="d-flex justify-content-lg-end text-decoration-none">
-            <button type="button" class="btn btn-outline-dark me-2">
-              Login
-            </button>
-          </a>
             <form id="logout" method="POST" action="/logout">
                 <button type="submit" value="Logout" class="btn btn-outline-dark me-2">Logout</button>
             </form>
@@ -165,11 +167,6 @@
           <p>
             <a href="/create-event.html"
               ><button class="btn btn-primary my-2">Create Event</button></a
-            >
-            <a href="/sign-up.html"
-              ><button type="button" class="btn btn-primary my-2">
-                Sign-up
-              </button></a
             >
           </p>
         </div>
