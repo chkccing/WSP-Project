@@ -49,12 +49,6 @@
         #title {
           margin: 0rem 2rem 0rem 2rem;
         }
-        #eventPicture {
-          width: 300px;
-          height: 200px;
-          object-fit: fill;
-          margin-bottom: 1rem;
-        }
         .row {
           display: flex;
         }
@@ -118,6 +112,7 @@
           margin: 1rem;
           border-radius: 30px;
           padding: 1rem;
+          width: 87vw;
         }
         .nameListBox {
           border: #9f9f9f solid 1px;
@@ -186,8 +181,10 @@
           background-color: rgb(254, 217, 224);
         }
         #eventPicture {
-          width: 30rem;
-          height: 20rem;
+          width: 90vw;
+          height: 50vw;
+          object-fit: contain;
+          margin-bottom: 1rem;
         }
         .participantsName {
           width: 25rem;
@@ -196,7 +193,7 @@
           display: flex;
           align-items: center;
         }
-        #deleteParticipant_btn {
+        .bi-person-circle {
           height: 2rem;
           width: 2rem;
           display: flex;
@@ -214,22 +211,15 @@
           margin-left: 2rem;
           margin-top: 1rem;
         }
-        .fullStatus {
+        .fullStatus,
+        .haveJoin {
           display: flex;
           justify-content: center;
         }
-        /* [data-role="guest"] #join_btn,
-        #edit_btn,
-        #deleteEvent_btn,
-        .fullStatus,
-        .participantsListBox,
-        .joined {
-          display: none;
-        } */
       }
     </style>
   </head>
-  <body data-role="user">
+  <body data-role="guest">
     <nav
       class="navbar navbar-expand-md mb-4"
       style="background-color: rgb(111, 203, 234)"
@@ -240,16 +230,15 @@
         </a>
         <div class="rowEnd">
           <a
-            href="/Login.html"
-            class="nav-link d-flex px-2 text-dark"
-            id="logIn"
-            >LogIn</a
-          >/
-          <a
             href="/sign-up.html"
             class="nav-link d-flex px-2 text-dark"
             id="signUp"
             >Sign Up</a
+          >/<a
+            href="/Login.html"
+            class="nav-link d-flex px-2 text-dark"
+            id="logIn"
+            >LogIn</a
           >
         </div>
         <button
@@ -359,6 +348,7 @@
           <button class="edit_event" id="edit_btn">Edit</button>
           <button class="delete_event" id="deleteEvent_btn">Delete</button>
           <div class="fullStatus"></div>
+          <div class="haveJoin"></div>
         </div>
         <div class="participantsListBox">
           <h2 class="participantTitle">Participant List</h2>
@@ -366,7 +356,7 @@
             <div class="participantsList">
               <div class="row nameListBox">
                 <div class="participantsName" name="showedname"></div>
-                <i class="bi bi-x-lg" id="deleteParticipant_btn"></i>
+                <i class="bi bi-person-circle"></i>
               </div>
             </div>
           </template>
@@ -439,6 +429,8 @@
           let json = await res.json();
           if (json.hasJoin == true) {
             document.querySelector(".join_event").style.display = "none";
+            document.querySelector(".haveJoin").textContent =
+              "You have joined this event.";
           }
         }
         joinStatus();
@@ -456,6 +448,7 @@
           } else {
             document.querySelector(".join_event").style.display = "none";
             document.querySelector(".fullStatus").style.display = "none";
+            document.querySelector(".haveJoin").style.display = "none";
           }
         }
         organizerPanel();
@@ -469,19 +462,19 @@
           node.querySelector(".participantsName").textContent = user.showedname;
           participantsList.appendChild(node);
 
-          document
-            .querySelector("#deleteParticipant_btn")
-            .addEventListener("click", async (event) => {
-              event.preventDefault();
-              const res = await fetch(
-                `/events/${event_id}/participants/${user.id}`,
-                {
-                  method: "delete",
-                }
-              );
-              let result = await res.json(); // { success: true }
-              window.location = `/`;
-            });
+          // document
+          //   .querySelector("#deleteParticipant_btn")
+          //   .addEventListener("click", async (event) => {
+          //     event.preventDefault();
+          //     const res = await fetch(
+          //       `/events/${event_id}/participants/${user.id}`,
+          //       {
+          //         method: "delete",
+          //       }
+          //     );
+          //     let result = await res.json(); // { success: true }
+          //     window.location = `/`;
+          //   });
         }
 
         async function loadParticipants() {

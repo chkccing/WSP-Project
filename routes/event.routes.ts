@@ -103,7 +103,6 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
     try {
       let host_id = getSessionUser(req).id;
       let eventPictureMaybeArray = files.eventPictures;
-      console.log("eventPictureMaybeArray:", files);
       let eventPicture = Array.isArray(eventPictureMaybeArray)
         ? eventPictureMaybeArray[0]
         : eventPictureMaybeArray
@@ -175,14 +174,12 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
       );
 
       let id = result.rows[0].id;
-      console.log(id);
 
       // 成功create event後換頁
       // res.redirect("/view-event.html");
 
       res.json(id);
     } catch (error) {
-      console.log(error);
       res.json({});
     }
   });
@@ -218,7 +215,6 @@ eventRoutes.post("/editEvent", function (req: Request, res: Response) {
   form.parse(req, async (err, fields, files) => {
     try {
       let eventPictureMaybeArray = files.eventPictures;
-      console.log("eventPictureMaybeArray:", files);
       let eventPicture = Array.isArray(eventPictureMaybeArray)
         ? eventPictureMaybeArray[0]
         : eventPictureMaybeArray
@@ -236,7 +232,6 @@ eventRoutes.post("/editEvent", function (req: Request, res: Response) {
       let participants = Number(
         checkString("participants", fields.participants)
       );
-      console.log({ participants });
       let faq = checkString("faq", fields.faq);
       let is_age18 = checkBoolean("is_age18", fields.is_age18);
       let is_private = checkBoolean("is_private", fields.is_private);
@@ -300,7 +295,6 @@ eventRoutes.post("/editEvent", function (req: Request, res: Response) {
       );
       res.json(result.rows[0].id);
     } catch (error) {
-      console.log(error);
       res.json({});
     }
   });
@@ -364,7 +358,6 @@ eventRoutes.post("/joinEvent", async (req: Request, res: Response) => {
 
     res.json(id);
   } catch (error) {
-    console.log(error);
     res.json({});
   }
 });
@@ -388,8 +381,36 @@ eventRoutes.get("/viewEvent/:id", async (req, res, next) => {
 
     res.json({ data: result.rows[0], joined: result.rowCount });
   } catch (error) {
-    console.log(error);
     next(error);
+  }
+});
+
+//organizer delete event 
+eventRoutes.post("/deleteEvent", async (req: Request, res: Response) => {
+  try {
+    let user_id = getSessionUser(req).id
+    let event_id = req.query.eventId
+    let result = await client.query(
+            /* sql */ ` 
+      select 
+      event.id, event.host_id, event.active 
+      from event 
+      WHERE event.host_id = ${user_id} and event.active = true 
+          `,
+      [],
+    )
+    result = await client.query(
+            /* sql */ ` 
+      update event set active = false  
+      WHERE id = $1 
+      returning id 
+          `,
+      [event_id],
+    )
+    let id = result.rows[0].id
+    res.json(id);
+  } catch (error) {
+    res.json({})
   }
 });
 
@@ -589,7 +610,7 @@ eventRoutes.get("/allCreateEvent", async (req, res, next) => {
       /* sql */ `
     select id, host_id, eventPicture, title, end_date, active from event 
     WHERE event.active = true and event.end_date >= NOW() and event.host_id = ${user_id}
-    ORDER BY start_date
+    ORDER BY id DESC;
         `,
       []
     );
@@ -614,7 +635,7 @@ eventRoutes.get("/allJoinedEvent", async (req, res, next) => {
     from event_participant 
     inner join event on event_participant.event_id = event.id
     WHERE event.active = true and event.end_date >= NOW() and event_participant.user_id = ${user_id}
-    ORDER BY start_date
+    ORDER BY id DESC;
         `,
       []
     );
