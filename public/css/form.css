@@ -26,6 +26,14 @@ input[type="file"] {
   display: none;
 }
 
+[data-role="user"] #logIn {
+  display: none !important;
+}
+
+[data-role="guest"] #logOut {
+  display: none;
+}
+
 #logIn-btu {
   border-radius: 0.5rem;
   background-color: black;
@@ -42,4 +50,8 @@ input[type="file"] {
   font-size: larger;
   margin: 0.5rem;
   text-align: center;
+}
+
+.small-font {
+  font-size: 0.6rem;
 }

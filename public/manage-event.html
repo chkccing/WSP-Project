@@ -53,8 +53,13 @@
     </style>
     <link rel="stylesheet" href="/css/form.css" />
     <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/nav.css" />
   </head>
   <body>
+    <nav
+      class="navbar navbar-expand-md mb-4"
+      style="background-color: rgb(111, 203, 234)"
+    >
     <nav
       class="navbar navbar-expand-md mb-4"
       style="background-color: rgb(111, 203, 234)"
@@ -87,6 +92,16 @@
 
             <li class="nav-item">
               <a href="/index.html" class="nav-link px-2 text-dark">Home</a>
+              <a href="/Login.html" class="nav-link d-flex px-2 text-dark"
+                >LogIn</a
+              >
+              <a href="/sign-up.html" class="nav-link d-flex px-2 text-dark"
+                >Sign Up</a
+              >
+            </li>
+
+            <li class="nav-item">
+              <a href="/index.html" class="nav-link px-2 text-dark">Home</a>
             </li>
             <li class="nav-item">
               <a href="/create-event.html" class="nav-link px-2 text-dark"
@@ -106,6 +121,9 @@
           </ul>
           <form id="logout" method="POST" action="/logout">
             <button
+              button
+              id="logoutBtn"
+              type="submit"
               type="submit"
               value="Logout"
               class="btn btn-outline-dark me-2"
@@ -114,6 +132,11 @@
             </button>
           </form>
         </div>
+      </div>
+      <div>
+        <a class="navbar-brand" href="/index.html">
+          <img id="logo" src="img/Logo.png" width="60" height="47" />Pecky
+        </a>
       </div>
     </nav>
 
