@@ -40,6 +40,10 @@
           width: 100vw;
           height: 50vh !important;
         }
+        .slideBtn{
+          width: 1rem !important;
+          height: 1rem !important;
+        }
       }
     </style>
     <link rel="stylesheet" href="/css/form.css" />
@@ -114,19 +118,27 @@
   
   <div id="carouselExampleIndicators" class="carousel slide">
     <div class="carousel-indicators">
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active slideBtn" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" class="slideBtn" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" class="slideBtn" aria-label="Slide 3"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" class="slideBtn" aria-label="Slide 4"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" class="slideBtn" aria-label="Slide 5"></button>
     </div>
     <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img class="d-block w-100 carouselimg" id="caurosel1">
+      <div class="carousel-item active"><a href="" id="carousel1Link">
+        <img class="d-block w-100 carouselimg" id="carousel1"></a>
       </div>
-      <div class="carousel-item">
-        <img class="d-block w-100 carouselimg" id="caurosel2">
+      <div class="carousel-item"><a href="" id="carousel2Link">
+        <img class="d-block w-100 carouselimg" id="carousel2"></a>
       </div>
-      <div class="carousel-item">
-        <img class="d-block w-100 carouselimg" id="caurosel3">
+      <div class="carousel-item"><a href="" id="carousel3Link">
+        <img class="d-block w-100 carouselimg" id="carousel3"></a>
+      </div>
+      <div class="carousel-item"><a href="" id="carousel4Link">
+        <img class="d-block w-100 carouselimg" id="carousel4"></a>
+      </div>
+      <div class="carousel-item"><a href="" id="carousel5Link">
+        <img class="d-block w-100 carouselimg" id="carousel5"></a>
       </div>
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
@@ -243,17 +255,35 @@
         for (let event of json.events) {
           showEvent(event);
 
-          let c1 = document.querySelector("#caurosel1")
-          let c2 = document.querySelector("#caurosel2")
-          let c3 = document.querySelector("#caurosel3")
+          let c1 = document.querySelector("#carousel1")
+          let c1link = document.querySelector("#carousel1Link")
+          let c2 = document.querySelector("#carousel2")
+          let c2link = document.querySelector("#carousel2Link")
+          let c3 = document.querySelector("#carousel3")
+          let c3link = document.querySelector("#carousel3Link")
+          let c4 = document.querySelector("#carousel4")
+          let c4link = document.querySelector("#carousel4Link")
+          let c5 = document.querySelector("#carousel5")
+          let c5link = document.querySelector("#carousel5Link")
           if (event.id == 2) {
           c1.src = "/uploads/event-images/" + event.eventpicture;
+          c1link.href = "/view-event.html?id=" + event.id;
           }
           if (event.id == 8) {
           c2.src = "/uploads/event-images/" + event.eventpicture;
+          c2link.href = "/view-event.html?id=" + event.id;
           }
           if (event.id == 16) {
           c3.src = "/uploads/event-images/" + event.eventpicture;
+          c3link.href = "/view-event.html?id=" + event.id;
+          } 
+          if (event.id == 10) {
+          c4.src = "/uploads/event-images/" + event.eventpicture;
+          c4link.href = "/view-event.html?id=" + event.id;
+          } 
+          if (event.id == 6) {
+          c5.src = "/uploads/event-images/" + event.eventpicture;
+          c5link.href = "/view-event.html?id=" + event.id;
           } 
 
         }
@@ -270,17 +300,35 @@
         for (let event of json.events) {
           showEvent(event);
 
-          let c1 = document.querySelector("#caurosel1")
-          let c2 = document.querySelector("#caurosel2")
-          let c3 = document.querySelector("#caurosel3")
+          let c1 = document.querySelector("#carousel1")
+          let c1link = document.querySelector("#carousel1Link")
+          let c2 = document.querySelector("#carousel2")
+          let c2link = document.querySelector("#carousel2Link")
+          let c3 = document.querySelector("#carousel3")
+          let c3link = document.querySelector("#carousel3Link")
+          let c4 = document.querySelector("#carousel4")
+          let c4link = document.querySelector("#carousel4Link")
+          let c5 = document.querySelector("#carousel5")
+          let c5link = document.querySelector("#carousel5Link")
           if (event.id == 2) {
           c1.src = "/uploads/event-images/" + event.eventpicture;
+          c1link.href = "/view-event.html?id=" + event.id;
           }
           if (event.id == 8) {
           c2.src = "/uploads/event-images/" + event.eventpicture;
+          c2link.href = "/view-event.html?id=" + event.id;
           }
           if (event.id == 16) {
           c3.src = "/uploads/event-images/" + event.eventpicture;
+          c3link.href = "/view-event.html?id=" + event.id;
+          } 
+          if (event.id == 10) {
+          c4.src = "/uploads/event-images/" + event.eventpicture;
+          c4link.href = "/view-event.html?id=" + event.id;
+          } 
+          if (event.id == 6) {
+          c5.src = "/uploads/event-images/" + event.eventpicture;
+          c5link.href = "/view-event.html?id=" + event.id;
           } 
 
         }
