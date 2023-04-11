@@ -488,6 +488,24 @@ eventRoutes.get("/organizerPanel/:id", async (req, res, next) => {
 });
 
 //show all event in index page
+eventRoutes.get("/allEventPure/", async (req, res, next) => {
+  try {
+    let result = await client.query(
+      /* sql */ `
+      select id, eventPicture, category, title, end_date, is_age18, is_private, active from event  
+      WHERE event.active = true and event.is_private = false and event.is_age18 = false and event.end_date >= NOW() 
+        ORDER BY start_date 
+      `,
+      []
+    );
+    let events = result.rows;
+    res.json({ events });
+  } catch (error) {
+    next(error);
+  }
+});
+
+//show all event in index page
 eventRoutes.get("/allEvent/", async (req, res, next) => {
   try {
     let result = await client.query(

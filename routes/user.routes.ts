@@ -3,6 +3,7 @@ import { client } from "../db";
 import { getString, getPhone, HttpError } from "../express";
 import { comparePassword, hashPassword } from "../hash";
 import "../session";
+import { getSessionUser } from "../guards";
 
 export let userRoutes = Router();
 
@@ -192,4 +193,21 @@ userRoutes.get("/role", (req, res) => {
   //   role: req.session.user ? 'admin' : 'guest',
   //   username: req.session.user?.username,
   // })
+});
+
+userRoutes.get("/non18users", async (req, res, next) => {
+  try {
+    let user_id = getSessionUser(req).id;
+    let result = await client.query(
+      /* sql */ `
+      select id, is_age18 from users
+      WHERE id = $1 
+      `,
+      [user_id]
+    );
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    next(error);
+  }
 });
