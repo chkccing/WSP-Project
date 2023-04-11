@@ -434,7 +434,6 @@
       });
 
       function applyRole(user) {
-        console.log("current user:", user);
         document.body.dataset.role = user ? "user" : "guest";
         if (user) {
           currentUsername.textContent = user.name;
