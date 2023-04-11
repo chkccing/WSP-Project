@@ -522,25 +522,25 @@ eventRoutes.get("/allEvent/", async (req, res, next) => {
   }
 });
 
-//加入event search功能
-export let searchRoutes = Router();
+// //加入event search功能
+// export let searchRoutes = Router();
 
-searchRoutes.get("/searchEvent", async (req, res) => {
-  try {
-    let searchEvent = req.body.search;
-    let result = await client.query(
-      /* sql */
-      `SELECT id 
-    FROM event
-    WHERE title, hashtag = $1`,
-      [`%${searchEvent}%`]
-    );
-    res.status(200).json(result.rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error searching records");
-  }
-});
+// searchRoutes.get("/searchEvent", async (req, res) => {
+//   try {
+//     let searchEvent = req.body.search;
+//     let result = await client.query(
+//       /* sql */
+//       `SELECT id 
+//     FROM event
+//     WHERE title, hashtag = $1`,
+//       [`%${searchEvent}%`]
+//     );
+//     res.status(200).json(result.rows);
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send("Error searching records");
+//   }
+// });
 
 // //organizer delete event
 
@@ -626,7 +626,7 @@ eventRoutes.get("/allCreateEvent", async (req, res, next) => {
     let result = await client.query(
       /* sql */ `
     select id, host_id, eventPicture, title, end_date, active from event 
-    WHERE event.active = true and event.end_date >= NOW() and event.host_id = ${user_id}
+    WHERE event.active = true and event.host_id = ${user_id}
     ORDER BY id DESC;
         `,
       []
@@ -651,7 +651,7 @@ eventRoutes.get("/allJoinedEvent", async (req, res, next) => {
         event.active 
     from event_participant 
     inner join event on event_participant.event_id = event.id
-    WHERE event.active = true and event.end_date >= NOW() and event_participant.user_id = ${user_id}
+    WHERE event.active = true and event_participant.user_id = ${user_id}
     ORDER BY id DESC;
         `,
       []
