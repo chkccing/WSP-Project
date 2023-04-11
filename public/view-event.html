@@ -345,12 +345,12 @@
         </template>
         <div class="event-result"></div>
         <div class="row organizerPanel">
+          <div class="expiredEvent"></div>
           <button class="join_event" id="join_btn">Join</button>
           <button class="edit_event" id="edit_btn">Edit</button>
           <button class="delete_event" id="deleteEvent_btn">Delete</button>
           <div class="fullStatus"></div>
           <div class="haveJoin"></div>
-          <div class="expiredEvent"></div>
         </div>
         <div class="participantsListBox">
           <h2 class="participantTitle">Participant List</h2>
@@ -426,6 +426,11 @@
           document.querySelector(".expiredEvent").textContent =
             "This event is ended.";
           document.querySelector(".join_event").style.display = "none";
+          document.querySelector(".fullStatus").style.display = "none";
+          document.querySelector(".delete_event").style.display = "none";
+          document.querySelector(".edit_event").style.display = "none";
+        } else {
+          document.querySelector(".expiredEvent").style.display = "none";
         }
         //show whether current user have joined the event.
         async function joinStatus() {
