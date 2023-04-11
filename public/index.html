@@ -246,19 +246,56 @@
           let c1 = document.querySelector("#caurosel1")
           let c2 = document.querySelector("#caurosel2")
           let c3 = document.querySelector("#caurosel3")
-          if (event.eventpicture) {
+          if (event.id == 2) {
           c1.src = "/uploads/event-images/" + event.eventpicture;
+          }
+          if (event.id == 8) {
           c2.src = "/uploads/event-images/" + event.eventpicture;
+          }
+          if (event.id == 16) {
           c3.src = "/uploads/event-images/" + event.eventpicture;
-        } else {
-          c1.src = "/uploads/event-images/default.jpg";
-          c2.src = "/uploads/event-images/default.jpg";
-          c3.src = "/uploads/event-images/default.jpg";
-        }
+          } 
 
         }
       }
-      loadEvents();
+      // loadEvents();
+
+      async function loadPureEvents() {
+        let res = await fetch("/allEventPure");
+        let json = await res.json();
+        if (json.error) {
+          showError("Failed to load event list", json.error);
+          return;
+        }
+        for (let event of json.events) {
+          showEvent(event);
+
+          let c1 = document.querySelector("#caurosel1")
+          let c2 = document.querySelector("#caurosel2")
+          let c3 = document.querySelector("#caurosel3")
+          if (event.id == 2) {
+          c1.src = "/uploads/event-images/" + event.eventpicture;
+          }
+          if (event.id == 8) {
+          c2.src = "/uploads/event-images/" + event.eventpicture;
+          }
+          if (event.id == 16) {
+          c3.src = "/uploads/event-images/" + event.eventpicture;
+          } 
+
+        }
+      }
+
+      async function non18users() {
+        let res = await fetch("/non18users");
+        let json = await res.json();
+        console.log(json.is_age18)
+        if(json.is_age18 == "true"){
+          loadEvents()
+        } else {
+          loadPureEvents()}
+      }
+      non18users()
 
       let logoutForm = document.querySelector("form#logOut");
       //連同applyRole令div顯示用戶名稱
