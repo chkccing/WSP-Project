@@ -27,7 +27,8 @@ start_date date
 end_date date
 cost integer
 location varchar(20)
-FAQ varchar(500)
+faq varchar(500)
+active boolean
 is_age18 boolean
 is_private boolean
 
@@ -37,6 +38,8 @@ event_participant
 id integer PK
 event_id integer FK >0- event.id
 user_id integer FK >0- user.id
+active boolean
+
 
 
 
