@@ -103,8 +103,9 @@
         }
       }
     </style>
+    <link rel="stylesheet" href="/css/form.css" />
   </head>
-  <body>
+  <body data-role="guest">
     <nav
       class="navbar navbar-expand-md mb-4"
       style="background-color: rgb(111, 203, 234)"
@@ -157,7 +158,27 @@
               >
             </li>
           </ul>
-          <form id="logOut" method="POST" action="/logout" class="nav-item">
+          <a
+            href="/Login.html"
+            id="logIn"
+            class="nav-link d-flex px-2 text-dark"
+            >LogIn</a
+          >
+          <form id="logOut" method="POST" action="/logout">
+            <button
+              id="logoutBtn"
+              type="submit"
+              value="Logout"
+              class="btn btn-outline-dark me-2"
+            >
+              Logout
+            </button>
+            <div class="small-font">
+              You have login as <span class="username"></span>
+            </div>
+          </form>
+
+          <!-- <form id="logout" method="POST" action="/logout">
             <button
               id="logoutBtn"
               value="Logout"
@@ -165,7 +186,7 @@
             >
               Log out
             </button>
-          </form>
+          </form> -->
         </div>
       </div>
     </nav>
@@ -214,7 +235,7 @@
         </select>
       </div>
 
-      <!-- <label>
+      <label>
         <div>
           <input hidden type="text" name="hashtags" />
         </div>
@@ -235,9 +256,10 @@
             <option>pie</option>
           </datalist>
         </div>
-      </label> -->
-      <!-- <input type="submit" value="Submit" />
-      <input type="reset" value="Reset" /> -->
+      </label>
+      <input type="submit" value="Submit" />
+      <input type="reset" value="Reset" />
+
       <div>
         <input
           type="text"
@@ -324,59 +346,59 @@
     </form>
     <script src="/js/alert.js"></script>
     <script>
-      // //加入預示hashtag機制。
-      // let form = createPostForm;
+      //加入預示hashtag機制。
+      let form = createPostForm;
 
-      // form.reset();
+      form.reset();
 
-      // fetch("/tags")
-      //   .then((res) => res.json())
-      //   .then((json) => {
-      //     hashtags.textContent = "";
-      //     json.hashtags.forEach((tag) => {
-      //       let option = document.createElement("option");
-      //       option.textContent =
-      //         tag.hashtag.replace(/-/g, " ") + ` (${tag.count})`;
-      //       option.value = tag.hashtag;
-      //       hashtags.appendChild(option);
-      //     });
-      //   });
+      fetch("/tags")
+        .then((res) => res.json())
+        .then((json) => {
+          hashtags.textContent = "";
+          json.hashtags.forEach((tag) => {
+            let option = document.createElement("option");
+            option.textContent =
+              tag.hashtag.replace(/-/g, " ") + ` (${tag.count})`;
+            option.value = tag.hashtag;
+            hashtags.appendChild(option);
+          });
+        });
 
-      // hashtag.addEventListener("keypress", (event) => {
-      //   switch (event.key) {
-      //     case "Enter":
-      //     case ",":
-      //     case "#":
-      //       addHashTag();
-      //       event.preventDefault();
-      //       break;
-      //     default:
-      //     // allow normal input
-      //   }
-      // });
+      hashtag.addEventListener("keypress", (event) => {
+        switch (event.key) {
+          case "Enter":
+          case ",":
+          case "#":
+            addHashTag();
+            event.preventDefault();
+            break;
+          default:
+          // allow normal input
+        }
+      });
 
-      // function addHashTag() {
-      //   let node = document.createElement("div");
-      //   node.className = "hash-tag-preview";
-      //   node.textContent = hashtag.value;
-      //   hashTagPreviewList.appendChild(node);
-      //   node.addEventListener("click", () => removeHashTag(node));
+      function addHashTag() {
+        let node = document.createElement("div");
+        node.className = "hash-tag-preview";
+        node.textContent = hashtag.value;
+        hashTagPreviewList.appendChild(node);
+        node.addEventListener("click", () => removeHashTag(node));
 
-      //   if (form.hashtags.value.length > 0) {
-      //     form.hashtags.value += ", ";
-      //   }
-      //   form.hashtags.value += hashtag.value;
-      //   hashtag.value = "";
-      // }
+        if (form.hashtags.value.length > 0) {
+          form.hashtags.value += ", ";
+        }
+        form.hashtags.value += hashtag.value;
+        hashtag.value = "";
+      }
 
-      // function removeHashTag(node) {
-      //   form.hashtags.value = form.hashtags.value
-      //     .split(", ")
-      //     .filter((part) => part !== node.textContent)
-      //     .join(", ");
-      //   node.remove();
-      // }
-      // //加入完畢。
+      function removeHashTag(node) {
+        form.hashtags.value = form.hashtags.value
+          .split(", ")
+          .filter((part) => part !== node.textContent)
+          .join(", ");
+        node.remove();
+      }
+      //加入完畢。
 
       let today = new Date().toISOString().split("T")[0];
       document.querySelector(".start_date").setAttribute("min", today);
@@ -417,7 +439,6 @@
         if (json.role == "guest") {
           applyRole();
         }
-        window.location = `/index.html`;
       });
 
       function applyRole(user) {
