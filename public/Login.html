@@ -95,7 +95,6 @@
     <script src="/js/alert.js"></script>
     <script>
       function applyRole(user) {
-        console.log("current user:", user);
         document.body.dataset.role = user.role;
         if (user.role == "admin") {
           currentUsername.textContent = user.username;
@@ -105,7 +104,6 @@
       async function loadRole() {
         let res = await fetch("/role");
         let json = await res.json();
-        console.log(json);
         if (!json.user) {
           document.body.dataset.role = "guest";
           return;

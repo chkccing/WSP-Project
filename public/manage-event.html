@@ -156,8 +156,6 @@
         } else {
           img.src = "/uploads/event-images/default.jpg";
         }
-        // let eventBox = node.querySelector(".eventBox");
-        // console.log(eventBox);
 
         node.href = "/view-event.html?id=" + event.id;
         eventList.appendChild(node);
@@ -171,7 +169,6 @@
           return;
         }
         for (let event of json.events) {
-          console.log(event.title);
           showCreatedEvent(event);
         }
       }
@@ -204,7 +201,6 @@
           return;
         }
         for (let event of json.events) {
-          console.log(event.title);
           showJoinedEvent(event);
         }
       }
@@ -228,7 +224,6 @@
       });
 
       function applyRole(user) {
-        console.log("current user:", user);
         document.body.dataset.role = user ? "user" : "guest";
         if (user) {
           currentUsername.textContent = user.name;

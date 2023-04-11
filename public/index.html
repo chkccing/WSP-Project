@@ -289,7 +289,6 @@
       async function non18users() {
         let res = await fetch("/non18users");
         let json = await res.json();
-        console.log(json.is_age18)
         if(json.is_age18 == "true"){
           loadEvents()
         } else {
@@ -315,7 +314,6 @@
       });
 
       function applyRole(user) {
-        console.log("current user:", user);
         document.body.dataset.role = user ? "user" : "guest";
         if (user) {
           currentUsername.textContent = user.name;

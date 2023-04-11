@@ -212,7 +212,8 @@
           margin-top: 1rem;
         }
         .fullStatus,
-        .haveJoin {
+        .haveJoin,
+        .expiredEvent {
           display: flex;
           justify-content: center;
         }
@@ -349,6 +350,7 @@
           <button class="delete_event" id="deleteEvent_btn">Delete</button>
           <div class="fullStatus"></div>
           <div class="haveJoin"></div>
+          <div class="expiredEvent"></div>
         </div>
         <div class="participantsListBox">
           <h2 class="participantTitle">Participant List</h2>
@@ -421,7 +423,9 @@
         let today = new Date().toISOString().split("T")[0];
         let end_date = json.data.end_date.split("T")[0];
         if (end_date < today) {
-          console.log("The event is finished.");
+          document.querySelector(".expiredEvent").textContent =
+            "This event is ended.";
+          document.querySelector(".join_event").style.display = "none";
         }
         //show whether current user have joined the event.
         async function joinStatus() {
