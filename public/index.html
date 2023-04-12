@@ -17,7 +17,7 @@
     crossorigin="anonymous"
   ></script>
     <style>
-      @media only screen and (max-width: 600px) {
+      @media only screen and (min-width: 380px) {
         /* For mobile phones: */
         [class*="col-"] {
           width: 100%;
@@ -34,11 +34,11 @@
           margin-top: 4.5rem;
           width: 100vw;
           object-fit: cover;
-          height: 50vh;
+          height: 30vh;
         }
         .carousel-item {
           width: 100vw;
-          height: 50vh !important;
+          height: 30vh !important;
         }
         .slideBtn{
           width: 1rem !important;
@@ -53,7 +53,7 @@
   <body data-role="guest">
 
     <nav
-      class="navbar navbar-expand-md mb-4"
+      class="navbar mb-4"
       style="background-color: rgb(111, 203, 234)"
     >
       <div class="container-fluid">
@@ -180,7 +180,12 @@
         </div>
       </a>      
     </template>
-    <h2 class="category-title">Anime</h2>
+
+    <div id="event-box">
+
+    </div>
+
+    <!-- <h2 class="category-title">Anime</h2>
     <div class="event-list anime"></div>
     <h2 class="category-title">Board Game</h2>
     <div class="event-list boardGame"></div>
@@ -195,12 +200,14 @@
     <h2 class="category-title">Meeting</h2>
     <div class="event-list meeting"></div>
     <h2 class="category-title">Photography</h2>
-    <div class="event-list photography"></div>
+    <div class="event-list photography"></div> -->
+
     <div class="footer">© 2023 Chocolate IceCream Limited</div>
     <script>
       
       //insert all event previews
       let template = document.querySelector("template");
+
       let animeGameEventList = document.querySelector(".anime");
       let boardGameEventList = document.querySelector(".boardGame");
       let bookingEventList = document.querySelector(".booking");
@@ -209,49 +216,65 @@
       let matchEventList = document.querySelector(".match");
       let meetingEventList = document.querySelector(".meeting");
       let photographyEventList = document.querySelector(".photography");
+
       let eventTemplate = template.content.querySelector("#link");
 
       function showEvent(event) {
         let node = eventTemplate.cloneNode(true);
         node.querySelector(".eventTitle").textContent = event.title;
+
         let img = node.querySelector(".image");
+
         if(event.is_age18 == false) {
           if (event.eventpicture) {
-          img.src = "/uploads/event-images/" + event.eventpicture;
-        } else {
-          img.src = "/uploads/event-images/default.jpg";
-        }
-        } else {
+            img.src = "/uploads/event-images/" + event.eventpicture;
+          } 
+          else {
+            img.src = "/uploads/event-images/default.jpg";
+          }
+        } 
+        else {
           img.src = "/uploads/event-images/r18.jpg";
         }
 
         node.href = "/view-event.html?id=" + event.id;
 
         if(event.category == "Anime"){
-          animeGameEventList.appendChild(node);}
+          animeGameEventList.appendChild(node);
+        }
         if(event.category == "Board Game"){
-          boardGameEventList.appendChild(node);}
+          boardGameEventList.appendChild(node);
+        }
         if(event.category == "Booking"){
-          bookingEventList.appendChild(node);}
+          bookingEventList.appendChild(node);
+        }
         if(event.category == "Celebrities"){
-          celebritiesEventList.appendChild(node);}
+          celebritiesEventList.appendChild(node);
+        }
         if(event.category == "Giveaway"){
-          giveawayEventList.appendChild(node);}
+          giveawayEventList.appendChild(node);
+        }
         if(event.category == "Match"){
-          matchEventList.appendChild(node);}
+          matchEventList.appendChild(node);
+        }
         if(event.category == "Meeting"){
-          meetingEventList.appendChild(node);}
+          meetingEventList.appendChild(node);
+        }
         if(event.category == "Photography"){
-          photographyEventList.appendChild(node);}
+          photographyEventList.appendChild(node);
+        }
       }
 
       async function loadEvents() {
         let res = await fetch("/allEvent");
+
+        
         let json = await res.json();
         if (json.error) {
           showError("Failed to load event list", json.error);
           return;
         }
+
         for (let event of json.events) {
           showEvent(event);
 
@@ -290,13 +313,194 @@
       }
       // loadEvents();
 
+      const eventBox = document.querySelector("#event-box")
+
+      async function loadEventsNew(isAdult){
+        console.log(isAdult);
+        let res = await fetch(`/allEventGet?isAdult=${isAdult}`);
+        let json = await res.json();
+
+        console.log(json);
+        
+        if (json.error) {
+          showError("Failed to load event list", json.error);
+          return;
+        }
+
+        const advArray = [2, 8, 16, 10, 6];
+        for(let i = 1; i < 6; i ++){
+          let c = document.querySelector(`#carousel${i}`)
+          let clink = document.querySelector(`#carousel${i}Link`)
+
+          let eventItem = json.events.find( event => event.id === advArray[i-1]);
+          c.src = "/uploads/event-images/" + eventItem.eventpicture;
+          clink.href = "/view-event.html?id=" + eventItem.id;
+        }
+
+
+        // json.events.forEach( event => showEvent(event));
+
+        let categoryList = new Set();
+        json.events.forEach( event => categoryList.add(event.category));
+
+        console.log(categoryList);
+
+        for(let category of Array.from(categoryList).sort()){
+
+          let categoryItems = json.events
+            .filter( v => v.category == category)
+            .sort( (a,b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime())
+            .map( v => {
+
+              console.log(new Date(v.start_date));
+
+              let imgPath = ""
+              if(v.is_age18 == false) {
+                if (v.eventpicture) {
+                  imgPath = "/uploads/event-images/" + v.eventpicture;
+                } 
+                else {
+                  imgPath = "/uploads/event-images/default.jpg";
+                }
+              } 
+              else {
+                imgPath = "/uploads/event-images/r18.jpg";
+              }
+
+              return `
+              <a href="/view-event.html?id=${v.id}" id="link">
+                <div class="eventBox">
+                  <img class="image" id="eventPicture" src="${imgPath}" />
+                  <div class="eventTitle" id="${v.title}">${v.title}</div>
+                </div>
+              </a>    
+            `
+            }) 
+            ;
+
+          let catHtml = `
+          <h2 class="category-title">${category}</h2>
+          <div class="event-list ${category}">
+            ${categoryItems.join("")}
+          </div>
+          `
+
+          eventBox.innerHTML += catHtml;
+
+         
+        }
+
+      
+
+       
+        
+      }
+
       async function loadPureEvents() {
         let res = await fetch("/allEventPure");
+        let json = await res.json();
+
+        if (json.error) {
+          showError("Failed to load event list", json.error);
+          return;
+        }
+
+        for (let event of json.events) {
+          showEvent(event);
+
+          let c1 = document.querySelector("#carousel1")
+          let c1link = document.querySelector("#carousel1Link")
+          let c2 = document.querySelector("#carousel2")
+          let c2link = document.querySelector("#carousel2Link")
+          let c3 = document.querySelector("#carousel3")
+          let c3link = document.querySelector("#carousel3Link")
+          let c4 = document.querySelector("#carousel4")
+          let c4link = document.querySelector("#carousel4Link")
+          let c5 = document.querySelector("#carousel5")
+          let c5link = document.querySelector("#carousel5Link")
+          
+          if (event.id == 2) {
+          c1.src = "/uploads/event-images/" + event.eventpicture;
+          c1link.href = "/view-event.html?id=" + event.id;
+          }
+          if (event.id == 8) {
+          c2.src = "/uploads/event-images/" + event.eventpicture;
+          c2link.href = "/view-event.html?id=" + event.id;
+          }
+          if (event.id == 16) {
+          c3.src = "/uploads/event-images/" + event.eventpicture;
+          c3link.href = "/view-event.html?id=" + event.id;
+          } 
+          if (event.id == 10) {
+          c4.src = "/uploads/event-images/" + event.eventpicture;
+          c4link.href = "/view-event.html?id=" + event.id;
+          } 
+          if (event.id == 6) {
+          c5.src = "/uploads/event-images/" + event.eventpicture;
+          c5link.href = "/view-event.html?id=" + event.id;
+          } 
+
+        }
+      }
+
+      async function non18users() {
+        let res = await fetch("/non18users");
+        let json = await res.json();
+
+        loadEventsNew(json.is_age18 || "false");
+
+        // if(json.is_age18 == "true"){
+        //   loadEvents() // 18
+        // } else {
+        //   loadPureEvents() // not in 18
+        // }
+
+      }
+
+      non18users()
+
+      let logoutForm = document.querySelector("form#logOut");
+      //連同applyRole令div顯示用戶名稱
+      let currentUsername = document.querySelector(".username");
+
+      logoutForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        let form = logoutForm;
+        let res = await fetch(form.action, {
+          method: form.method,
+        });
+        let json = await res.json();
+        if (json.role == "guest") {
+          applyRole();
+        }
+        window.location = `/index.html`;
+      });
+
+      function applyRole(user) {
+        document.body.dataset.role = user ? "user" : "guest";
+        if (user) {
+          currentUsername.textContent = user.name;
+        }
+      }
+
+      async function loadRole() {
+        let res = await fetch("/role");
+        let json = await res.json();
+        applyRole(json.user);
+      }
+
+      loadRole();
+
+      async function loadEvents() {
+        let res = await fetch("/allEvent");
+
+        
         let json = await res.json();
         if (json.error) {
           showError("Failed to load event list", json.error);
           return;
         }
+
         for (let event of json.events) {
           showEvent(event);
 
@@ -333,47 +537,6 @@
 
         }
       }
-
-      async function non18users() {
-        let res = await fetch("/non18users");
-        let json = await res.json();
-        if(json.is_age18 == "true"){
-          loadEvents()
-        } else {
-          loadPureEvents()}
-      }
-      non18users()
-
-      let logoutForm = document.querySelector("form#logOut");
-      //連同applyRole令div顯示用戶名稱
-      let currentUsername = document.querySelector(".username");
-
-      logoutForm.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        let form = logoutForm;
-        let res = await fetch(form.action, {
-          method: form.method,
-        });
-        let json = await res.json();
-        if (json.role == "guest") {
-          applyRole();
-        }
-        window.location = `/index.html`;
-      });
-
-      function applyRole(user) {
-        document.body.dataset.role = user ? "user" : "guest";
-        if (user) {
-          currentUsername.textContent = user.name;
-        }
-      }
-
-      async function loadRole() {
-        let res = await fetch("/role");
-        let json = await res.json();
-        applyRole(json.user);
-      }
-      loadRole();
     </script>
   </body>
 </html>

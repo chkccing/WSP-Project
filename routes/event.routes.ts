@@ -522,6 +522,33 @@ eventRoutes.get("/allEvent/", async (req, res, next) => {
   }
 });
 
+// /allEventGet?isAdult=true
+// /allEventGet?isAdult=false
+
+eventRoutes.get("/allEventGet", async (req, res, next) => {
+  try {
+    let isAdult = (!!req.query.isAdult && req.query.isAdult == "true") || false;
+
+    let requireAdultContent = isAdult ? "" : `and event.is_age18 = false`;
+
+    let result = await client.query(
+      /* sql */ `
+      select id, eventPicture, category, start_date, title, end_date, is_age18, is_private, active from event  
+      WHERE event.active = true 
+      and event.is_private = false 
+      ${requireAdultContent} 
+      and event.end_date >= NOW() 
+        ORDER BY start_date 
+      `,
+    );
+
+    let events = result.rows;
+    res.json({ events });
+  } catch (error) {
+    next(error);
+  }
+});
+
 // //加入event search功能
 // export let searchRoutes = Router();
 

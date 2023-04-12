@@ -23,7 +23,7 @@
       crossorigin="anonymous"
     ></script>
     <style>
-      @media only screen and (max-width: 600px) {
+      @media only screen and (min-width: 380px) {
         /* For mobile phones: */
         [class*="col-"] {
           width: 100%;
@@ -41,7 +41,7 @@
           margin: 0rem 0rem 1rem 2rem;
         }
         .top {
-          margin-top: 6rem !important;
+          margin-top: 20vw !important;
         }
         .bi-hash {
           margin-left: 2rem;
@@ -69,18 +69,16 @@
         }
         #category {
           font-size: 1rem;
-          width: 7rem;
           margin-right: 1rem;
         }
         .date {
           display: flex;
-          width: 18rem;
           margin: 0rem 2rem 1rem 2rem;
         }
         #start_date,
         #end_date {
           font-size: 1rem;
-          width: 7rem;
+          width: 23vw;
         }
         #end_date {
           margin-left: -1.25rem;
@@ -143,7 +141,7 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          width: 7rem;
+          width: 20vw;
         }
         .edit_event:hover {
           background-color: rgb(204, 246, 246);
@@ -159,7 +157,7 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          width: 7rem;
+          width: 20vw;
         }
         .delete_event:hover {
           background-color: rgb(193, 193, 193);
@@ -175,7 +173,7 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          width: 7rem;
+          width: 20vw;
         }
         .join_event:hover {
           background-color: rgb(254, 217, 224);
@@ -194,8 +192,8 @@
           align-items: center;
         }
         .bi-person-circle {
-          height: 2rem;
-          width: 2rem;
+          height: 5vw;
+          width: 5vw;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -221,10 +219,7 @@
     </style>
   </head>
   <body data-role="guest">
-    <nav
-      class="navbar navbar-expand-md mb-4"
-      style="background-color: rgb(111, 203, 234)"
-    >
+    <nav class="navbar mb-4" style="background-color: rgb(111, 203, 234)">
       <div class="container-fluid">
         <a class="navbar-brand" href="/index.html">
           <img id="logo" src="img/Logo.png" width="60" height="47" />Pecky
