@@ -141,9 +141,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav me-auto mb-2 mb-md-0">
-            <div class="message">
+            <li class="nav-item message">
               Welcome back -<span class="username"></span>
-            </div>
+            </li>
             <li class="nav-item">
               <a href="/index.html" class="nav-link px-2 text-dark">Home</a>
             </li>
@@ -190,12 +190,7 @@
         </div>
       </div>
     </nav>
-    <form
-      id="Create-Event"
-      id="createPostForm"
-      method="post"
-      action="/createEvent"
-    >
+    <form id="createPostForm" method="post" action="/createEvent">
       <h2>Event Create</h2>
       <div>
         <label for="img"></label>
@@ -257,20 +252,7 @@
           </datalist>
         </div>
       </label>
-      <input type="submit" value="Submit" />
-      <input type="reset" value="Reset" />
 
-      <div>
-        <input
-          type="text"
-          class="line"
-          id="hashtag"
-          list="hashtags"
-          placeholder="Key Description"
-          name="hashtag"
-          required
-        />
-      </div>
       <div>
         <input
           class="start_date date"
@@ -339,9 +321,8 @@
     <script src="/js/alert.js"></script>
     <script>
       //加入預示hashtag機制。
-      let form = createPostForm;
 
-      form.reset();
+      createPostForm.reset();
 
       fetch("/tags")
         .then((res) => res.json())
@@ -376,15 +357,15 @@
         hashTagPreviewList.appendChild(node);
         node.addEventListener("click", () => removeHashTag(node));
 
-        if (form.hashtags.value.length > 0) {
-          form.hashtags.value += ", ";
+        if (createPostForm.hashtags.value.length > 0) {
+          createPostForm.hashtags.value += ", ";
         }
-        form.hashtags.value += hashtag.value;
+        createPostForm.hashtags.value += hashtag.value;
         hashtag.value = "";
       }
 
       function removeHashTag(node) {
-        form.hashtags.value = form.hashtags.value
+        createPostForm.hashtags.value = createPostForm.hashtags.value
           .split(", ")
           .filter((part) => part !== node.textContent)
           .join(", ");
@@ -400,26 +381,29 @@
         document.querySelector(".end_date").setAttribute("min", start_date);
       });
 
-      document
-        .querySelector("#Create-Event")
-        .addEventListener("submit", async (event) => {
-          event.preventDefault();
-          // Serialize the Form afterwards
-          const form = event.target;
-          const formData = new FormData(form);
-          // Submit FormData(), no need to add "Content-Type": "application/json"
-          const res = await fetch("/createEvent", {
-            method: "POST",
-            body: formData,
-          });
-
-          const result = await res.json(); // { success: true }
-          window.location = `/view-event.html?id=${result}`;
+      createPostForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        // Serialize the Form afterwards
+        const form = event.target;
+        const formData = new FormData(form);
+        // Submit FormData(), no need to add "Content-Type": "application/json"
+        const res = await fetch("/createEvent", {
+          method: "POST",
+          body: formData,
         });
+
+        const result = await res.json(); // { success: true }
+        if (result.error) {
+          alert(result.error);
+          return;
+        }
+        console.log("result:", result);
+        window.location = `/view-event.html?id=${result}`;
+      });
 
       let logoutForm = document.querySelector("form#logOut");
       //連同applyRole令div顯示用戶名稱
-      let currentUsername = document.querySelector(".username");
+      let currentUsername = logoutForm.querySelector(".username");
 
       logoutForm.addEventListener("submit", async (event) => {
         event.preventDefault();

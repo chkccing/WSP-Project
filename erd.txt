@@ -96,7 +96,7 @@ id integer PK
 event_id integer NULL FK >0- event.id
 tag_id integer NULL FK >0- tag.id
 
-
+# (要del hashtage和decode)
 event
 -----
 id integer PK

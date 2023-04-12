@@ -1,4 +1,28 @@
-[data-role="user"] #logIn-btu {
+.form-list {
+  display: inline-flex;
+  flex-direction: column;
+  width: fit-content;
+}
+
+form {
+  /* background-color: darkred; */
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+  padding: 1rem;
+  padding-top: 0;
+  width: 10rem;
+}
+#logOut,
+#logoutForm {
+  color: white;
+}
+
+input[type="file"] {
+  max-width: 25ch;
+}
+
+[data-role="user"] button#logIn-btu {
   display: none;
 }
 
@@ -13,10 +37,8 @@
   display: none !important;
 }
 
-[data-role="guest"] #logOut {
-  display: none !important;
-}
-
+[data-role="guest"] #logOut,
+[data-role="guest"] #logoutForm,
 [data-role="guest"] button#edit_btn,
 [data-role="guest"] button#deleteEvent_btn,
 [data-role="guest"] div.participantsListBox,

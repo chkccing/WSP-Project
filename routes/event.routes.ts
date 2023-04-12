@@ -50,19 +50,6 @@ const form = formidable({
   filter: (part) => part.mimetype?.startsWith("image/") || false,
 });
 
-//加入拆解hashtags的結構，不留空白與符號。
-let insert_post = async (content: string) => {
-  const result = await client.query(
-    /* sql */ `
-    insert into post (content) values ($1) returning id
-  `,
-    [content]
-  );
-  console.log(result.rows[0].id);
-  return result.rows[0].id;
-};
-console.log(insert_post);
-
 let select_tag_id = async (hashtag: string) => {
   const result = await client.query(
     /* sql */ `
@@ -86,12 +73,21 @@ let insert_tag = async (hashtag: string) => {
   return result.rows[0].id;
 };
 
-let insert_post_tag = async (post_id: number, tag_id: number) => {
+let insert_event_tag = async (event_id: number, tag_id: number) => {
   await client.query(
     /* sql */ `
-    INSERT INTO post_tag (post_id, tag_id) VALUES ($1, $2)
+    INSERT INTO event_tag (event_id, tag_id) VALUES ($1, $2)
   `,
-    [post_id, tag_id]
+    [event_id, tag_id]
+  );
+};
+
+let delete_all_event_tag = async (event_id: number) => {
+  await client.query(
+    /* sql */ `
+    delete from event_tag where event_id = $1
+  `,
+    [event_id]
   );
 };
 
@@ -100,19 +96,27 @@ let insert_post_tag = async (post_id: number, tag_id: number) => {
 //User Create Event
 eventRoutes.post("/createEvent", function (req: Request, res: Response) {
   form.parse(req, async (err, fields, files) => {
+    if (err) {
+      res.status(400);
+      res.json({ error: String(err) });
+      return;
+    }
+    console.log({ fields });
     try {
       let host_id = getSessionUser(req).id;
       let eventPictureMaybeArray = files.eventPictures;
       let eventPicture = Array.isArray(eventPictureMaybeArray)
         ? eventPictureMaybeArray[0]
         : eventPictureMaybeArray
-          ? eventPictureMaybeArray.newFilename
-          : "";
+        ? eventPictureMaybeArray.newFilename
+        : "";
       let title = checkString("title", fields.title);
       let category = checkString("category", fields.category);
       let start_date = checkString("start_date", fields.start_date);
       let end_date = checkString("end_date", fields.end_date);
-      let hashtag = checkString("hashtag", fields.hashtag);
+
+      //之前沒有釐清hashtag和hashtags，以致爆bugs
+      let hashtags = checkString("hashtags", fields.hashtags);
       let cost = Number(checkString("cost", fields.cost));
       let location = checkString("location", fields.location);
       let participants = Number(
@@ -122,38 +126,13 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
       let is_age18 = checkBoolean("is_age18", fields.is_age18);
       let is_private = checkBoolean("is_private", fields.is_private);
 
+      // 之前加入了decodeTag及$14，但暫時沒有用途，最好把它刪去，尤其decodeTag設定了not null，而front end沒有要求輸入decodeTag數值，搞到曾經爆bug。
       let result = await client.query(
         /* sql */ `
-      select
-        event.id
-      from event
-      inner join users on users.id = event.host_id
-          `,
-        []
-      );
-
-      //冇req.body，因此res.body.title無效。已let名為「title」的 variable，因此直接食title已可。
-      //加入拆解hashtag。
-      // let decodeTag = extractTag(hashtag);
-      // //加入把decodeTag資料放入tag table
-      // let tags = decodeTag;
-      // let { id: post_id } = await insert_post(title);
-
-      // for (let tag of tags) {
-      //   let tag_id = await select_tag_id(tag);
-      //   if (!tag_id) {
-      //     tag_id = (await insert_tag(tag)).lastInsertRowid;
-      //   }
-      //   await insert_post_tag(post_id, tag_id);
-      // }
-
-      // 加入decodeTag及$14
-      result = await client.query(
-        /* sql */ `
       insert into event
-      (host_id, eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, faq, is_age18, is_private)
+      (host_id, eventPicture, title, category, hashtag, start_date, end_date, cost, location, participants, faq, is_age18, is_private, decodetag)
       values
-      ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+      ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, 'todo: remove this field')
       returning id
           `,
         [
@@ -161,7 +140,7 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
           eventPicture,
           title,
           category,
-          hashtag,
+          "todo: remove this field",
           start_date,
           end_date,
           cost,
@@ -173,14 +152,32 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
         ]
       );
 
-      let id = result.rows[0].id;
+      let event_id = result.rows[0].id;
+      console.log({ event_id });
+
+      //冇req.body，因此res.body.title無效。已let名為「title」的 variable，因此直接食title已可。
+      //加入拆解hashtag。
+      // let decodeTag = extractTag(hashtag);
+      // //加入把decodeTag資料放入tag table
+      // let tags = decodeTag;
+
+      let tags = hashtags.split(", ");
+      for (let tag of tags) {
+        let tag_id = await select_tag_id(tag);
+        if (!tag_id) {
+          tag_id = await insert_tag(tag);
+        }
+        await insert_event_tag(event_id, tag_id);
+      }
 
       // 成功create event後換頁
       // res.redirect("/view-event.html");
 
-      res.json(id);
+      res.json(event_id);
     } catch (error) {
-      res.json({});
+      console.log(error);
+      //之前漏咗顯示error
+      res.json({ error: String(error) });
     }
   });
 });
@@ -191,9 +188,9 @@ eventRoutes.post("/createEvent", function (req: Request, res: Response) {
 //     SELECT
 //       tag.id,
 //       tag.hashtag,
-//       COUNT(post_tag.post_id) AS count
+//       COUNT(event_tag.event_id) AS count
 //     FROM tag
-//     INNER JOIN post_tag ON post_tag.tag_id = tag.id
+//     INNER JOIN event_tag ON event_tag.tag_id = tag.id
 //     GROUP BY tag.id
 //     ORDER BY count DESC
 //   `);
@@ -218,10 +215,10 @@ eventRoutes.post("/editEvent", function (req: Request, res: Response) {
       let eventPicture = Array.isArray(eventPictureMaybeArray)
         ? eventPictureMaybeArray[0]
         : eventPictureMaybeArray
-          ? eventPictureMaybeArray.newFilename
-          : "";
+        ? eventPictureMaybeArray.newFilename
+        : "";
       let id = req.params.id;
-      let event_id = req.query.eventId;
+      let event_id = +String(req.query.eventId);
       let title = checkString("title", fields.title);
       let category = checkString("category", fields.category);
       let start_date = checkString("start_date", fields.start_date);
@@ -238,24 +235,35 @@ eventRoutes.post("/editEvent", function (req: Request, res: Response) {
       let result = await client.query(
         /* sql */ `
       select
-        event.id
+        host_id
       from event
       WHERE event.id = $1
           `,
         [id]
       );
+      let event = result.rows[0];
+      if (!event) {
+        res.status(404);
+        res.json({ error: "event not found" });
+        return;
+      }
+      if (event.host_id !== req.session.user?.id) {
+        res.status(401);
+        res.json({ error: "only event host can edit the event" });
+        return;
+      }
 
       let decodeTag = extractTag(hashtag);
       //加入把decodeTag資料放入tag table
       let tags = decodeTag;
-      let { id: post_id } = await insert_post(title);
+      await delete_all_event_tag(event_id);
 
       for (let tag of tags) {
         let tag_id = await select_tag_id(tag);
         if (!tag_id) {
-          tag_id = (await insert_tag(tag)).lastInsertRowid;
+          tag_id = await insert_tag(tag);
         }
-        await insert_post_tag(post_id, tag_id);
+        await insert_event_tag(event_id, tag_id);
       }
 
       result = await client.query(
@@ -295,7 +303,9 @@ eventRoutes.post("/editEvent", function (req: Request, res: Response) {
       );
       res.json(result.rows[0].id);
     } catch (error) {
-      res.json({});
+      console.log(error);
+      res.status(500);
+      res.json({ error: String(error) });
     }
   });
 });
@@ -306,9 +316,9 @@ let select_hashtags = async () => {
     SELECT
       tag.id,
       tag.hashtag,
-      COUNT(post_tag.post_id) AS count
+      COUNT(event_tag.event_id) AS count
     FROM tag
-    INNER JOIN post_tag ON post_tag.tag_id = tag.id
+    INNER JOIN event_tag ON event_tag.tag_id = tag.id
     GROUP BY tag.id
     ORDER BY count DESC
   `);
@@ -385,32 +395,32 @@ eventRoutes.get("/viewEvent/:id", async (req, res, next) => {
   }
 });
 
-//organizer delete event 
+//organizer delete event
 eventRoutes.post("/deleteEvent", async (req: Request, res: Response) => {
   try {
-    let user_id = getSessionUser(req).id
-    let event_id = req.query.eventId
+    let user_id = getSessionUser(req).id;
+    let event_id = req.query.eventId;
     let result = await client.query(
-            /* sql */ ` 
+      /* sql */ ` 
       select 
       event.id, event.host_id, event.active 
       from event 
       WHERE event.host_id = ${user_id} and event.active = true 
           `,
-      [],
-    )
+      []
+    );
     result = await client.query(
-            /* sql */ ` 
+      /* sql */ ` 
       update event set active = false  
       WHERE id = $1 
       returning id 
           `,
-      [event_id],
-    )
-    let id = result.rows[0].id
+      [event_id]
+    );
+    let id = result.rows[0].id;
     res.json(id);
   } catch (error) {
-    res.json({})
+    res.json({});
   }
 });
 
@@ -554,7 +564,8 @@ eventRoutes.delete(
       let result = await client.query(
         /* sql */ `select   host_id
       from event
-      WHERE event.id = $1`, [event_id]
+      WHERE event.id = $1`,
+        [event_id]
       );
       let event = result.rows[0];
       if (!event) {
@@ -569,14 +580,16 @@ eventRoutes.delete(
       }
       result = await client.query(
         /* sql */ `  WHERE event_id = $1
-        and user_id = $2`, [event_id, req.params.user_id]
+        and user_id = $2`,
+        [event_id, req.params.user_id]
       );
       res.json({});
     } catch (error) {
       res.status(500);
       res.json({ error: String(error) });
     }
-  });
+  }
+);
 
 //organizer delete participant
 eventRoutes.delete(
