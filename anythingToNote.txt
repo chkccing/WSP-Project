@@ -1,3 +1,561 @@
+
+
+//以下來自index.html，入面的async function loadEventsNew(isAdult){}可以把event按category來排序。
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home Page</title>
+    <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+    crossorigin="anonymous"
+  />
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
+    crossorigin="anonymous"
+  ></script>
+    <style>
+      @media only screen and (min-width: 380px) {
+        /* For mobile phones: */
+        [class*="col-"] {
+          width: 100%;
+        }
+        .category-title{
+          margin-left: 2rem;;
+          margin-top: 2rem;
+        }
+        .carouselimg {
+          height: 100%;
+          object-fit: cover;
+        }
+        #carouselExampleIndicators{
+          margin-top: 4.5rem;
+          width: 100vw;
+          object-fit: cover;
+          height: 30vh;
+        }
+        .carousel-item {
+          width: 100vw;
+          height: 30vh !important;
+        }
+        .slideBtn{
+          width: 1rem !important;
+          height: 1rem !important;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="/css/form.css" />
+    <link rel="stylesheet" href="/css/nav.css" />
+    <link rel="stylesheet" href="/css/eventlist.css" />
+  </head>
+  <body data-role="guest">
+
+    <nav
+      class="navbar mb-4"
+      style="background-color: rgb(111, 203, 234)"
+    >
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/index.html">
+          <img id="logo" src="img/Logo.png" width="60" height="47" />Pecky
+        </a>
+        <div class="rowEnd">
+          <a
+            href="/sign-up.html"
+            class="nav-link d-flex px-2 text-dark"
+            id="signUp"
+            >Sign Up</a
+          >/<a
+            href="/Login.html"
+            class="nav-link d-flex px-2 text-dark"
+            id="logIn"
+            >LogIn</a
+          >          
+        </div>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarCollapse"
+          aria-controls="navbarCollapse"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <div class="message">
+              Welcome back -<span class="username"></span>
+            </div>
+            <li class="nav-item">
+              <a href="/index.html" class="nav-link px-2 text-dark">Home</a>
+            </li>
+            <li class="nav-item">
+              <a href="/create-event.html" class="nav-link px-2 text-dark"
+                >Create event</a
+              >
+            </li>
+            <li class="nav-item">
+              <a href="/manage-event.html" class="nav-link px-2 text-dark"
+                >Manage event</a
+              >
+            </li>
+          </ul>
+          <form id="logOut" method="POST" action="/logout" class="nav-item">
+            <button
+              id="logoutBtn"
+              value="Logout"
+              class="btn nav-link text-dark me-2"
+            >
+              Log out
+            </button>
+          </form>
+        </div>
+      </div>
+    </nav>
+  
+  <div id="carouselExampleIndicators" class="carousel slide">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active slideBtn" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" class="slideBtn" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" class="slideBtn" aria-label="Slide 3"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" class="slideBtn" aria-label="Slide 4"></button>
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" class="slideBtn" aria-label="Slide 5"></button>
+    </div>
+    <div class="carousel-inner">
+      <div class="carousel-item active"><a href="" id="carousel1Link">
+        <img class="d-block w-100 carouselimg" id="carousel1"></a>
+      </div>
+      <div class="carousel-item"><a href="" id="carousel2Link">
+        <img class="d-block w-100 carouselimg" id="carousel2"></a>
+      </div>
+      <div class="carousel-item"><a href="" id="carousel3Link">
+        <img class="d-block w-100 carouselimg" id="carousel3"></a>
+      </div>
+      <div class="carousel-item"><a href="" id="carousel4Link">
+        <img class="d-block w-100 carouselimg" id="carousel4"></a>
+      </div>
+      <div class="carousel-item"><a href="" id="carousel5Link">
+        <img class="d-block w-100 carouselimg" id="carousel5"></a>
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+    </section>
+</main>
+
+
+          <!-- <div class="right">
+            <div>
+              <a href="/index.html"><button id="logOut-btu">Logout</button></a>
+              <div class="title">Admin Panel</div>
+              <div>You have login as <span class="username"></span></div>
+            </div>
+          </div> -->
+ 
+        <!-- 加入search功能 -->
+        <!-- <a href="/index.html"><i class="bi bi-x-lg"></i></a>
+        <h1>Search Event</h1>
+        <form id="search-form">
+          <input type="text" id="search-input" placeholder="Search items..." />
+          <button type="submit">Search</button>
+        </form>
+        <ul id="results-list"></ul> -->
+
+    <template>
+      <a href="/view-event.html?id=1" id="link">
+        <div class="eventBox">
+          <img class="image" id="eventPicture" />
+          <div class="eventTitle" id="title">test1</div>
+        </div>
+      </a>      
+    </template>
+
+    <div id="event-box">
+
+    </div>
+
+    <!-- <h2 class="category-title">Anime</h2>
+    <div class="event-list anime"></div>
+    <h2 class="category-title">Board Game</h2>
+    <div class="event-list boardGame"></div>
+    <h2 class="category-title">Booking</h2>
+    <div class="event-list booking"></div>
+    <h2 class="category-title">Celebrities</h2>
+    <div class="event-list celebrities"></div>
+    <h2 class="category-title">Giveaway</h2>
+    <div class="event-list giveaway"></div>
+    <h2 class="category-title">Match</h2>
+    <div class="event-list match"></div>
+    <h2 class="category-title">Meeting</h2>
+    <div class="event-list meeting"></div>
+    <h2 class="category-title">Photography</h2>
+    <div class="event-list photography"></div> -->
+
+    <div class="footer">© 2023 Chocolate IceCream Limited</div>
+    <script>
+      
+      //insert all event previews
+      let template = document.querySelector("template");
+
+      let animeGameEventList = document.querySelector(".anime");
+      let boardGameEventList = document.querySelector(".boardGame");
+      let bookingEventList = document.querySelector(".booking");
+      let celebritiesEventList = document.querySelector(".celebrities");
+      let giveawayEventList = document.querySelector(".giveaway");
+      let matchEventList = document.querySelector(".match");
+      let meetingEventList = document.querySelector(".meeting");
+      let photographyEventList = document.querySelector(".photography");
+
+      let eventTemplate = template.content.querySelector("#link");
+
+      function showEvent(event) {
+        let node = eventTemplate.cloneNode(true);
+        node.querySelector(".eventTitle").textContent = event.title;
+
+        let img = node.querySelector(".image");
+
+        if(event.is_age18 == false) {
+          if (event.eventpicture) {
+            img.src = "/uploads/event-images/" + event.eventpicture;
+          } 
+          else {
+            img.src = "/uploads/event-images/default.jpg";
+          }
+        } 
+        else {
+          img.src = "/uploads/event-images/r18.jpg";
+        }
+
+        node.href = "/view-event.html?id=" + event.id;
+
+        if(event.category == "Anime"){
+          animeGameEventList.appendChild(node);
+        }
+        if(event.category == "Board Game"){
+          boardGameEventList.appendChild(node);
+        }
+        if(event.category == "Booking"){
+          bookingEventList.appendChild(node);
+        }
+        if(event.category == "Celebrities"){
+          celebritiesEventList.appendChild(node);
+        }
+        if(event.category == "Giveaway"){
+          giveawayEventList.appendChild(node);
+        }
+        if(event.category == "Match"){
+          matchEventList.appendChild(node);
+        }
+        if(event.category == "Meeting"){
+          meetingEventList.appendChild(node);
+        }
+        if(event.category == "Photography"){
+          photographyEventList.appendChild(node);
+        }
+      }
+
+      async function loadEvents() {
+        let res = await fetch("/allEvent");
+
+        
+        let json = await res.json();
+        if (json.error) {
+          showError("Failed to load event list", json.error);
+          return;
+        }
+
+        for (let event of json.events) {
+          showEvent(event);
+
+          let c1 = document.querySelector("#carousel1")
+          let c1link = document.querySelector("#carousel1Link")
+          let c2 = document.querySelector("#carousel2")
+          let c2link = document.querySelector("#carousel2Link")
+          let c3 = document.querySelector("#carousel3")
+          let c3link = document.querySelector("#carousel3Link")
+          let c4 = document.querySelector("#carousel4")
+          let c4link = document.querySelector("#carousel4Link")
+          let c5 = document.querySelector("#carousel5")
+          let c5link = document.querySelector("#carousel5Link")
+          if (event.id == 2) {
+          c1.src = "/uploads/event-images/" + event.eventpicture;
+          c1link.href = "/view-event.html?id=" + event.id;
+          }
+          if (event.id == 8) {
+          c2.src = "/uploads/event-images/" + event.eventpicture;
+          c2link.href = "/view-event.html?id=" + event.id;
+          }
+          if (event.id == 16) {
+          c3.src = "/uploads/event-images/" + event.eventpicture;
+          c3link.href = "/view-event.html?id=" + event.id;
+          } 
+          if (event.id == 10) {
+          c4.src = "/uploads/event-images/" + event.eventpicture;
+          c4link.href = "/view-event.html?id=" + event.id;
+          } 
+          if (event.id == 6) {
+          c5.src = "/uploads/event-images/" + event.eventpicture;
+          c5link.href = "/view-event.html?id=" + event.id;
+          } 
+
+        }
+      }
+      // loadEvents();
+
+      const eventBox = document.querySelector("#event-box")
+
+      async function loadEventsNew(isAdult){
+        console.log(isAdult);
+        let res = await fetch(`/allEventGet?isAdult=${isAdult}`);
+        let json = await res.json();
+
+        console.log(json);
+        
+        if (json.error) {
+          showError("Failed to load event list", json.error);
+          return;
+        }
+
+        const advArray = [2, 8, 16, 10, 6];
+        for(let i = 1; i < 6; i ++){
+          let c = document.querySelector(`#carousel${i}`)
+          let clink = document.querySelector(`#carousel${i}Link`)
+
+          let eventItem = json.events.find( event => event.id === advArray[i-1]);
+          c.src = "/uploads/event-images/" + eventItem.eventpicture;
+          clink.href = "/view-event.html?id=" + eventItem.id;
+        }
+
+
+        // json.events.forEach( event => showEvent(event));
+
+        let categoryList = new Set();
+        json.events.forEach( event => categoryList.add(event.category));
+
+        console.log(categoryList);
+
+        for(let category of Array.from(categoryList).sort()){
+
+          let categoryItems = json.events
+            .filter( v => v.category == category)
+            .sort( (a,b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime())
+            .map( v => {
+
+              console.log(new Date(v.start_date));
+
+              let imgPath = ""
+              if(v.is_age18 == false) {
+                if (v.eventpicture) {
+                  imgPath = "/uploads/event-images/" + v.eventpicture;
+                } 
+                else {
+                  imgPath = "/uploads/event-images/default.jpg";
+                }
+              } 
+              else {
+                imgPath = "/uploads/event-images/r18.jpg";
+              }
+
+              return `
+              <a href="/view-event.html?id=${v.id}" id="link">
+                <div class="eventBox">
+                  <img class="image" id="eventPicture" src="${imgPath}" />
+                  <div class="eventTitle" id="${v.title}">${v.title}</div>
+                </div>
+              </a>    
+            `
+            }) 
+            ;
+
+          let catHtml = `
+          <h2 class="category-title">${category}</h2>
+          <div class="event-list ${category}">
+            ${categoryItems.join("")}
+          </div>
+          `
+
+          eventBox.innerHTML += catHtml;
+
+         
+        }
+
+      
+
+       
+        
+      }
+
+      async function loadPureEvents() {
+        let res = await fetch("/allEventPure");
+        let json = await res.json();
+
+        if (json.error) {
+          showError("Failed to load event list", json.error);
+          return;
+        }
+
+        for (let event of json.events) {
+          showEvent(event);
+
+          let c1 = document.querySelector("#carousel1")
+          let c1link = document.querySelector("#carousel1Link")
+          let c2 = document.querySelector("#carousel2")
+          let c2link = document.querySelector("#carousel2Link")
+          let c3 = document.querySelector("#carousel3")
+          let c3link = document.querySelector("#carousel3Link")
+          let c4 = document.querySelector("#carousel4")
+          let c4link = document.querySelector("#carousel4Link")
+          let c5 = document.querySelector("#carousel5")
+          let c5link = document.querySelector("#carousel5Link")
+          
+          if (event.id == 2) {
+          c1.src = "/uploads/event-images/" + event.eventpicture;
+          c1link.href = "/view-event.html?id=" + event.id;
+          }
+          if (event.id == 8) {
+          c2.src = "/uploads/event-images/" + event.eventpicture;
+          c2link.href = "/view-event.html?id=" + event.id;
+          }
+          if (event.id == 16) {
+          c3.src = "/uploads/event-images/" + event.eventpicture;
+          c3link.href = "/view-event.html?id=" + event.id;
+          } 
+          if (event.id == 10) {
+          c4.src = "/uploads/event-images/" + event.eventpicture;
+          c4link.href = "/view-event.html?id=" + event.id;
+          } 
+          if (event.id == 6) {
+          c5.src = "/uploads/event-images/" + event.eventpicture;
+          c5link.href = "/view-event.html?id=" + event.id;
+          } 
+
+        }
+      }
+
+      async function non18users() {
+        let res = await fetch("/non18users");
+        let json = await res.json();
+
+        loadEventsNew(json.is_age18 || "false");
+
+        // if(json.is_age18 == "true"){
+        //   loadEvents() // 18
+        // } else {
+        //   loadPureEvents() // not in 18
+        // }
+
+      }
+
+      non18users()
+
+      let logoutForm = document.querySelector("form#logOut");
+      //連同applyRole令div顯示用戶名稱
+      let currentUsername = document.querySelector(".username");
+
+      logoutForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        let form = logoutForm;
+        let res = await fetch(form.action, {
+          method: form.method,
+        });
+        let json = await res.json();
+        if (json.role == "guest") {
+          applyRole();
+        }
+        window.location = `/index.html`;
+      });
+
+      function applyRole(user) {
+        document.body.dataset.role = user ? "user" : "guest";
+        if (user) {
+          currentUsername.textContent = user.name;
+        }
+      }
+
+      async function loadRole() {
+        let res = await fetch("/role");
+        let json = await res.json();
+        applyRole(json.user);
+      }
+
+      loadRole();
+
+      async function loadEvents() {
+        let res = await fetch("/allEvent");
+
+        
+        let json = await res.json();
+        if (json.error) {
+          showError("Failed to load event list", json.error);
+          return;
+        }
+
+        for (let event of json.events) {
+          showEvent(event);
+
+          let c1 = document.querySelector("#carousel1")
+          let c1link = document.querySelector("#carousel1Link")
+          let c2 = document.querySelector("#carousel2")
+          let c2link = document.querySelector("#carousel2Link")
+          let c3 = document.querySelector("#carousel3")
+          let c3link = document.querySelector("#carousel3Link")
+          let c4 = document.querySelector("#carousel4")
+          let c4link = document.querySelector("#carousel4Link")
+          let c5 = document.querySelector("#carousel5")
+          let c5link = document.querySelector("#carousel5Link")
+          if (event.id == 2) {
+          c1.src = "/uploads/event-images/" + event.eventpicture;
+          c1link.href = "/view-event.html?id=" + event.id;
+          }
+          if (event.id == 8) {
+          c2.src = "/uploads/event-images/" + event.eventpicture;
+          c2link.href = "/view-event.html?id=" + event.id;
+          }
+          if (event.id == 16) {
+          c3.src = "/uploads/event-images/" + event.eventpicture;
+          c3link.href = "/view-event.html?id=" + event.id;
+          } 
+          if (event.id == 10) {
+          c4.src = "/uploads/event-images/" + event.eventpicture;
+          c4link.href = "/view-event.html?id=" + event.id;
+          } 
+          if (event.id == 6) {
+          c5.src = "/uploads/event-images/" + event.eventpicture;
+          c5link.href = "/view-event.html?id=" + event.id;
+          } 
+
+        }
+      }
+    </script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
 我的guards.ts文件如下：
 import { NextFunction, Request, Response } from 'express'
 import { HttpError } from './express'

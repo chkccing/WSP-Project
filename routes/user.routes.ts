@@ -4,6 +4,15 @@ import { getString, getPhone, HttpError } from "../express";
 import { comparePassword, hashPassword } from "../hash";
 import "../session";
 import { getSessionUser } from "../guards";
+import nodemailer from "nodemailer";
+import { env } from "../env";
+// import { EmailService } from "../emailService";
+
+//.
+// transport.sendMail({...})
+
+// let emailServer = new EmailService()
+// emailServer.sendEmail({...})
 
 export let userRoutes = Router();
 
@@ -209,5 +218,174 @@ userRoutes.get("/non18users", async (req, res, next) => {
     res.json(result.rows[0]);
   } catch (error) {
     next(error);
+  }
+});
+
+let transport = nodemailer.createTransport({
+  service: "hotmail",
+  auth: {
+    user: env.EMAIL_USER,
+    pass: env.EMAIL_PASSWORD,
+  },
+});
+
+//Why MINUTE is  60 * 1000?
+const MINUTE = 60 * 1000;
+
+userRoutes.post("/reset-pw-request", async (req, res) => {
+  let { email } = req.body;
+  if (!email) {
+    res.status(400);
+    res.json({ error: "missing email" });
+    return;
+  }
+  let code = Math.random().toString(36).slice(2, 8).toUpperCase();
+  console.log(code);
+  let expire = new Date(Date.now() + 15 * MINUTE);
+  try {
+    let result = await client.query(
+      /*sql*/ `
+      select id from users
+      where email = $1    
+    `,
+      [email]
+    );
+    let user = result.rows[0];
+    if (!user) {
+      res.status(404);
+      res.json({ error: "this email is not registered" });
+      return;
+    }
+    //when to use 'set' or 'update'?
+
+    await client.query(
+      /*sql*/ `
+update users
+set token = $1,
+    token_expire_at = $2,
+    token_attempt = 0
+where id = $3
+    
+`,
+      [code, expire, user.id]
+    );
+  } catch (error) {
+    res.status(500);
+    res.json({ error: "Database error:" + error });
+    return;
+  }
+
+  let text = `We received your request to reset password, please enter this verification code: "${code}" (without the quotation). If you have not requesred to reset password, it is safe to ignore this email.`;
+  let html = /*sql*/ `
+<p>We received your request to reset password, please enter this verification coed below</p>
+<b>${code}</b>
+<p>If you have not requesred to reset password, it is safe to ignore this email.</p>
+  `;
+  try {
+    if (env.EMAIL_USER === "skip") {
+      throw new Error("skipped email");
+    }
+    await transport.sendMail({
+      from: env.EMAIL_USER,
+      to: email,
+      subject: "Reset Password of Pecky account.",
+      text,
+      html,
+    });
+  } catch (error) {
+    console.log(error);
+    console.log("email content:", text);
+
+    //have to use these again when the email system is normal. Also, have to change env
+    // res.status(500);
+    // res.json({ error: "Failed to send email:" + error });
+    // return;
+  }
+  res.json({
+    message:
+      "Email sent. Please check your inbox and also spam folder just in case.",
+  });
+});
+
+userRoutes.post("/claim-reset-pw", async (req, res) => {
+  let { email, code, new_password } = req.body;
+  if (!email) {
+    res.status(400);
+    res.json({ error: "missing email" });
+    return;
+  }
+  if (!code) {
+    res.status(400);
+    res.json({ error: "missing code" });
+    return;
+  }
+  if (!new_password) {
+    res.status(400);
+    res.json({ error: "missing new password" });
+    return;
+  }
+  try {
+    let result = await client.query(
+      /*sql*/ `
+select token_expire_at, token_attempt, id, token
+from users
+where email=$1
+`,
+      [email]
+    );
+    let user = result.rows[0];
+    if (!user) {
+      res.status(400);
+      res.json({ error: "Wrong email" });
+      return;
+    }
+    if (user.token_attempt > 5) {
+      res.status(400);
+      res.json({
+        error:
+          "Verification coed is expired. Please request another code in the reset password page.",
+      });
+    }
+    console.log({ token: user.token, code });
+    if (user.token !== code) {
+      await client.query(
+        /*sql*/ `
+        update users
+        set token_attempt = token_attempt + 1
+        where id = $1
+`,
+        [user.id]
+      );
+      res.status(400);
+      res.json({
+        error:
+          "Wrong verification code. Please double check the code from your email.",
+      });
+      return;
+    }
+    //what is 'new Date'?
+    if (new Date(user.token_expire_at).getTime() < Date.now()) {
+      res.status(400);
+      res.json({
+        error:
+          "Verfication code is expired. Please request a new verification code.",
+      });
+      return;
+    }
+
+    let password_hash = await hashPassword(new_password);
+
+    await client.query(
+      /*sql*/ `
+      update users
+      set password_hash = $1
+      where id = $2
+`,
+      [password_hash, user.id]
+    );
+    res.json({ message: "The password is updated." });
+  } catch (error) {
+    res.status(500);
+    res.json({ error: "Database error:" + error });
   }
 });
