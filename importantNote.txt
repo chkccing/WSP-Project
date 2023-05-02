@@ -1,0 +1,15 @@
+When email system is banned by service provider, we use the following method to pretend our server can work:
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=eventplatform2
+EMAIL_USER=skip
+EMAIL_USER_BK=alantestcode2023@outlook.com
+EMAIL_PASSWORD=A214365*
+
+However, when the email system is normal, we should do the practice as the following:
+
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=eventplatform2
+EMAIL_USER=alantestcode2023@outlook.com
+EMAIL_PASSWORD=A214365*
